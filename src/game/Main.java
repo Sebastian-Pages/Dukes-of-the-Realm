@@ -27,10 +27,12 @@ public class Main extends Application {
 	private Image playerImage;
 	private Image enemyImage;
 	private Image missileImage;
+	private Image castleImage;
 
 	private Player player;
 	private List<Enemy> enemies = new ArrayList<>();
 	private List<Missile> missiles = new ArrayList<>();
+	private List<Castle> castles = new ArrayList<>();;
 
 	private Text scoreMessage = new Text();
 	private int scoreValue = 0;
@@ -113,6 +115,7 @@ public class Main extends Application {
 		playerImage = new Image(getClass().getResource("/images/alien.png").toExternalForm(), 100, 100, true, true);
 		enemyImage = new Image(getClass().getResource("/images/enemy.png").toExternalForm(), 50, 50, true, true);
 		missileImage = new Image(getClass().getResource("/images/pinapple.png").toExternalForm(), 20, 20, true, true);
+		castleImage = new Image(getClass().getResource("/images/square.png").toExternalForm(), 100, 100, true, true);
 
 		input = new Input(scene);
 		input.addListeners();
@@ -120,9 +123,14 @@ public class Main extends Application {
 		createPlayer();
 		createStatusBar();
 		
+		//Initialize map
+		spawnCastles(5);
+		
 		scene.setOnMousePressed(e -> {
 			player.setX(e.getX() - (player.getWidth() / 2));
 			player.setY(e.getY() - (player.getHeight() / 2));
+			
+			/****** pause function *****
 			if (pauseState) {
 				gameLoop.start();
 				pauseState = false;
@@ -132,6 +140,7 @@ public class Main extends Application {
 				gameLoop.stop();
 				pauseState = true;
 			}
+			***************************/
 				
 		});
 	}
@@ -180,6 +189,16 @@ public class Main extends Application {
 		double y = -enemyImage.getHeight();
 		Enemy enemy = new Enemy(playfieldLayer, enemyImage, x, y, 1, 1, speed);
 		enemies.add(enemy);
+	}
+	
+	private void spawnCastles(int nb_castles) {
+		for (int i=0; i<nb_castles; i++) {
+			double speed = 0;
+			double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - castleImage.getWidth());
+			double y = rnd.nextDouble() * (Settings.SCENE_HEIGHT- castleImage.getHeight());
+			Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed);
+			castles.add(castle);
+		}
 	}
 
 	private void fire(long now) {
