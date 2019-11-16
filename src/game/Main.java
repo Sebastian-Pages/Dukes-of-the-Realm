@@ -129,8 +129,11 @@ public class Main extends Application {
 		spawnCastles(5);
 		
 		scene.setOnMousePressed(e -> {
+			
+			/**
 			player.setX(e.getX() - (player.getWidth() / 2));
 			player.setY(e.getY() - (player.getHeight() / 2));
+			**/
 			
 			/****** pause function *****
 			if (pauseState) {
@@ -164,10 +167,11 @@ public class Main extends Application {
 		player = new Player(playfieldLayer, playerImage, x, y, Settings.PLAYER_HEALTH, Settings.PLAYER_DAMAGE,
 				Settings.PLAYER_SPEED, input);
 		
+		/**
 		player.getView().setOnMousePressed(e -> {
 			System.out.println("Click on player");
 			e.consume();
-		});
+		});**/
 		
 		player.getView().setOnContextMenuRequested(e -> {
 			ContextMenu contextMenu = new ContextMenu();
@@ -221,7 +225,8 @@ public class Main extends Application {
 			placed_well = true;
 			c++;
 			
-		}
+		}		
+		
 	}
 
 	private void fire(long now) {

@@ -29,4 +29,28 @@ public class Castle extends Sprite {
 		if (getY() > maxY || !isAlive())
 			remove();
 	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public int getTresor() {
+		return tresor;
+	}
+
+	public void setTresor(int tresor) {
+		this.tresor = tresor;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
 }

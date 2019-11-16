@@ -2,7 +2,7 @@ package game;
 
 public class Settings {
 
-	public static final double SCENE_WIDTH = 800;
+	public static final double SCENE_WIDTH = 300;
     public static final double SCENE_HEIGHT = 750;
 	public static final double STATUS_BAR_HEIGHT = 50;
 
