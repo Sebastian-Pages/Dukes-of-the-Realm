@@ -37,7 +37,7 @@ public class Main extends Application {
 	private Text scoreMessage = new Text();
 	private int scoreValue = 0;
 	private boolean collision = false;
-	private boolean pauseState = false;
+	//private boolean pauseState = false;
 
 	private Scene scene;
 	private Input input;
@@ -88,10 +88,12 @@ public class Main extends Application {
 				// check if sprite can be removed
 				enemies.forEach(sprite -> sprite.checkRemovability());
 				missiles.forEach(sprite -> sprite.checkRemovability());
+				castles.forEach(sprite -> sprite.checkRemovability());
 
 				// remove removables from list, layer, etc
 				removeSprites(enemies);
 				removeSprites(missiles);
+				removeSprites(castles);
 
 				// update score, health, etc
 				update();
@@ -115,7 +117,7 @@ public class Main extends Application {
 		playerImage = new Image(getClass().getResource("/images/alien.png").toExternalForm(), 100, 100, true, true);
 		enemyImage = new Image(getClass().getResource("/images/enemy.png").toExternalForm(), 50, 50, true, true);
 		missileImage = new Image(getClass().getResource("/images/pinapple.png").toExternalForm(), 20, 20, true, true);
-		castleImage = new Image(getClass().getResource("/images/square.png").toExternalForm(), 100, 100, true, true);
+		castleImage = new Image(getClass().getResource("/images/castle.png").toExternalForm(), 100, 100, true, true);
 
 		input = new Input(scene);
 		input.addListeners();
@@ -192,12 +194,33 @@ public class Main extends Application {
 	}
 	
 	private void spawnCastles(int nb_castles) {
-		for (int i=0; i<nb_castles; i++) {
+		boolean placed_well = true;
+		int c = 0;
+		
+		while ((castles.size()<nb_castles)&&(c<5) ){
 			double speed = 0;
 			double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - castleImage.getWidth());
 			double y = rnd.nextDouble() * (Settings.SCENE_HEIGHT- castleImage.getHeight());
 			Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed);
-			castles.add(castle);
+			
+			
+			//parcours des chateau pour éviter les collisions et une distance min entre eux
+			for (Castle i : castles) {
+				if (castle.collidesWith(i)) {
+					placed_well = false;
+				}
+			}
+			if (placed_well){
+				castles.add(castle);
+			}
+			else {
+				castle.remove();
+			}
+	
+				
+			placed_well = true;
+			c++;
+			
 		}
 	}
 
