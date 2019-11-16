@@ -2,7 +2,7 @@ package game;
 
 public class Settings {
 
-	public static final double SCENE_WIDTH = 400;
+	public static final double SCENE_WIDTH = 800;
     public static final double SCENE_HEIGHT = 750;
 	public static final double STATUS_BAR_HEIGHT = 50;
 
@@ -16,6 +16,8 @@ public class Settings {
     public static final double MISSILE_DAMAGE = 1.0;
 
     public static final int ENEMY_SPAWN_RANDOMNESS = 100;
+    
+    public static final int CASTLE_SPAWN_RANDOMNESS = 5;
     
     public static final int FIRE_FREQUENCY_LOW = 1000 * 1000 * 1000; // 1 second in nanoseconds
     public static final int FIRE_FREQUENCY_MEDIUM = 500 * 1000 * 1000; // 0.5 second in nanoseconds
