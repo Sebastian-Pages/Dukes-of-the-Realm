@@ -17,8 +17,6 @@ public class Settings {
 
     public static final int ENEMY_SPAWN_RANDOMNESS = 100;
     
-    public static final int CASTLE_SPAWN_RANDOMNESS = 5;
-    
     public static final int FIRE_FREQUENCY_LOW = 1000 * 1000 * 1000; // 1 second in nanoseconds
     public static final int FIRE_FREQUENCY_MEDIUM = 500 * 1000 * 1000; // 0.5 second in nanoseconds
     public static final int FIRE_FREQUENCY_HIGH = 100 * 1000 * 1000; // 0.1 second in nanoseconds
