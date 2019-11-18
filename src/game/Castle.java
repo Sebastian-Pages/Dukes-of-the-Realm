@@ -1,5 +1,8 @@
 package game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
@@ -7,18 +10,21 @@ public class Castle extends Sprite {
 	private double maxY;
 	
 	private String owner;
-	private int tresor;
+	private double unitProduction;
+	private double productionSpeed;
 	private int level;
-	//private List<Unit> reserve = new ArrayList<>();
+	private List<Unit> reserve = new ArrayList<>();
 	//private Unitproduction up = new Unitproduction();
 	//private Order order = new Order();
 	//private String orientation;
 	
 	public Castle(Pane layer, Image image, double x, double y, int health,double damage, double speed) {
 		super(layer, image, x, y, health, damage);
-		setDy(speed);
+		setDy(0);
+		setDx(0);
+		this.productionSpeed=speed;
 		maxY = Settings.SCENE_HEIGHT - image.getHeight();
-		this.tresor= 0;
+		this.unitProduction= 0;
 		this.level = 1;
 		this.owner = "unowned";
 		}
@@ -38,12 +44,20 @@ public class Castle extends Sprite {
 		this.owner = owner;
 	}
 
-	public int getTresor() {
-		return tresor;
+	public double getUnitProduction() {
+		return unitProduction;
 	}
 
-	public void setTresor(int tresor) {
-		this.tresor = tresor;
+	public void setUnitProduction(double UnitProduction) {
+		this.unitProduction = UnitProduction;
+	}
+
+	public double getProductionSpeed() {
+		return productionSpeed;
+	}
+
+	public void setProductionSpeed(double productionSpeed) {
+		this.productionSpeed = productionSpeed;
 	}
 
 	public int getLevel() {
@@ -52,5 +66,17 @@ public class Castle extends Sprite {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+	
+	public void updateUI() {
+        unitProduction += this.productionSpeed;
+    }
+	
+	public int getReserveSize() {
+		return this.reserve.size();
+	}
+	
+	public void reserveAdd(Unit u) {
+		reserve.add(u);
 	}
 }

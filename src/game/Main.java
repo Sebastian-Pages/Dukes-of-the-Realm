@@ -26,13 +26,21 @@ public class Main extends Application {
 	private Pane playfieldLayer;
 
 	private Image playerImage;
-	private Image enemyImage;
+	//private Image enemyImage;
 	private Image missileImage;
+	
+	//castle images
 	private Image castleImage;
 	private Image castleImageBlue;
 	private Image castleImageBlueS;
 	private Image castleImageRed;
 	private Image castleImageRedS;
+	
+	//Units images
+	private Image unitImage;
+	
+	//Selected castles
+	private List<Castle> selected = new ArrayList<>();;
 
 	private Player player;
 	private List<Enemy> enemies = new ArrayList<>();
@@ -40,6 +48,7 @@ public class Main extends Application {
 	private List<Castle> castles = new ArrayList<>();;
 
 	private Text scoreMessage = new Text();
+	private Text newMessage = new Text();
 	private int scoreValue = 0;
 	private boolean collision = false;
 	//private boolean pauseState = false;
@@ -76,6 +85,9 @@ public class Main extends Application {
 
 				// add random enemies
 				//spawnEnemies(true);
+				
+				//update army count
+				updateUnitsCount(true);
 
 				// movement
 				player.move();
@@ -122,13 +134,14 @@ public class Main extends Application {
 
 	private void loadGame() {
 		playerImage = new Image(getClass().getResource("/images/alien.png").toExternalForm(), 100, 100, true, true);
-		enemyImage = new Image(getClass().getResource("/images/enemy.png").toExternalForm(), 50, 50, true, true);
+		//enemyImage = new Image(getClass().getResource("/images/enemy.png").toExternalForm(), 50, 50, true, true);
 		missileImage = new Image(getClass().getResource("/images/pinapple.png").toExternalForm(), 20, 20, true, true);
 		castleImage = new Image(getClass().getResource("/images/neutral_castle.png").toExternalForm(), 100, 100, true, true);	
 		castleImageBlue = new Image(getClass().getResource("/images/blue_castle.png").toExternalForm(), 100, 100, true, true);
 		castleImageBlueS = new Image(getClass().getResource("/images/blue_castle_selected.png").toExternalForm(), 100, 100, true, true);
 		castleImageRed = new Image(getClass().getResource("/images/red_castle.png").toExternalForm(), 100, 100, true, true);
 		castleImageRedS = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), 100, 100, true, true);
+		unitImage = new Image(getClass().getResource("/images/blue_castle_selected.png").toExternalForm(), 20, 20, true, true);
 		input = new Input(scene);
 		input.addListeners();
 
@@ -197,7 +210,7 @@ public class Main extends Application {
 			contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
 		});
 	}
-
+	/**
 	private void spawnEnemies(boolean random) {
 		if (random && rnd.nextInt(Settings.ENEMY_SPAWN_RANDOMNESS) != 0) {
 			return;
@@ -208,6 +221,7 @@ public class Main extends Application {
 		Enemy enemy = new Enemy(playfieldLayer, enemyImage, x, y, 1, 1, speed);
 		enemies.add(enemy);
 	}
+	**/
 	
 	private void spawnCastles(int nb_castles) {
 		boolean placed_well = true;
@@ -221,7 +235,8 @@ public class Main extends Application {
 			double y = rnd.nextDouble() * (Settings.SCENE_HEIGHT- castleImage.getHeight());
 			Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed);
 			castle.getView().setOnMousePressed(e -> {
-				System.out.println("Castle [ owner: "+castle.getOwner()+" tresor: "+castle.getTresor()+" Level: "+castle.getLevel()+" ]");
+				scoreMessage.setText("Castle [ owner: "+castle.getOwner()+" | units: "+Math.round(castle.getReserveSize())+" | Level: "+castle.getLevel()+" ]");
+				System.out.println("Castle [ owner: "+castle.getOwner()+" | units: "+Math.round(castle.getReserveSize())+" | Level: "+castle.getLevel()+" ]");
 				e.consume();
 			});
 			
@@ -239,21 +254,50 @@ public class Main extends Application {
 				castle.removeFromLayer();
 				castle.remove();
 			}
-	
-				
 			placed_well = true;
 		}	
-		// pick 2 starting castles
+		// pick 1 starting castles
 		Castle castle_1 = castles.get(0);
 		castle_1.setOwner("player");
+		castle_1.setProductionSpeed(0.1);
 		castle_1.setView(castleImageBlue);
+		castle_1.updateUI();
+		
+		/****testing bar****/
+		HBox unitCount = new HBox();
+		newMessage.setText("0");
+		unitCount.getChildren().addAll(newMessage);
+		unitCount.getStyleClass().add("uc");
+		unitCount.relocate(castle_1.getX(),castle_1.getY() );
+		unitCount.setPrefSize(10,10);
+		root.getChildren().add(unitCount);
+		/********/
+		
 		castle_1.getView().setOnMousePressed(e -> {
-			scoreMessage.setText("Castle [ owner: "+castle_1.getOwner()+" tresor: "+castle_1.getTresor()+" Level: "+castle_1.getLevel()+" ]");
-			System.out.println("Castle [ owner: "+castle_1.getOwner()+" tresor: "+castle_1.getTresor()+" Level: "+castle_1.getLevel()+" ]");
+			scoreMessage.setText("Castle [ owner: "+castle_1.getOwner()+" | units: "+Math.round(castle_1.getReserveSize())+" | Level: "+castle_1.getLevel()+" ]");
+			manageSelectedCastles(castle_1);
 			e.consume();
 		});
+		castles.add(0, castle_1);
+		
 		
 	}
+	
+	private void updateUnitsCount(boolean bool){
+		if(bool) {
+			for (Castle c : castles) {
+				if (c.getUnitProduction()>10) {
+					Unit u = new Unit(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), 1, 1, 1);
+					double temp=c.getUnitProduction();
+					c.setUnitProduction(temp-10);
+					c.reserveAdd(u);
+					u.removeFromLayer();
+				}
+			}
+		}
+		
+	}
+	
 
 	private void fire(long now) {
 		if (player.canFire(now)) {
@@ -280,7 +324,9 @@ public class Main extends Application {
 
 	private void checkCollisions() {
 		collision = false;
-
+		
+		
+				
 		for (Enemy enemy : enemies) {
 			for (Missile missile : missiles) {
 				if (missile.collidesWith(enemy)) {
@@ -298,6 +344,20 @@ public class Main extends Application {
 				if (player.getHealth() < 1)
 					gameOver();
 			}
+		}
+		
+		// checkForAttackOrder (je met dans une fonction bien rangé quand ça marchera)
+		if(selected.size()>2) {
+			//DEBUG
+			System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));
+			
+			/**
+			if(selected.get(0).getOwner()=="player" && selected.get(1).getOwner()=="neutral") {
+				//Castle c=selected.get(0);
+				//Castle d=selected.get(1);
+				gameOver();
+			}
+			**/
 		}
 
 	}
@@ -318,7 +378,20 @@ public class Main extends Application {
 		if (collision) {
 			scoreMessage.setText("Score : " + scoreValue + "          Life : " + player.getHealth());
 		}
+		newMessage.setText(""+castles.get(0).getReserveSize());
 	}
+	
+	private void manageSelectedCastles(Castle c){
+		if (selected.size()>2) {
+			Castle temp = selected.get(1);
+			selected.clear();
+			selected.add(temp);
+			selected.add(c);
+		}
+		else {
+			selected.add(c);
+		}
+		}
 
 	public static void main(String[] args) {
 		launch(args);
