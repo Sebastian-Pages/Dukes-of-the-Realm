@@ -29,6 +29,10 @@ public class Main extends Application {
 	private Image enemyImage;
 	private Image missileImage;
 	private Image castleImage;
+	private Image castleImageBlue;
+	private Image castleImageBlueS;
+	private Image castleImageRed;
+	private Image castleImageRedS;
 
 	private Player player;
 	private List<Enemy> enemies = new ArrayList<>();
@@ -71,7 +75,7 @@ public class Main extends Application {
 				player.processInput();
 
 				// add random enemies
-				spawnEnemies(true);
+				//spawnEnemies(true);
 
 				// movement
 				player.move();
@@ -120,25 +124,29 @@ public class Main extends Application {
 		playerImage = new Image(getClass().getResource("/images/alien.png").toExternalForm(), 100, 100, true, true);
 		enemyImage = new Image(getClass().getResource("/images/enemy.png").toExternalForm(), 50, 50, true, true);
 		missileImage = new Image(getClass().getResource("/images/pinapple.png").toExternalForm(), 20, 20, true, true);
-		castleImage = new Image(getClass().getResource("/images/castle.png").toExternalForm(), 100, 100, true, true);
-
+		castleImage = new Image(getClass().getResource("/images/neutral_castle.png").toExternalForm(), 100, 100, true, true);	
+		castleImageBlue = new Image(getClass().getResource("/images/blue_castle.png").toExternalForm(), 100, 100, true, true);
+		castleImageBlueS = new Image(getClass().getResource("/images/blue_castle_selected.png").toExternalForm(), 100, 100, true, true);
+		castleImageRed = new Image(getClass().getResource("/images/red_castle.png").toExternalForm(), 100, 100, true, true);
+		castleImageRedS = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), 100, 100, true, true);
 		input = new Input(scene);
 		input.addListeners();
 
 		createPlayer();
+		player.removeFromLayer();
 		createStatusBar();
 		
 		//Initialize map
 		spawnCastles(5);
-		
-		scene.setOnMousePressed(e -> {
+		/**
+		//scene.setOnMousePressed(e -> {
 			
-			/**
+			
 			player.setX(e.getX() - (player.getWidth() / 2));
 			player.setY(e.getY() - (player.getHeight() / 2));
-			**/
 			
-			/****** pause function *****
+			
+			****** pause function *****
 			if (pauseState) {
 				gameLoop.start();
 				pauseState = false;
@@ -148,15 +156,16 @@ public class Main extends Application {
 				gameLoop.stop();
 				pauseState = true;
 			}
-			***************************/
+			***************************
 				
-		});
+		} ) ; 
+		**/
 	}
 
 
 	public void createStatusBar() {
 		HBox statusBar = new HBox();
-		scoreMessage.setText("Score : 0          Life : " + player.getHealth());
+		scoreMessage.setText("Click on one of your castles to see more information");
 		statusBar.getChildren().addAll(scoreMessage);
 		statusBar.getStyleClass().add("statusBar");
 		statusBar.relocate(0, Settings.SCENE_HEIGHT);
@@ -170,11 +179,11 @@ public class Main extends Application {
 		player = new Player(playfieldLayer, playerImage, x, y, Settings.PLAYER_HEALTH, Settings.PLAYER_DAMAGE,
 				Settings.PLAYER_SPEED, input);
 		
-		/**
+		
 		player.getView().setOnMousePressed(e -> {
 			System.out.println("Click on player");
 			e.consume();
-		});**/
+		});
 		
 		player.getView().setOnContextMenuRequested(e -> {
 			ContextMenu contextMenu = new ContextMenu();
@@ -203,12 +212,18 @@ public class Main extends Application {
 	private void spawnCastles(int nb_castles) {
 		boolean placed_well = true;
 		
+		
+		// add 5 neutral castles
 		while ((castles.size()<nb_castles) ){
 			ListIterator<Castle> it = castles.listIterator();
 			double speed = 0;
 			double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - castleImage.getWidth());
 			double y = rnd.nextDouble() * (Settings.SCENE_HEIGHT- castleImage.getHeight());
 			Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed);
+			castle.getView().setOnMousePressed(e -> {
+				System.out.println("Castle [ owner: "+castle.getOwner()+" tresor: "+castle.getTresor()+" Level: "+castle.getLevel()+" ]");
+				e.consume();
+			});
 			
 			//parcours des chateaux pour éviter les collisions et une distance min entre eux			
 			while(it.hasNext()){
@@ -227,7 +242,16 @@ public class Main extends Application {
 	
 				
 			placed_well = true;
-		}		
+		}	
+		// pick 2 starting castles
+		Castle castle_1 = castles.get(0);
+		castle_1.setOwner("player");
+		castle_1.setView(castleImageBlue);
+		castle_1.getView().setOnMousePressed(e -> {
+			scoreMessage.setText("Castle [ owner: "+castle_1.getOwner()+" tresor: "+castle_1.getTresor()+" Level: "+castle_1.getLevel()+" ]");
+			System.out.println("Castle [ owner: "+castle_1.getOwner()+" tresor: "+castle_1.getTresor()+" Level: "+castle_1.getLevel()+" ]");
+			e.consume();
+		});
 		
 	}
 

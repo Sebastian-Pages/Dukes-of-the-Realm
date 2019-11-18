@@ -20,7 +20,7 @@ public class Castle extends Sprite {
 		maxY = Settings.SCENE_HEIGHT - image.getHeight();
 		this.tresor= 0;
 		this.level = 1;
-		this.owner = "player1";
+		this.owner = "unowned";
 		}
 
 	@Override
