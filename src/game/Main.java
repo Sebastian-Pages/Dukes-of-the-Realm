@@ -4,6 +4,7 @@ package game;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
@@ -84,6 +85,8 @@ public class Main extends Application {
 				player.updateUI();
 				enemies.forEach(sprite -> sprite.updateUI());
 				missiles.forEach(sprite -> sprite.updateUI());
+				castles.forEach(sprite -> sprite.updateUI());
+
 
 				// check if sprite can be removed
 				enemies.forEach(sprite -> sprite.checkRemovability());
@@ -199,32 +202,31 @@ public class Main extends Application {
 	
 	private void spawnCastles(int nb_castles) {
 		boolean placed_well = true;
-		int c = 0;
 		
-		while ((castles.size()<nb_castles)&&(c<5) ){
+		while ((castles.size()<nb_castles) ){
+			ListIterator<Castle> it = castles.listIterator();
 			double speed = 0;
 			double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - castleImage.getWidth());
 			double y = rnd.nextDouble() * (Settings.SCENE_HEIGHT- castleImage.getHeight());
 			Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed);
 			
-			
-			//parcours des chateau pour éviter les collisions et une distance min entre eux
-			for (Castle i : castles) {
-				if (castle.collidesWith(i)) {
-					placed_well = false;
-				}
-			}
+			//parcours des chateaux pour éviter les collisions et une distance min entre eux			
+			while(it.hasNext()){
+		    	 Castle c = it.next();
+		    	 if (castle.collidesWith(c)) {
+						placed_well = false;
+					}
+			}	
 			if (placed_well){
 				castles.add(castle);
 			}
 			else {
+				castle.removeFromLayer();
 				castle.remove();
 			}
 	
 				
 			placed_well = true;
-			c++;
-			
 		}		
 		
 	}
