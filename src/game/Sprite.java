@@ -111,6 +111,12 @@ public abstract class Sprite {
     protected ImageView getView() {
         return imageView;
     }
+    
+    protected void setView(Image image) {
+    	this.removeFromLayer();
+        this.imageView=new ImageView(image);
+        this.addToLayer();     
+    }
 
     public void updateUI() {
         imageView.relocate(x, y);
