@@ -79,4 +79,12 @@ public class Castle extends Sprite {
 	public void reserveAdd(Unit u) {
 		reserve.add(u);
 	}
+	public Unit reservePull() {
+		//DEBUG
+		System.out.println("res size = "+getReserveSize());
+		Unit u = reserve.get(getReserveSize()-1);
+		System.out.println("res size2 = "+getReserveSize());
+		reserve.remove(getReserveSize()-1);
+		return u;
+	}
 }
