@@ -51,6 +51,7 @@ public class Main extends Application {
 	private Text newMessage = new Text();
 	private int scoreValue = 0;
 	private boolean collision = false;
+	private boolean test = true;
 	//private boolean pauseState = false;
 
 	private Scene scene;
@@ -236,7 +237,9 @@ public class Main extends Application {
 			Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed);
 			castle.getView().setOnMousePressed(e -> {
 				scoreMessage.setText("Castle [ owner: "+castle.getOwner()+" | units: "+Math.round(castle.getReserveSize())+" | Level: "+castle.getLevel()+" ]");
-				System.out.println("Castle [ owner: "+castle.getOwner()+" | units: "+Math.round(castle.getReserveSize())+" | Level: "+castle.getLevel()+" ]");
+				//System.out.println("Castle [ owner: "+castle.getOwner()+" | units: "+Math.round(castle.getReserveSize())+" | Level: "+castle.getLevel()+" ]");
+				manageSelectedCastles(castle);
+				System.out.println("Selection: "+selected.get(0));
 				e.consume();
 			});
 			
@@ -276,6 +279,7 @@ public class Main extends Application {
 		castle_1.getView().setOnMousePressed(e -> {
 			scoreMessage.setText("Castle [ owner: "+castle_1.getOwner()+" | units: "+Math.round(castle_1.getReserveSize())+" | Level: "+castle_1.getLevel()+" ]");
 			manageSelectedCastles(castle_1);
+			System.out.println("Selection: "+selected.get(0));
 			e.consume();
 		});
 		castles.add(0, castle_1);
@@ -347,17 +351,21 @@ public class Main extends Application {
 		}
 		
 		// checkForAttackOrder (je met dans une fonction bien rangé quand ça marchera)
-		if(selected.size()>2) {
+		if(selected.size()>1) {
 			//DEBUG
-			System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));
+			//System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));
 			
-			/**
-			if(selected.get(0).getOwner()=="player" && selected.get(1).getOwner()=="neutral") {
-				//Castle c=selected.get(0);
-				//Castle d=selected.get(1);
-				gameOver();
+			
+			if((selected.get(0).getOwner()=="player" && selected.get(1).getOwner()=="unowned")&&(test) ){
+				Castle c=selected.get(0);
+				Castle d=selected.get(1);
+				System.out.println(selected.get(0).getOwner() +" attacks -> "+ (selected.get(1).getOwner()));
+				Unit u = c.reservePull();
+				u.addToLayer();
+				test=false;
+				//gameOver();
 			}
-			**/
+			
 		}
 
 	}
