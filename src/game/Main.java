@@ -52,8 +52,9 @@ public class Main extends Application {
 	private Text newMessage = new Text();
 	private int scoreValue = 0;
 	private boolean collision = false;
-	//private boolean test = true;
+	private boolean test = true;
 	//private boolean pauseState = false;
+	private Castle aiGoal;
 
 	private Scene scene;
 	private Input input;
@@ -96,6 +97,9 @@ public class Main extends Application {
 				enemies.forEach(sprite -> sprite.move());
 				missiles.forEach(sprite -> sprite.move());
 				units.forEach(sprite -> sprite.move());
+				
+				// AI
+				AI();
 
 				// check collisions
 				checkCollisions();
@@ -273,12 +277,14 @@ public class Main extends Application {
 			placed_well = true;
 		}	
 		// pick 1 starting castles 
-		Castle castle_1=castles.get(0);
+		Castle castle_1=castles.get(2);
+		castles.remove(2);
 		castle_1 = CastleSet(castle_1 ,0);
-		castles.add(0, castle_1);
+		castles.add(2, castle_1);
 		
 		// pick 1 starting castles 
 		Castle castle_2=castles.get(3);
+		castles.remove(3);
 		castle_2 = CastleSet(castle_2 ,1);
 		castles.add(3, castle_2);
 		
@@ -351,7 +357,6 @@ public class Main extends Application {
 	private void checkOrders() {		
 		// checkForAttackOrder (je met dans une fonction bien rangé quand ça marchera)
 		if(selected.size()>1) {
-			//DEBUG
 			//System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));
 			
 			
@@ -389,9 +394,9 @@ public class Main extends Application {
 			( (int)u.getGoaly()-5 < (int)u.getY() )&&
 			( (int)u.getY() < (int)u.getGoaly()+5 ) ) 
 			{
-				System.out.println("DEBUG 1");
+				
 				for (Castle c : castles) {
-					System.out.println("DEBUG 2");
+					
 					if (u.collidesWith(c)) {
 						
 						u.remove();
@@ -402,14 +407,13 @@ public class Main extends Application {
 						//removSrpite le fait deja
 						//u.removeFromLayer();
 						
-						System.out.println("DEBUG 3");
+						
 						if (c.getReserveSize()>0) {
-							System.out.println("DEBUG 4");
+							
 							Unit t =c.reservePull();
 							t.remove();
 						}
 						else {
-							System.out.println("DEBUG 5");
 							c = CastleSet(c ,0);
 						}
 					}		
@@ -418,6 +422,7 @@ public class Main extends Application {
 		}
 	}
 
+	// ne marche pas lorqu'il reste des chateaux neutre
 	private void checkIfGameOver() {
 		boolean areAllOwnedByTheSame = true;
 		String s = castles.get(0).getOwner();
@@ -441,6 +446,53 @@ public class Main extends Application {
 		root.getChildren().add(hbox);
 		gameLoop.stop();
 	}
+	
+	private void AI() {
+		
+		//trouve un premier objectif
+		if (test){
+			System.out.println("DEBUG 1");
+			for (Castle c : castles) {
+				if ((c.getOwner()!="ennemi")&&(test)) {
+					aiGoal = c;
+					System.out.println("DEBUG "+aiGoal);
+					System.out.println("DEBUG size: "+castles.size());
+					test=false;
+				}
+			}
+		}
+		
+		//trouver nouvo objectif si aiGoal est "ennemi"
+		if (!false) {
+		
+		//Attaquer aiGoal
+		for (Castle c2 : castles) {
+			if (c2.getOwner()=="ennemi") {
+				if (c2.getReserveSize()>0) {
+					Unit u = c2.reservePull();
+					//set destination of unit
+					u.setGoalx(aiGoal.getCenterX());
+					u.setGoaly(aiGoal.getCenterY());
+					u.addToLayer();
+					units.add(u);
+				}
+			}
+		}
+		}
+	
+		
+		/**&& (aiGoal.getOwner()!="ennemi")
+		Unit u = c.reservePull();
+		
+		//set destination of unit
+		u.setGoalx(d.getCenterX());
+		u.setGoaly(d.getCenterY());
+		
+		u.addToLayer();
+		units.add(u);
+		if (c.getReserveSize()==0)
+			selected.clear();**/
+	}
 
 	private void update() {
 		if (collision) {
@@ -450,7 +502,7 @@ public class Main extends Application {
 	}
 	
 	
-	//on peut revoie la séléectio et changer les view pour voir ce qui est sélectionner
+	//on peut revoie la séléection et changer les views pour voir ce qui est sélectionner
 	private void manageSelectedCastles(Castle c){
 		if (selected.size()>2) {
 			Castle temp = selected.get(1);
