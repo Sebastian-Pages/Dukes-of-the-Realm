@@ -6,6 +6,7 @@ import javafx.scene.layout.Pane;
 public class Unit extends Sprite{
 	double goalx;
 	double goaly;
+	String owner;
 
 	public double getGoalx() {
 		return goalx;

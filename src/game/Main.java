@@ -35,6 +35,7 @@ public class Main extends Application {
 	private Image castleImageBlueS;
 	private Image castleImageRed;
 	private Image castleImageRedS;
+	private Image unitImageR;
 	
 	//Units images
 	private Image unitImage;
@@ -156,6 +157,7 @@ public class Main extends Application {
 		castleImageRed = new Image(getClass().getResource("/images/red_castle.png").toExternalForm(), 100, 100, true, true);
 		castleImageRedS = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), 100, 100, true, true);
 		unitImage = new Image(getClass().getResource("/images/blue_castle_selected.png").toExternalForm(), 20, 20, true, true);
+		unitImageR = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), 20, 20, true, true);
 		input = new Input(scene);
 		input.addListeners();
 
@@ -282,7 +284,7 @@ public class Main extends Application {
 		castle_1 = CastleSet(castle_1 ,0);
 		castles.add(2, castle_1);
 		
-		// pick 1 starting castles 
+		// pick ennemy starting castles 
 		Castle castle_2=castles.get(3);
 		castles.remove(3);
 		castle_2 = CastleSet(castle_2 ,1);
@@ -295,12 +297,32 @@ public class Main extends Application {
 		if(bool) {
 			for (Castle c : castles) {
 				if (c.getUnitProduction()>10) {
-					Unit u = new Unit(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), 1, 1, 1);
-					double temp=c.getUnitProduction();
-					c.setUnitProduction(temp-10);
-					c.reserveAdd(u);
-					u.removeFromLayer();
-				}
+
+					if (c.getOwner()=="player") {
+						Unit u = new Unit(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), 1, 1, 1);
+						u.owner = "player";	
+						double temp=c.getUnitProduction();
+						c.setUnitProduction(temp-10);
+						c.reserveAdd(u);
+						u.removeFromLayer();
+					}
+					if(c.getOwner()=="ennemi") {
+						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
+						u.owner="ennemi";
+						double temp=c.getUnitProduction();
+						c.setUnitProduction(temp-10);
+						c.reserveAdd(u);
+						u.removeFromLayer();
+					}
+					if(c.getOwner()=="unowned") {
+						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
+						u.owner="unowned";
+						double temp=c.getUnitProduction();
+						c.setUnitProduction(temp-10);
+						c.reserveAdd(u);
+						u.removeFromLayer();
+					}
+				}			
 			}
 		}
 		
@@ -410,11 +432,24 @@ public class Main extends Application {
 						
 						if (c.getReserveSize()>0) {
 							
-							Unit t =c.reservePull();
-							t.remove();
+							if (c.getOwner()==u.owner) {
+								c.reserveAdd(u);
+							}
+							else {
+								Unit t =c.reservePull();
+								t.remove();
+							}
+								
+							
 						}
 						else {
-							c = CastleSet(c ,0);
+							int type =0;
+							if (u.owner=="player")
+								type = 0;
+							if (u.owner=="ennemi")
+								type = 1;	;
+								test=true;
+							c = CastleSet(c ,type);
 						}
 					}		
 				}
@@ -464,6 +499,14 @@ public class Main extends Application {
 		
 		//trouver nouvo objectif si aiGoal est "ennemi"
 		if (!false) {
+			for (Castle c : castles) {
+				if ((c.getOwner()!="ennemi")&&(test)) {
+					aiGoal = c;
+					System.out.println("DEBUG "+aiGoal);
+					System.out.println("DEBUG size: "+castles.size());
+					test=false;
+				}
+			}
 		
 		//Attaquer aiGoal
 		for (Castle c2 : castles) {
@@ -522,7 +565,7 @@ public class Main extends Application {
 			
 			//change the attributes
 			c.setOwner("player");
-			c.setProductionSpeed(0.1);
+			c.setProductionSpeed(0.2);
 			c.setView(castleImageBlue);
 			c.updateUI();
 			
@@ -538,7 +581,7 @@ public class Main extends Application {
 		if (type == 1) {
 			//change the attributes
 			c.setOwner("ennemi");
-			c.setProductionSpeed(0.1);
+			c.setProductionSpeed(0.2);
 			c.setView(castleImageRed);
 			c.updateUI();	
 			
@@ -554,7 +597,7 @@ public class Main extends Application {
 		if (type == 2) {
 			//change the attributes
 			c.setOwner("unowned");
-			c.setProductionSpeed(0.04);
+			c.setProductionSpeed(0.1);
 			c.setView(castleImage);
 			c.updateUI();	
 			
@@ -573,7 +616,6 @@ public class Main extends Application {
 			unitCount.relocate(c.getX(),c.getY() );
 			unitCount.setPrefSize(10,10);
 			root.getChildren().add(unitCount);
-			c.setProductionSpeed(0.04);
 			castles.add(c);
 		}
 		
