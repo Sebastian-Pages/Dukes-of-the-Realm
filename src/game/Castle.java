@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 public class Castle extends Sprite {
 	private double maxY;
@@ -13,6 +14,8 @@ public class Castle extends Sprite {
 	private double unitProduction;
 	private double productionSpeed;
 	private int level;
+	public boolean isReadyToAttack;
+	public Text newMessage = new Text();
 	private List<Unit> reserve = new ArrayList<>();
 	//private Unitproduction up = new Unitproduction();
 	//private Order order = new Order();
@@ -27,6 +30,7 @@ public class Castle extends Sprite {
 		this.unitProduction= 0;
 		this.level = 1;
 		this.owner = "unowned";
+		this.isReadyToAttack=true;
 		}
 
 	@Override
@@ -80,11 +84,12 @@ public class Castle extends Sprite {
 		reserve.add(u);
 	}
 	public Unit reservePull() {
-		//DEBUG
-		System.out.println("res size = "+getReserveSize());
 		Unit u = reserve.get(getReserveSize()-1);
-		System.out.println("res size2 = "+getReserveSize());
 		reserve.remove(getReserveSize()-1);
 		return u;
 	}
+	public void update() {
+		newMessage.setText(""+this.getReserveSize());
+	}
+	
 }

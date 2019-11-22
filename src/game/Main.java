@@ -45,13 +45,14 @@ public class Main extends Application {
 	private Player player;
 	private List<Enemy> enemies = new ArrayList<>();
 	private List<Missile> missiles = new ArrayList<>();
-	private List<Castle> castles = new ArrayList<>();;
+	private List<Castle> castles = new ArrayList<>();
+	private List<Unit> units= new ArrayList<>();
 
 	private Text scoreMessage = new Text();
 	private Text newMessage = new Text();
 	private int scoreValue = 0;
 	private boolean collision = false;
-	private boolean test = true;
+	//private boolean test = true;
 	//private boolean pauseState = false;
 
 	private Scene scene;
@@ -94,29 +95,37 @@ public class Main extends Application {
 				player.move();
 				enemies.forEach(sprite -> sprite.move());
 				missiles.forEach(sprite -> sprite.move());
+				units.forEach(sprite -> sprite.move());
 
 				// check collisions
 				checkCollisions();
-
+				checkOrders();
+				checkSiege();
+				
 				// update sprites in scene
 				player.updateUI();
 				enemies.forEach(sprite -> sprite.updateUI());
 				missiles.forEach(sprite -> sprite.updateUI());
 				castles.forEach(sprite -> sprite.updateUI());
+				units.forEach(sprite -> sprite.updateUI());
 
 
 				// check if sprite can be removed
 				enemies.forEach(sprite -> sprite.checkRemovability());
 				missiles.forEach(sprite -> sprite.checkRemovability());
 				castles.forEach(sprite -> sprite.checkRemovability());
+				units.forEach(sprite -> sprite.checkRemovability());
 
 				// remove removables from list, layer, etc
 				removeSprites(enemies);
 				removeSprites(missiles);
 				removeSprites(castles);
+				removeSprites(units);
 
 				// update score, health, etc
-				update();
+				update();	
+				castles.forEach(castle -> castle.update());
+				checkIfGameOver();
 			}
 
 			private void processInput(Input input, long now) {
@@ -235,6 +244,7 @@ public class Main extends Application {
 			double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - castleImage.getWidth());
 			double y = rnd.nextDouble() * (Settings.SCENE_HEIGHT- castleImage.getHeight());
 			Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed);
+			
 			castle.getView().setOnMousePressed(e -> {
 				scoreMessage.setText("Castle [ owner: "+castle.getOwner()+" | units: "+Math.round(castle.getReserveSize())+" | Level: "+castle.getLevel()+" ]");
 				//System.out.println("Castle [ owner: "+castle.getOwner()+" | units: "+Math.round(castle.getReserveSize())+" | Level: "+castle.getLevel()+" ]");
@@ -249,9 +259,12 @@ public class Main extends Application {
 		    	 if (castle.collidesWith(c)) {
 						placed_well = false;
 					}
-			}	
+		    }	
+			
 			if (placed_well){
-				castles.add(castle);
+				Castle castle2 = CastleSet(castle,2);
+				castles.add(castle2);
+				castles.remove(castle);
 			}
 			else {
 				castle.removeFromLayer();
@@ -259,30 +272,15 @@ public class Main extends Application {
 			}
 			placed_well = true;
 		}	
-		// pick 1 starting castles
-		Castle castle_1 = castles.get(0);
-		castle_1.setOwner("player");
-		castle_1.setProductionSpeed(0.1);
-		castle_1.setView(castleImageBlue);
-		castle_1.updateUI();
-		
-		/****testing bar****/
-		HBox unitCount = new HBox();
-		newMessage.setText("0");
-		unitCount.getChildren().addAll(newMessage);
-		unitCount.getStyleClass().add("uc");
-		unitCount.relocate(castle_1.getX(),castle_1.getY() );
-		unitCount.setPrefSize(10,10);
-		root.getChildren().add(unitCount);
-		/********/
-		
-		castle_1.getView().setOnMousePressed(e -> {
-			scoreMessage.setText("Castle [ owner: "+castle_1.getOwner()+" | units: "+Math.round(castle_1.getReserveSize())+" | Level: "+castle_1.getLevel()+" ]");
-			manageSelectedCastles(castle_1);
-			System.out.println("Selection: "+selected.get(0));
-			e.consume();
-		});
+		// pick 1 starting castles 
+		Castle castle_1=castles.get(0);
+		castle_1 = CastleSet(castle_1 ,0);
 		castles.add(0, castle_1);
+		
+		// pick 1 starting castles 
+		Castle castle_2=castles.get(3);
+		castle_2 = CastleSet(castle_2 ,1);
+		castles.add(3, castle_2);
 		
 		
 	}
@@ -349,25 +347,87 @@ public class Main extends Application {
 					gameOver();
 			}
 		}
-		
+	}
+	private void checkOrders() {		
 		// checkForAttackOrder (je met dans une fonction bien rangé quand ça marchera)
 		if(selected.size()>1) {
 			//DEBUG
 			//System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));
 			
 			
-			if((selected.get(0).getOwner()=="player" && selected.get(1).getOwner()=="unowned")&&(test) ){
+			if(
+			(selected.get(0).getOwner()=="player" &&( selected.get(1).getOwner()=="unowned")||(selected.get(1).getOwner()=="ennemi"))&&
+			(selected.get(0).getReserveSize()>0) &&(selected.get(0).isReadyToAttack))
+			{
 				Castle c=selected.get(0);
 				Castle d=selected.get(1);
+
 				System.out.println(selected.get(0).getOwner() +" attacks -> "+ (selected.get(1).getOwner()));
 				Unit u = c.reservePull();
+				
+				//set destination of unit
+				u.setGoalx(d.getCenterX());
+				u.setGoaly(d.getCenterY());
+				
 				u.addToLayer();
-				test=false;
+				units.add(u);
+				if (c.getReserveSize()==0)
+					selected.clear();
 				//gameOver();
 			}
 			
 		}
 
+	}
+	private void checkSiege() {
+		for (Unit u : units) {
+			
+			// La condition est comme ça pour laisser de la marge d'erreur et ne pas rater la collision
+			if(
+			( (int)u.getGoalx()-5 < (int)u.getX() )&&
+			( (int)u.getX() < (int)u.getGoalx()+5 )&&
+			( (int)u.getGoaly()-5 < (int)u.getY() )&&
+			( (int)u.getY() < (int)u.getGoaly()+5 ) ) 
+			{
+				System.out.println("DEBUG 1");
+				for (Castle c : castles) {
+					System.out.println("DEBUG 2");
+					if (u.collidesWith(c)) {
+						
+						u.remove();
+						
+						/// ne pas mettre cette ligne. On met son attribut removable à"true" ensuite la fct remove sprite le retire de la lsite
+						//units.remove(u);
+						
+						//removSrpite le fait deja
+						//u.removeFromLayer();
+						
+						System.out.println("DEBUG 3");
+						if (c.getReserveSize()>0) {
+							System.out.println("DEBUG 4");
+							Unit t =c.reservePull();
+							t.remove();
+						}
+						else {
+							System.out.println("DEBUG 5");
+							c = CastleSet(c ,0);
+						}
+					}		
+				}
+			}
+		}
+	}
+
+	private void checkIfGameOver() {
+		boolean areAllOwnedByTheSame = true;
+		String s = castles.get(0).getOwner();
+		for (Castle c : castles) {
+			if (c.getOwner() != s ) {
+				areAllOwnedByTheSame=false;
+			}		
+		}
+		if (areAllOwnedByTheSame)
+			gameOver();
 	}
 
 	private void gameOver() {
@@ -389,6 +449,8 @@ public class Main extends Application {
 		newMessage.setText(""+castles.get(0).getReserveSize());
 	}
 	
+	
+	//on peut revoie la séléectio et changer les view pour voir ce qui est sélectionner
 	private void manageSelectedCastles(Castle c){
 		if (selected.size()>2) {
 			Castle temp = selected.get(1);
@@ -399,7 +461,75 @@ public class Main extends Application {
 		else {
 			selected.add(c);
 		}
+	}
+	
+	private Castle CastleSet(Castle c , int type){
+		
+		// On dit que 0 c'est les chateau alliés
+		if (type == 0) {
+			
+			//change the attributes
+			c.setOwner("player");
+			c.setProductionSpeed(0.1);
+			c.setView(castleImageBlue);
+			c.updateUI();
+			
+			//change On Click behaviour
+			c.getView().setOnMousePressed(e -> {
+				scoreMessage.setText("Castle [ owner: "+c.getOwner()+" | units: "+Math.round(c.getReserveSize())+" | Level: "+c.getLevel()+" ]");
+				manageSelectedCastles(c);
+				e.consume();
+			});
+
 		}
+		//1 est le type de l'ennemi
+		if (type == 1) {
+			//change the attributes
+			c.setOwner("ennemi");
+			c.setProductionSpeed(0.1);
+			c.setView(castleImageRed);
+			c.updateUI();	
+			
+			//change On Click behaviour
+			c.getView().setOnMousePressed(e -> {
+				scoreMessage.setText("Castle [ owner: "+c.getOwner()+" | units: "+Math.round(c.getReserveSize())+" | Level: "+c.getLevel()+" ]");
+				manageSelectedCastles(c);
+				e.consume();
+			});
+		}
+		
+		//Chateau 3 de type neutre
+		if (type == 2) {
+			//change the attributes
+			c.setOwner("unowned");
+			c.setProductionSpeed(0.04);
+			c.setView(castleImage);
+			c.updateUI();	
+			
+			//change On Click behaviour
+			c.getView().setOnMousePressed(e -> {
+				scoreMessage.setText("Castle [ owner: "+c.getOwner()+" | units: "+Math.round(c.getReserveSize())+" | Level: "+c.getLevel()+" ]");
+				manageSelectedCastles(c);
+				e.consume();
+			});
+			
+			//pour tous les chateau faire une HBOX
+			HBox unitCount = new HBox();
+			c.newMessage.setText("0");
+			unitCount.getChildren().addAll(c.newMessage);
+			unitCount.getStyleClass().add("uc");
+			unitCount.relocate(c.getX(),c.getY() );
+			unitCount.setPrefSize(10,10);
+			root.getChildren().add(unitCount);
+			c.setProductionSpeed(0.04);
+			castles.add(c);
+		}
+		
+			
+		
+		
+		return c;
+	}
 
 	public static void main(String[] args) {
 		launch(args);
