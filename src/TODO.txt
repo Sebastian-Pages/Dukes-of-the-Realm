@@ -1,0 +1,25 @@
+BUGS :
+empecher le fait de s'attaquer soit meme (meme chateau vers meme chateau) -> rajouter une condition.
+terminer la game lorsque le joueur n'a plus de chateau ou dans le cadre d'un combat d'ia plus qu'un joueur en vie.
+(en plus des neutres nsm les gens non politisés).
+
+
+AJOUTS:
+classe ost pour le nombre d'unités a envoyer lors d'une attaque
+-> créer un nouveau menu d'attaque lorsqu'on sélectionne un chateau.
+
+Changer les attaques d'unités par les attaques d'osts. -> créer les différentes classes d'unités.
+passer des coords a un vrai pathing.
+
+Séparer la version mini de la version finale.
+
+improve l'ia : pas vider son chato comme un boloss.
+lancer des games avec seulement des ia.
+
+IDEES:
+demander a rv pour les pixels arts.
+
+afficher le pathing des unités avec des petits pointillés.
+
+afficher la queue de la prod des unités.
+
