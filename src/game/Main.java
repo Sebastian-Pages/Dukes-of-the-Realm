@@ -54,7 +54,7 @@ public class Main extends Application {
 	private int scoreValue = 0;
 	private boolean collision = false;
 	private boolean test = true;
-	//private boolean pauseState = false;
+	private boolean pauseState = false;
 	private Castle aiGoal;
 
 	private Scene scene;
@@ -164,6 +164,20 @@ public class Main extends Application {
 		createPlayer();
 		player.removeFromLayer();
 		createStatusBar();
+		
+		//Initialize pause input
+		scene.setOnKeyTyped(ke ->{
+			if(input.isPaused()) {
+				if(pauseState) {
+					gameLoop.start();
+					pauseState=false;
+				}
+				else {
+					gameLoop.stop();
+					pauseState=true;
+				}
+			}
+				});
 		
 		//Initialize map
 		spawnCastles(5);
