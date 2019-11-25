@@ -397,7 +397,7 @@ public class Main extends Application {
 			
 			
 			if(
-			(selected.get(0).getOwner()=="player" &&( selected.get(1).getOwner()=="unowned")||(selected.get(1).getOwner()=="ennemi"))&&
+			(selected.get(0).getOwner()=="player"  /**&&( selected.get(1).getOwner()=="unowned")||(selected.get(1).getOwner()=="ennemi")**/)&&
 			(selected.get(0).getReserveSize()>0) &&(selected.get(0).isReadyToAttack))
 			{
 				Castle c=selected.get(0);
@@ -561,7 +561,7 @@ public class Main extends Application {
 	
 	//on peut revoie la séléection et changer les views pour voir ce qui est sélectionner
 	private void manageSelectedCastles(Castle c){
-		if (selected.size()>2) {
+		if (selected.size()>=2) {
 			Castle temp = selected.get(1);
 			selected.clear();
 			selected.add(temp);
