@@ -3,7 +3,7 @@ BUGS :
 	terminer la game lorsque le joueur n'a plus de chateau ou dans le cadre d'un combat d'ia plus qu'un joueur en vie.
 	(en plus des neutres nsm les gens non politisés).
 	
-	lorsqu'on envoie trop d'unités ca bug beacuoup sont détruites.
+	lorsqu'on envoie trop d'unités ca bug beacuoup sont détruites.;
 
 
 AJOUTS:
