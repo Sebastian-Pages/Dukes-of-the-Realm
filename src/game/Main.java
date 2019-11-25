@@ -397,7 +397,7 @@ public class Main extends Application {
 			
 			
 			if(
-			(selected.get(0).getOwner()=="player"  /**&&( selected.get(1).getOwner()=="unowned")||(selected.get(1).getOwner()=="ennemi")**/)&&
+			(selected.get(0).getOwner()=="player" && selected.get(1)!=selected.get(0) /**&&( selected.get(1).getOwner()=="unowned")||(selected.get(1).getOwner()=="ennemi")**/)&&
 			(selected.get(0).getReserveSize()>0) &&(selected.get(0).isReadyToAttack))
 			{
 				Castle c=selected.get(0);
