@@ -566,9 +566,19 @@ public class Main extends Application {
 			selected.clear();
 			selected.add(temp);
 			selected.add(c);
+			c.isSelected=true;
+			for (Castle cas : castles) {
+				if (cas != c)
+					cas.isSelected = false;
+			}
 		}
 		else {
 			selected.add(c);
+			c.isSelected=true;
+			for (Castle cas : castles) {
+				if (cas != c)
+					cas.isSelected = false;
+			}
 		}
 	}
 	

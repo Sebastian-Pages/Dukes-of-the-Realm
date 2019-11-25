@@ -15,6 +15,7 @@ public class Castle extends Sprite {
 	private double productionSpeed;
 	private int level;
 	public boolean isReadyToAttack;
+	public boolean isSelected;
 	public Text newMessage = new Text();
 	private List<Unit> reserve = new ArrayList<>();
 	//private Unitproduction up = new Unitproduction();
@@ -31,6 +32,7 @@ public class Castle extends Sprite {
 		this.level = 1;
 		this.owner = "unowned";
 		this.isReadyToAttack=true;
+		this.isSelected = false;
 		}
 
 	@Override
@@ -89,7 +91,12 @@ public class Castle extends Sprite {
 		return u;
 	}
 	public void update() {
-		newMessage.setText(""+this.getReserveSize());
+		String selectString ="";
+		if (this.isSelected)
+			selectString="*";
+		else
+			selectString ="";
+		newMessage.setText(""+this.getReserveSize()+selectString);
 	}
 	
 }
