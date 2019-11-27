@@ -51,4 +51,17 @@ public class Ost extends Sprite{
 		if (this.y > this.goaly)
 			y -= dy;
     }
+	
+	public int getReserveSize() {
+		return this.reserve.size();
+	}
+	
+	public void reserveAdd(Unit u) {
+		reserve.add(u);
+	}
+	public Unit reservePull() {
+		Unit u = reserve.get(getReserveSize()-1);
+		reserve.remove(getReserveSize()-1);
+		return u;
+	}
 }

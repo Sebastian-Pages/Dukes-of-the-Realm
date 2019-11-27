@@ -1,31 +1,20 @@
 BUGS :
-	FIXED :empecher le fait de s'attaquer soit meme (meme chateau vers meme chateau) -> rajouter une condition.
-	terminer la game lorsque le joueur n'a plus de chateau ou dans le cadre d'un combat d'ia plus qu'un joueur en vie.
-	(en plus des neutres nsm les gens non politisés).
+	status [✅]: empecher le fait de s'attaquer soit meme (meme chateau vers meme chateau) -> rajouter une condition.
+	status [❌]: terminer la game lorsque le joueur n'a plus de chateau ou dans le cadre d'un combat d'ia plus qu'un joueur en vie.
+				(en plus des neutres nsm les gens non politisés).
+	status [🔄]: lorsqu'on envoie trop d'unités ca bug beacuoup sont détruites. -> remplacer par les ost
 	
-	lorsqu'on envoie trop d'unités ca bug beacuoup sont détruites.;
+A FAIRE POUR JEUDI 28
+	status [❌]: corriger bugs
+	status [❌]: netoyer code (commenter aussi)
+	status [❌]: git branch pour version minimale
+	status [❌]: faire le README.md
+	
 
-
-AJOUTS:
-	classe ost pour le nombre d'unités a envoyer lors d'une attaque
-	-> créer un nouveau menu d'attaque lorsqu'on sélectionne un chateau.
-	
-	Changer les attaques d'unités par les attaques d'osts. -> créer les différentes classes d'unités.
-	passer des coords a un vrai pathing.
-	
-	Séparer la version mini de la version finale.
-	
-	improve l'ia : pas vider son chato comme un boloss.
-	lancer des games avec seulement des ia.
-	
-	créer un readme.md
-	
-	changer l'image lors de la sélection d'un castle/unit
-
-IDEES:
-	demander a rv pour les pixels arts.
-	
-	afficher le pathing des unités avec des petits pointillés.
-	
-	afficher la queue de la prod des unités.
-
+A FAIRE AVANT LES VACANCES:
+	status [❌]: ajouter l'argent
+	status [❌]: faire menu [send] [train] [trade] (en bas ou a coté du chateau). afficher les unité ne cours de train
+	status [❌]: gérer les nouvelles image (on attend RV) sous forme de sets. créer des tableaux par joueur, donner un tableau à cahque joueur
+	status [❌]: ajouter les nouvelle unités
+	status [❌]: gérer les contournements de chateau (passer par la porte)
+	status [❌]: menu avant la partie pour lancer un match entre IA et choisir le set d'image jouer (peut etre choisir des level)

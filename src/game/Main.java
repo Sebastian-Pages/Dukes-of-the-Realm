@@ -47,10 +47,11 @@ public class Main extends Application {
 	private List<Castle> selected = new ArrayList<>();;
 
 	private Player player;
-	private List<Enemy> enemies = new ArrayList<>();
-	private List<Missile> missiles = new ArrayList<>();
+	//private List<Enemy> enemies = new ArrayList<>();
+	//private List<Missile> missiles = new ArrayList<>();
 	private List<Castle> castles = new ArrayList<>();
-	private List<Unit> units= new ArrayList<>();
+	private List<Unit> units = new ArrayList<>();
+	private List<Ost> osts = new ArrayList<>();
 
 	private Text scoreMessage = new Text();
 	private Text newMessage = new Text();
@@ -59,6 +60,7 @@ public class Main extends Application {
 	private boolean test = true;
 	private boolean pauseState = false;
 	private Castle aiGoal;
+	long timestamp;
 
 	private Scene scene;
 	private Input input;
@@ -97,32 +99,38 @@ public class Main extends Application {
 
 				// movement
 				player.move();
-				enemies.forEach(sprite -> sprite.move());
-				missiles.forEach(sprite -> sprite.move());
+				//enemies.forEach(sprite -> sprite.move());
+				//missiles.forEach(sprite -> sprite.move());
 				units.forEach(sprite -> sprite.move());
+				osts.forEach(sprite -> sprite.move());
 				
 				// AI
 				AI();
 
 				// check collisions
-				checkCollisions();
+				//checkCollisions();
 				checkOrders();
 				checkSiege();
+				checkSieges();
 				
 				// update sprites in scene
 				player.updateUI();
 				castles.forEach(sprite -> sprite.updateUI());
 				units.forEach(sprite -> sprite.updateUI());
+				osts.forEach(sprite -> sprite.updateUI());
 
 
 				// check if sprite can be removed
 
 				castles.forEach(sprite -> sprite.checkRemovability());
 				units.forEach(sprite -> sprite.checkRemovability());
+				osts.forEach(sprite -> sprite.checkRemovability());
 
 				// remove removables from list, layer, etc
 				removeSprites(castles);
 				removeSprites(units);
+				removeSprites(osts);
+
 
 				// update score, health, etc
 				update();	
@@ -176,7 +184,8 @@ public class Main extends Application {
 		
 		//Initialize map
 		spawnCastles();
-
+		
+		
 	}
 
 
@@ -244,6 +253,7 @@ public class Main extends Application {
 			
 			if (placed_well){
 				castle.CastleSet(2, castleImage);
+				castle.time = System.currentTimeMillis();
 				setOnClickBehaviour(castle);
 				castles.remove(castle);
 				
@@ -329,7 +339,7 @@ public class Main extends Application {
 			}
 		}
 	}
-
+	/**
 	private void checkCollisions() {
 		collision = false;
 		
@@ -353,13 +363,69 @@ public class Main extends Application {
 					gameOver();
 			}
 		}
-	}
+	}**/
 	private void checkOrders() {		
-		// checkForAttackOrder (je met dans une fonction bien rangé quand ça marchera)
 		if(selected.size()>1) {
-			//System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));
+			//System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));			
+			if(
+			(selected.get(0).getOwner()=="player" && selected.get(1)!=selected.get(0) /**&&( selected.get(1).getOwner()=="unowned")||(selected.get(1).getOwner()=="ennemi")**/)&&
+			(selected.get(0).getReserveSize()>0) &&(selected.get(0).isReadyToAttack))
+			{
+				Castle c=selected.get(0);
+				Castle d=selected.get(1);
+				/**
+				System.out.println(selected.get(0).getOwner() +" attacks -> "+ (selected.get(1).getOwner()));
+				Unit u = c.reservePull();	
+				//set destination of unit
+				u.setGoalx(d.getCenterX());
+				u.setGoaly(d.getCenterY());
+				
+				u.addToLayer();
+				units.add(u);
+				if (c.getReserveSize()==0)
+					selected.clear();**/
+				
+				sendOst(c,d);
+				selected.clear();
+			}
 			
+		}
+
+	}
+	
+	private void sendOst(Castle source,Castle dest) {	
+		
+		//on veux au moins 1 unité dans l'ost
+		if (source.getReserveSize()>0) {
+			String mystring=" ";
+			Image im=unitImage;
 			
+			if (source.getOwner()=="player") {
+				im = unitImage;
+				mystring="player";	
+			}
+			if(source.getOwner()=="ennemi") {
+				im = unitImageR;
+				mystring="ennemi";			
+			}
+			Ost o = new Ost(playfieldLayer,im, source.getCenterX(), source.getCenterY(), 1, 1, 1);
+			o.owner = mystring;	
+			
+			//pour chaque unité dans le chateau, l'ajouter à l'ost
+			while (source.getReserveSize()>0) {
+				Unit u = source.reservePull();
+				o.reserveAdd(u);
+			}
+			o.setGoalx(dest.getCenterX());
+			o.setGoaly(dest.getCenterY());
+			//System.out.println("ost: "+ o+" size: "+o.getReserveSize());
+			osts.add(o);
+			//System.out.println("ost[]: "+ osts.get(0));
+		}
+		
+		
+		if(selected.size()>1) {
+			//System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));			
 			if(
 			(selected.get(0).getOwner()=="player" && selected.get(1)!=selected.get(0) /**&&( selected.get(1).getOwner()=="unowned")||(selected.get(1).getOwner()=="ennemi")**/)&&
 			(selected.get(0).getReserveSize()>0) &&(selected.get(0).isReadyToAttack))
@@ -384,41 +450,32 @@ public class Main extends Application {
 		}
 
 	}
+	
 	private void checkSiege() {
-		for (Unit u : units) {
-			
+		for (Unit u : units) {	
 			// La condition est comme ça pour laisser de la marge d'erreur et ne pas rater la collision
 			if(
 			( (int)u.getGoalx()-5 < (int)u.getX() )&&
 			( (int)u.getX() < (int)u.getGoalx()+5 )&&
 			( (int)u.getGoaly()-5 < (int)u.getY() )&&
 			( (int)u.getY() < (int)u.getGoaly()+5 ) ) 
-			{
-				
-				for (Castle c : castles) {
-					
-					if (u.collidesWith(c)) {
-						
+			{		
+				for (Castle c : castles) {	
+					if (u.collidesWith(c)) {	
 						u.remove();
-						
 						/// ne pas mettre cette ligne. On met son attribut removable à"true" ensuite la fct remove sprite le retire de la lsite
 						//units.remove(u);
 						
 						//removSrpite le fait deja
 						//u.removeFromLayer();
-						
-						
-						if (c.getReserveSize()>0) {
-							
+						if (c.getReserveSize()>0) {	
 							if (c.getOwner()==u.owner) {
 								c.reserveAdd(u);
 							}
 							else {
 								Unit t =c.reservePull();
 								t.remove();
-							}
-								
-							
+							}						
 						}
 						else {
 							int type =0;
@@ -443,6 +500,64 @@ public class Main extends Application {
 		}
 	}
 
+	private void checkSieges() {
+		for (Ost o : osts) {	
+			// La condition est comme ça pour laisser de la marge d'erreur et ne pas rater la collision
+			if(
+			( (int)o.getGoalx()-5 < (int)o.getX() )&&
+			( (int)o.getX() < (int)o.getGoalx()+5 )&&
+			( (int)o.getGoaly()-5 < (int)o.getY() )&&
+			( (int)o.getY() < (int)o.getGoaly()+5 ) ) 
+			{		
+				for (Castle c : castles) {	
+					if (o.collidesWith(c)) {	
+						//o.remove();
+						if(o.getReserveSize()>0) {
+							
+						
+						Unit u = o.reservePull();
+						/// ne pas mettre cette ligne. On met son attribut removable à"true" ensuite la fct remove sprite le retire de la lsite
+						//units.remove(u);
+						
+						//removSrpite le fait deja
+						//u.removeFromLayer();
+						if (c.getReserveSize()>0) {	
+							if (c.getOwner()==u.owner) {
+								c.reserveAdd(u);
+							}
+							else {
+								Unit t =c.reservePull();
+								t.remove();
+							}						
+						}
+						else {
+							int type =0;
+							Image im = castleImage;
+							if (u.owner=="player") {
+								type = 0;
+								im = castleImageBlue;
+							}
+
+							if (u.owner=="ennemi") {
+								type = 1;
+								im = castleImageRed;
+								test=true;
+							}	
+							//c = CastleSet(c ,type);
+							c.CastleSet(type, im);
+							setOnClickBehaviour(c);		
+						}
+						}
+						else {
+							o.remove();
+						}
+					}		
+				}
+			}
+		}
+	}
+
+	
 	// ne marche pas lorqu'il reste des chateaux neutre
 	private void checkIfGameOver() {
 		boolean areAllOwnedByTheSame = true;
@@ -498,12 +613,20 @@ public class Main extends Application {
 		for (Castle c2 : castles) {
 			if (c2.getOwner()=="ennemi") {
 				if (c2.getReserveSize()>0) {
-					Unit u = c2.reservePull();
-					//set destination of unit
+					//Unit u = c2.reservePull();
+					/**
 					u.setGoalx(aiGoal.getCenterX());
 					u.setGoaly(aiGoal.getCenterY());
 					u.addToLayer();
-					units.add(u);
+					units.add(u);**/ 
+					long now = System.currentTimeMillis();
+					System.out.println("timediff: "+(timestamp-now)+"\n");
+					if (now-c2.time>5000) {
+						c2.time=now;
+						sendOst(c2,aiGoal);
+					}
+					
+					
 				}
 			}
 		}

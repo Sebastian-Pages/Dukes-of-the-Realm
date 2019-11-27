@@ -9,7 +9,7 @@ import javafx.scene.text.Text;
 
 public class Castle extends Sprite {
 	private double maxY;
-	
+	long time;
 	private String owner;
 	private double unitProduction;
 	private double productionSpeed;
@@ -33,6 +33,7 @@ public class Castle extends Sprite {
 		this.owner = "unowned";
 		this.isReadyToAttack=true;
 		this.isSelected = false;
+		time=0;
 		}
 
 	@Override
