@@ -21,6 +21,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 public class Main extends Application {
+	
+	/**DECLARATION DES VARIABLES GLOBALES**/
+	
 	private Random rnd = new Random();
 
 	private Pane playfieldLayer;
@@ -77,8 +80,10 @@ public class Main extends Application {
 		playfieldLayer = new Pane();
 		root.getChildren().add(playfieldLayer);
 		
+		/**INITIALISATION DU JEU**/
 		loadGame();
 		
+		/**DEBUT DE LA LOOP**/
 		gameLoop = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
@@ -180,7 +185,7 @@ public class Main extends Application {
 				});
 		
 		//Initialize map
-		spawnCastles(5);
+		spawnCastles();
 		/**
 		//scene.setOnMousePressed(e -> {
 			
@@ -253,12 +258,13 @@ public class Main extends Application {
 	}
 	**/
 	
-	private void spawnCastles(int nb_castles) {
+	/**INITIALISE LES CHATEAUX**/
+	private void spawnCastles() {
 		boolean placed_well = true;
 		
 		
-		// add 5 neutral castles
-		while ((castles.size()<nb_castles) ){
+		/**ON GENERE N CHATEAU AU DEBUT DE LA PARTIE**/
+		while ((castles.size()<Settings.NUMBER_OF_CASTLES) ){
 			ListIterator<Castle> it = castles.listIterator();
 			double speed = 0;
 			double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - castleImage.getWidth());
@@ -267,9 +273,7 @@ public class Main extends Application {
 			
 			castle.getView().setOnMousePressed(e -> {
 				scoreMessage.setText("Castle [ owner: "+castle.getOwner()+" | units: "+Math.round(castle.getReserveSize())+" | Level: "+castle.getLevel()+" ]");
-				//System.out.println("Castle [ owner: "+castle.getOwner()+" | units: "+Math.round(castle.getReserveSize())+" | Level: "+castle.getLevel()+" ]");
 				manageSelectedCastles(castle);
-				System.out.println("Selection: "+selected.get(0));
 				e.consume();
 			});
 			
@@ -282,9 +286,19 @@ public class Main extends Application {
 		    }	
 			
 			if (placed_well){
-				Castle castle2 = CastleSet(castle,2);
-				castles.add(castle2);
+				castle.CastleSet(2, castleImage);
+				setOnClickBehaviour(castle);
 				castles.remove(castle);
+				
+				//pour tous les chateau faire une HBOX
+				HBox unitCount = new HBox();
+				castle.newMessage.setText("0");
+				unitCount.getChildren().addAll(castle.newMessage);
+				unitCount.getStyleClass().add("uc");
+				unitCount.relocate(castle.getX(),castle.getY() );
+				unitCount.setPrefSize(10,10);
+				root.getChildren().add(unitCount);
+				castles.add(castle);
 			}
 			else {
 				castle.removeFromLayer();
@@ -294,14 +308,16 @@ public class Main extends Application {
 		}	
 		// pick 1 starting castles 
 		Castle castle_1=castles.get(2);
-		castles.remove(2);
-		castle_1 = CastleSet(castle_1 ,0);
+		castles.remove(2);		
+		castle_1.CastleSet(0, castleImageBlue);
+		setOnClickBehaviour(castle_1);		
 		castles.add(2, castle_1);
 		
 		// pick ennemy starting castles 
 		Castle castle_2=castles.get(3);
-		castles.remove(3);
-		castle_2 = CastleSet(castle_2 ,1);
+		castles.remove(3);		
+		castle_2.CastleSet(1, castleImageRed);
+		setOnClickBehaviour(castle_2);	
 		castles.add(3, castle_2);
 		
 		
@@ -458,12 +474,20 @@ public class Main extends Application {
 						}
 						else {
 							int type =0;
-							if (u.owner=="player")
+							Image im = castleImage;
+							if (u.owner=="player") {
 								type = 0;
-							if (u.owner=="ennemi")
-								type = 1;	;
+								im = castleImageBlue;
+							}
+
+							if (u.owner=="ennemi") {
+								type = 1;
+								im = castleImageRed;
 								test=true;
-							c = CastleSet(c ,type);
+							}	
+							//c = CastleSet(c ,type);
+							c.CastleSet(type, im);
+							setOnClickBehaviour(c);		
 						}
 					}		
 				}
@@ -582,72 +606,14 @@ public class Main extends Application {
 		}
 	}
 	
-	private Castle CastleSet(Castle c , int type){
-		
-		// On dit que 0 c'est les chateau alliés
-		if (type == 0) {
-			
-			//change the attributes
-			c.setOwner("player");
-			c.setProductionSpeed(0.2);
-			c.setView(castleImageBlue);
-			c.updateUI();
-			
-			//change On Click behaviour
-			c.getView().setOnMousePressed(e -> {
-				scoreMessage.setText("Castle [ owner: "+c.getOwner()+" | units: "+Math.round(c.getReserveSize())+" | Level: "+c.getLevel()+" ]");
-				manageSelectedCastles(c);
-				e.consume();
-			});
-
-		}
-		//1 est le type de l'ennemi
-		if (type == 1) {
-			//change the attributes
-			c.setOwner("ennemi");
-			c.setProductionSpeed(0.2);
-			c.setView(castleImageRed);
-			c.updateUI();	
-			
-			//change On Click behaviour
-			c.getView().setOnMousePressed(e -> {
-				scoreMessage.setText("Castle [ owner: "+c.getOwner()+" | units: "+Math.round(c.getReserveSize())+" | Level: "+c.getLevel()+" ]");
-				manageSelectedCastles(c);
-				e.consume();
-			});
-		}
-		
-		//Chateau 3 de type neutre
-		if (type == 2) {
-			//change the attributes
-			c.setOwner("unowned");
-			c.setProductionSpeed(0.1);
-			c.setView(castleImage);
-			c.updateUI();	
-			
-			//change On Click behaviour
-			c.getView().setOnMousePressed(e -> {
-				scoreMessage.setText("Castle [ owner: "+c.getOwner()+" | units: "+Math.round(c.getReserveSize())+" | Level: "+c.getLevel()+" ]");
-				manageSelectedCastles(c);
-				e.consume();
-			});
-			
-			//pour tous les chateau faire une HBOX
-			HBox unitCount = new HBox();
-			c.newMessage.setText("0");
-			unitCount.getChildren().addAll(c.newMessage);
-			unitCount.getStyleClass().add("uc");
-			unitCount.relocate(c.getX(),c.getY() );
-			unitCount.setPrefSize(10,10);
-			root.getChildren().add(unitCount);
-			castles.add(c);
-		}
-		
-			
-		
-		
-		return c;
+	public void setOnClickBehaviour(Castle c) {
+		c.getView().setOnMousePressed(e -> {
+			scoreMessage.setText("Castle [ owner: "+c.getOwner()+" | units: "+Math.round(c.getReserveSize())+" | Level: "+c.getLevel()+" ]");
+			manageSelectedCastles(c);
+			e.consume();
+		});
 	}
+		
 
 	public static void main(String[] args) {
 		launch(args);

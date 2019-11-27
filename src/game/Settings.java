@@ -3,10 +3,10 @@ package game;
 public class Settings {
 
 	public static final double SCENE_WIDTH = 800;
-    public static final double SCENE_HEIGHT = 750;
+    public static final double SCENE_HEIGHT = 400;
 	public static final double STATUS_BAR_HEIGHT = 50;
 	
-	public static final int NUMBER_OF_CASTLES = 50;
+	public static final int NUMBER_OF_CASTLES = 5;
 	public static final double NEUTRAL_PRODUCTION_SPEED = 0.1;
 	public static final double NORMAL_PRODUCTION_SPEED = 0.2;
 	public static final int NEUTRAL_MAX_UNIT = 20;

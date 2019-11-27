@@ -99,4 +99,30 @@ public class Castle extends Sprite {
 		newMessage.setText(""+this.getReserveSize()+selectString);
 	}
 	
+	public void CastleSet(int type,Image img){
+		
+		// On dit que 0 c'est les chateau alliés
+		if (type == 0) {		
+			this.setOwner("player");
+			this.setProductionSpeed(Settings.NORMAL_PRODUCTION_SPEED);
+			this.setView(img);
+			this.updateUI();
+		}
+		//1 est le type de l'ennemi
+		if (type == 1) {
+			this.setOwner("ennemi");
+			this.setProductionSpeed(Settings.NORMAL_PRODUCTION_SPEED);
+			this.setView(img);
+			this.updateUI();	
+		}	
+		//Chateau 3 de type neutre
+		if (type == 2) {
+			//change the attributes
+			this.setOwner("unowned");
+			this.setProductionSpeed(Settings.NEUTRAL_PRODUCTION_SPEED);
+			this.setView(img);
+			this.updateUI();	
+		}
+	}
+	
 }
