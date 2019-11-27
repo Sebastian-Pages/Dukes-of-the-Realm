@@ -92,9 +92,6 @@ public class Main extends Application {
 				// player input
 				player.processInput();
 
-				// add random enemies
-				//spawnEnemies(true);
-				
 				//update army count
 				updateUnitsCount(true);
 
@@ -114,21 +111,16 @@ public class Main extends Application {
 				
 				// update sprites in scene
 				player.updateUI();
-				enemies.forEach(sprite -> sprite.updateUI());
-				missiles.forEach(sprite -> sprite.updateUI());
 				castles.forEach(sprite -> sprite.updateUI());
 				units.forEach(sprite -> sprite.updateUI());
 
 
 				// check if sprite can be removed
-				enemies.forEach(sprite -> sprite.checkRemovability());
-				missiles.forEach(sprite -> sprite.checkRemovability());
+
 				castles.forEach(sprite -> sprite.checkRemovability());
 				units.forEach(sprite -> sprite.checkRemovability());
 
 				// remove removables from list, layer, etc
-				removeSprites(enemies);
-				removeSprites(missiles);
 				removeSprites(castles);
 				removeSprites(units);
 
@@ -142,8 +134,6 @@ public class Main extends Application {
 				if (input.isExit()) {
 					Platform.exit();
 					System.exit(0);
-				} else if (input.isFire()) {
-					fire(now);
 				} 
 			}
 
@@ -186,28 +176,7 @@ public class Main extends Application {
 		
 		//Initialize map
 		spawnCastles();
-		/**
-		//scene.setOnMousePressed(e -> {
-			
-			
-			player.setX(e.getX() - (player.getWidth() / 2));
-			player.setY(e.getY() - (player.getHeight() / 2));
-			
-			
-			****** pause function *****
-			if (pauseState) {
-				gameLoop.start();
-				pauseState = false;
-			}
-				
-			else {
-				gameLoop.stop();
-				pauseState = true;
-			}
-			***************************
-				
-		} ) ; 
-		**/
+
 	}
 
 
@@ -245,19 +214,7 @@ public class Main extends Application {
 			contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
 		});
 	}
-	/**
-	private void spawnEnemies(boolean random) {
-		if (random && rnd.nextInt(Settings.ENEMY_SPAWN_RANDOMNESS) != 0) {
-			return;
-		}
-		double speed = rnd.nextDouble() * 3 + 1.0;
-		double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - enemyImage.getWidth());
-		double y = -enemyImage.getHeight();
-		Enemy enemy = new Enemy(playfieldLayer, enemyImage, x, y, 1, 1, speed);
-		enemies.add(enemy);
-	}
-	**/
-	
+
 	/**INITIALISE LES CHATEAUX**/
 	private void spawnCastles() {
 		boolean placed_well = true;
@@ -358,15 +315,6 @@ public class Main extends Application {
 		
 	}
 	
-
-	private void fire(long now) {
-		if (player.canFire(now)) {
-			Missile missile = new Missile(playfieldLayer, missileImage, player.getCenterX(), player.getY(),
-					Settings.MISSILE_DAMAGE, Settings.MISSILE_SPEED);
-			missiles.add(missile);
-			player.fire(now);
-		}
-	}
 
 	private void removeSprites(List<? extends Sprite> spriteList) {
 		Iterator<? extends Sprite> iter = spriteList.iterator();
