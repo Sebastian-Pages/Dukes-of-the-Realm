@@ -64,6 +64,8 @@ public class Main extends Application {
 	private boolean pauseState = false;
 	private Castle aiGoal;
 	long timestamp;
+	private HBox statusBar;
+	private int hboxState;
 
 	private Scene scene;
 	private Input input;
@@ -136,7 +138,7 @@ public class Main extends Application {
 
 
 				// update score, health, etc
-				updateCounters();	
+				updateText();	
 				castles.forEach(castle -> castle.update());
 				checkIfGameOver();
 			}
@@ -189,8 +191,10 @@ public class Main extends Application {
 		//Initialize map
 		Decoration grass = new Decoration(playfieldLayer, grassImage, 0, 0, 1, 1);
 		grass.getView().setOnMousePressed(e -> {
-			if (selected.size()>0) 
-				selected.get(0).isSelected=false;
+			for (Castle c3: selected) {
+				c3.isSelected=false;
+			}
+			setStatusBar(statusBar,Settings.STATE_UNSELECTED);
 			selected.clear();
 			e.consume();
 		});
@@ -201,27 +205,40 @@ public class Main extends Application {
 
 
 	public void createStatusBar() {
-		HBox statusBar = new HBox();
-		setStatusBat(statusBar,Settings.STATE_INIT);
+		statusBar = new HBox();
+		setStatusBar(statusBar,Settings.STATE_INIT);
 		statusBar.relocate(0, Settings.SCENE_HEIGHT);
 		statusBar.setPrefSize(Settings.SCENE_WIDTH, Settings.STATUS_BAR_HEIGHT);		
 		root.getChildren().add(statusBar);
 	}
 	
 	//GESTION DES SOUS-MENUS
-	public void setStatusBat(HBox sb,int state){
+	public void setStatusBar(HBox sb,int state){
 		switch(state) {
 		case Settings.STATE_INIT:
+			hboxState=Settings.STATE_INIT;
 			scoreMessage.setText("Click on a castle");
 			sb.getChildren().addAll(scoreMessage);
 			sb.getStyleClass().add("statusBar"); 
-			sb.setSpacing(15);		
+			sb.setSpacing(15);	
 			break;
-		
-		case Settings.STATE_FIRST:
+			
+		case Settings.STATE_UNSELECTED:
+			hboxState=Settings.STATE_UNSELECTED;
 			for (Button b : buttons) {
 				sb.getChildren().remove(b);
 			}
+			scoreMessage.setText("Click on a castle");
+			break;
+		
+		case Settings.STATE_FIRST:
+			hboxState=Settings.STATE_FIRST;
+			for (Button b : buttons) {
+				sb.getChildren().remove(b);
+			}
+			Castle c = selected.get(0);
+			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Units:  "+Math.round(c.getReserveSize())+"\n	    Level:  "+c.getLevel());
+			
 			
 			Button trainButton = new Button("Train"); 
 			buttons.add(trainButton);
@@ -234,17 +251,27 @@ public class Main extends Application {
 
 			//gérer les actions
 			trainButton.setOnAction(e -> {
-				setStatusBat(sb,Settings.STATE_TRAIN);
+				setStatusBar(sb,Settings.STATE_TRAIN);
 				e.consume();
 			});
 			sendButton.setOnAction(e -> {
-				setStatusBat(sb,Settings.STATE_SEND);
+				setStatusBar(sb,Settings.STATE_SEND);
 				e.consume();
 			});
 			
 		break;
+		
+		case Settings.STATE_INFO:
+			hboxState=Settings.STATE_FIRST;
+			for (Button b : buttons) {
+				sb.getChildren().remove(b);
+			}
+			c = selected.get(0);
+			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Units:  "+Math.round(c.getReserveSize())+"\n	    Level:  "+c.getLevel());		
+		break;
 				
 		case Settings.STATE_TRAIN:
+			hboxState=Settings.STATE_TRAIN;
 			for (Button b : buttons) {
 				sb.getChildren().remove(b);
 			}
@@ -253,7 +280,7 @@ public class Main extends Application {
 			sb.getChildren().addAll(returnButton);
 			buttons.add(returnButton);
 			returnButton.setOnAction(e -> {
-				setStatusBat(sb,Settings.STATE_FIRST);
+				setStatusBar(sb,Settings.STATE_FIRST);
 				e.consume();
 			});
 			
@@ -270,6 +297,7 @@ public class Main extends Application {
 		break;
 		
 		case Settings.STATE_SEND:
+			hboxState=Settings.STATE_SEND;
 			for (Button b : buttons) {
 				sb.getChildren().remove(b);
 			}
@@ -278,7 +306,7 @@ public class Main extends Application {
 			sb.getChildren().addAll(returnButton2);
 			buttons.add(returnButton2);
 			returnButton2.setOnAction(e -> {
-				setStatusBat(sb,Settings.STATE_FIRST);
+				setStatusBar(sb,Settings.STATE_FIRST);
 				e.consume();
 			});
 			
@@ -744,14 +772,15 @@ public class Main extends Application {
 			selected.clear();**/
 	}
 
-	private void updateCounters() {
-		newMessage.setText(""+castles.get(0).getReserveSize());
-
+	private void updateText() {
+		newMessage.setText(""+castles.get(0).getReserveSize());	
+		
 		if (selected.size()>0) {
 			Castle c = selected.get(0);
-			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Units:  "+Math.round(c.getReserveSize())+"\n	    Level:  "+c.getLevel());
-			
+			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Units:  "+Math.round(c.getReserveSize())+"\n	    Level:  "+c.getLevel());	
 		}
+		else 
+			setStatusBar(statusBar,Settings.STATE_UNSELECTED);
 	}
 	
 	
@@ -776,11 +805,14 @@ public class Main extends Application {
 					cas.isSelected = false;
 			}
 		}
-		
+		if (c.getOwner()=="player")
+				setStatusBar(statusBar,Settings.STATE_FIRST);
+		else
+			setStatusBar(statusBar,Settings.STATE_INFO);
 	}
 	
 	public void setOnClickBehaviour(Castle c) {
-		c.getView().setOnMousePressed(e -> {
+		c.getView().setOnMousePressed(e -> {		
 			//scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Units:  "+Math.round(c.getReserveSize())+"\n	    Level:  "+c.getLevel());
 			manageSelectedCastles(c);
 			e.consume();
