@@ -13,6 +13,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
@@ -39,6 +40,7 @@ public class Main extends Application {
 	private Image castleImageRed;
 	private Image castleImageRedS;
 	private Image unitImageR;
+	private Image grassImage;
 	
 	//Units images
 	private Image unitImage;
@@ -52,6 +54,7 @@ public class Main extends Application {
 	private List<Castle> castles = new ArrayList<>();
 	private List<Unit> units = new ArrayList<>();
 	private List<Ost> osts = new ArrayList<>();
+	private List<Button> buttons = new ArrayList<>();
 
 	private Text scoreMessage = new Text();
 	private Text newMessage = new Text();
@@ -133,7 +136,7 @@ public class Main extends Application {
 
 
 				// update score, health, etc
-				update();	
+				updateCounters();	
 				castles.forEach(castle -> castle.update());
 				checkIfGameOver();
 			}
@@ -161,6 +164,7 @@ public class Main extends Application {
 		castleImageRedS = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), 100, 100, true, true);
 		unitImage = new Image(getClass().getResource("/images/blue_castle_selected.png").toExternalForm(), 20, 20, true, true);
 		unitImageR = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), 20, 20, true, true);
+		grassImage = new Image(getClass().getResource("/images/grass.png").toExternalForm(), Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT, false, true);
 		input = new Input(scene);
 		input.addListeners();
 
@@ -183,6 +187,13 @@ public class Main extends Application {
 				});
 		
 		//Initialize map
+		Decoration grass = new Decoration(playfieldLayer, grassImage, 0, 0, 1, 1);
+		grass.getView().setOnMousePressed(e -> {
+			if (selected.size()>0) 
+				selected.get(0).isSelected=false;
+			selected.clear();
+			e.consume();
+		});
 		spawnCastles();
 		
 		
@@ -191,13 +202,100 @@ public class Main extends Application {
 
 	public void createStatusBar() {
 		HBox statusBar = new HBox();
-		scoreMessage.setText("Click on one of your castles to see more information");
-		statusBar.getChildren().addAll(scoreMessage);
-		statusBar.getStyleClass().add("statusBar");
+		setStatusBat(statusBar,Settings.STATE_INIT);
 		statusBar.relocate(0, Settings.SCENE_HEIGHT);
-		statusBar.setPrefSize(Settings.SCENE_WIDTH, Settings.STATUS_BAR_HEIGHT);
+		statusBar.setPrefSize(Settings.SCENE_WIDTH, Settings.STATUS_BAR_HEIGHT);		
 		root.getChildren().add(statusBar);
 	}
+	
+	//GESTION DES SOUS-MENUS
+	public void setStatusBat(HBox sb,int state){
+		switch(state) {
+		case Settings.STATE_INIT:
+			scoreMessage.setText("Click on a castle");
+			sb.getChildren().addAll(scoreMessage);
+			sb.getStyleClass().add("statusBar"); 
+			sb.setSpacing(15);		
+			break;
+		
+		case Settings.STATE_FIRST:
+			for (Button b : buttons) {
+				sb.getChildren().remove(b);
+			}
+			
+			Button trainButton = new Button("Train"); 
+			buttons.add(trainButton);
+			sb.getChildren().addAll(trainButton);
+			
+			
+			Button sendButton = new Button("Send"); 
+			buttons.add(sendButton);
+			sb.getChildren().addAll(sendButton);
+
+			//gérer les actions
+			trainButton.setOnAction(e -> {
+				setStatusBat(sb,Settings.STATE_TRAIN);
+				e.consume();
+			});
+			sendButton.setOnAction(e -> {
+				setStatusBat(sb,Settings.STATE_SEND);
+				e.consume();
+			});
+			
+		break;
+				
+		case Settings.STATE_TRAIN:
+			for (Button b : buttons) {
+				sb.getChildren().remove(b);
+			}
+			
+			Button returnButton = new Button("<-"); 
+			sb.getChildren().addAll(returnButton);
+			buttons.add(returnButton);
+			returnButton.setOnAction(e -> {
+				setStatusBat(sb,Settings.STATE_FIRST);
+				e.consume();
+			});
+			
+			Button piquierButton = new Button("Piquier 100£"); 
+			sb.getChildren().addAll(piquierButton);
+			buttons.add(piquierButton);
+			Button chevalierButton = new Button("Chevalier 500£"); 
+			sb.getChildren().addAll(chevalierButton);
+			buttons.add(chevalierButton);
+			Button onagreButton = new Button("Onagre 900£"); 
+			sb.getChildren().addAll(onagreButton);
+			buttons.add(onagreButton);
+			
+		break;
+		
+		case Settings.STATE_SEND:
+			for (Button b : buttons) {
+				sb.getChildren().remove(b);
+			}
+			
+			Button returnButton2 = new Button("<-"); 
+			sb.getChildren().addAll(returnButton2);
+			buttons.add(returnButton2);
+			returnButton2.setOnAction(e -> {
+				setStatusBat(sb,Settings.STATE_FIRST);
+				e.consume();
+			});
+			
+			Button piquierButton2 = new Button("Piquier"); 
+			sb.getChildren().addAll(piquierButton2);
+			buttons.add(piquierButton2);
+			Button chevalierButton2 = new Button("Chevalier"); 
+			sb.getChildren().addAll(chevalierButton2);
+			buttons.add(chevalierButton2);
+			Button onagreButton2 = new Button("Onagre"); 
+			sb.getChildren().addAll(onagreButton2);
+			buttons.add(onagreButton2);
+			
+		break;
+		}
+	}
+	
 
 	private void createPlayer() {
 		double x = (Settings.SCENE_WIDTH - playerImage.getWidth()) / 2.0;
@@ -620,7 +718,7 @@ public class Main extends Application {
 					u.addToLayer();
 					units.add(u);**/ 
 					long now = System.currentTimeMillis();
-					System.out.println("timediff: "+(timestamp-now)+"\n");
+					//System.out.println("timediff: "+(timestamp-now)+"\n");
 					if (now-c2.time>5000) {
 						c2.time=now;
 						sendOst(c2,aiGoal);
@@ -646,11 +744,14 @@ public class Main extends Application {
 			selected.clear();**/
 	}
 
-	private void update() {
-		if (collision) {
-			scoreMessage.setText("Score : " + scoreValue + "          Life : " + player.getHealth());
-		}
+	private void updateCounters() {
 		newMessage.setText(""+castles.get(0).getReserveSize());
+
+		if (selected.size()>0) {
+			Castle c = selected.get(0);
+			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Units:  "+Math.round(c.getReserveSize())+"\n	    Level:  "+c.getLevel());
+			
+		}
 	}
 	
 	
@@ -675,11 +776,12 @@ public class Main extends Application {
 					cas.isSelected = false;
 			}
 		}
+		
 	}
 	
 	public void setOnClickBehaviour(Castle c) {
 		c.getView().setOnMousePressed(e -> {
-			scoreMessage.setText("Castle [ owner: "+c.getOwner()+" | units: "+Math.round(c.getReserveSize())+" | Level: "+c.getLevel()+" ]");
+			//scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Units:  "+Math.round(c.getReserveSize())+"\n	    Level:  "+c.getLevel());
 			manageSelectedCastles(c);
 			e.consume();
 		});

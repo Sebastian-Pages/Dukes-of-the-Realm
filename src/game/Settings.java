@@ -2,9 +2,9 @@ package game;
 
 public class Settings {
 
-	public static final double SCENE_WIDTH = 800;
-    public static final double SCENE_HEIGHT = 400;
-	public static final double STATUS_BAR_HEIGHT = 50;
+	public static final double SCENE_WIDTH = 1000;
+    public static final double SCENE_HEIGHT = 800;
+	public static final double STATUS_BAR_HEIGHT = 80;
 	
 	public static final int NUMBER_OF_CASTLES = 5;
 	public static final double NEUTRAL_PRODUCTION_SPEED = 0.1;
@@ -32,4 +32,8 @@ public class Settings {
     public static final int FIRE_FREQUENCY_MEDIUM = 500 * 1000 * 1000; // 0.5 second in nanoseconds
     public static final int FIRE_FREQUENCY_HIGH = 100 * 1000 * 1000; // 0.1 second in nanoseconds
    
+    public static final int STATE_INIT=0;
+    public static final int STATE_FIRST=1;
+    public static final int STATE_TRAIN=2;
+    public static final int STATE_SEND=3;
 }

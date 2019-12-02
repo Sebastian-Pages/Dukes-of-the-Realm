@@ -2,7 +2,7 @@ BUGS :
 	status [✅]: empecher le fait de s'attaquer soit meme (meme chateau vers meme chateau) -> rajouter une condition.
 	status [❌]: terminer la game lorsque le joueur n'a plus de chateau ou dans le cadre d'un combat d'ia plus qu'un joueur en vie.
 				(en plus des neutres nsm les gens non politisés).
-	status [🔄]: lorsqu'on envoie trop d'unités ca bug beacuoup sont détruites. -> remplacer par les ost
+	status [✅]: lorsqu'on envoie trop d'unités ca bug beacuoup sont détruites. -> remplacer par les ost🔄
 	
 A FAIRE POUR JEUDI 28
 	status [❌]: corriger bugs
@@ -18,3 +18,9 @@ A FAIRE AVANT LES VACANCES:
 	status [❌]: ajouter les nouvelle unités
 	status [❌]: gérer les contournements de chateau (passer par la porte)
 	status [❌]: menu avant la partie pour lancer un match entre IA et choisir le set d'image jouer (peut etre choisir des level)
+	
+	
+FONCTIONNEMENT DU MENU
+
+[ARMY] -> [<-] [piqier][chevalier][onagre]
+[UPGRADES] -> [<-] [level 2][barrack][walls]

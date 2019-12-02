@@ -5,12 +5,12 @@
     -fx-border-style: solid;
     -fx-border-width: 2px 0 0 0;  
 	-fx-font-weight: bold;
-	-fx-font-size: 20px;
+	-fx-font-size: 18px;
 }
 
 .uc{
     -fx-background-color: #efefef;
-    -fx-padding: 10px 10px;
+    -fx-padding: 5px 10px;
     -fx-border-color: black;
     -fx-border-style: solid;
     -fx-border-width: 2px 2px 2px 2px;  
