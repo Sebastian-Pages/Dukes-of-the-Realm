@@ -11,7 +11,7 @@ public class Castle extends Sprite {
 	private double maxY;
 	long time;
 	private String owner;
-	private double unitProduction;
+	private double gold;
 	private double productionSpeed;
 	private int level;
 	public boolean isReadyToAttack;
@@ -28,7 +28,7 @@ public class Castle extends Sprite {
 		setDx(0);
 		this.productionSpeed=speed;
 		maxY = Settings.SCENE_HEIGHT - image.getHeight();
-		this.unitProduction= 0;
+		this.gold= 0;
 		this.level = 1;
 		this.owner = "unowned";
 		this.isReadyToAttack=true;
@@ -51,12 +51,12 @@ public class Castle extends Sprite {
 		this.owner = owner;
 	}
 
-	public double getUnitProduction() {
-		return unitProduction;
+	public double getGold() {
+		return gold;
 	}
 
 	public void setUnitProduction(double UnitProduction) {
-		this.unitProduction = UnitProduction;
+		this.gold = UnitProduction;
 	}
 
 	public double getProductionSpeed() {
@@ -70,13 +70,14 @@ public class Castle extends Sprite {
 	public int getLevel() {
 		return level;
 	}
+	
 
 	public void setLevel(int level) {
 		this.level = level;
 	}
 	
 	public void updateUI() {
-        unitProduction += this.productionSpeed;
+        gold += this.productionSpeed;
     }
 	
 	public int getReserveSize() {

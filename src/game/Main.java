@@ -237,7 +237,7 @@ public class Main extends Application {
 				sb.getChildren().remove(b);
 			}
 			Castle c = selected.get(0);
-			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Units:  "+Math.round(c.getReserveSize())+"\n	    Level:  "+c.getLevel());
+			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Gold:   "+Math.round(c.getGold())+"\n	    Level:  "+c.getLevel());
 			
 			
 			Button trainButton = new Button("Train"); 
@@ -267,7 +267,7 @@ public class Main extends Application {
 				sb.getChildren().remove(b);
 			}
 			c = selected.get(0);
-			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Units:  "+Math.round(c.getReserveSize())+"\n	    Level:  "+c.getLevel());		
+			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Gold:   "+Math.round(c.getGold())+"\n	    Level:  "+c.getLevel());		
 		break;
 				
 		case Settings.STATE_TRAIN:
@@ -364,7 +364,7 @@ public class Main extends Application {
 			Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed);
 			
 			castle.getView().setOnMousePressed(e -> {
-				scoreMessage.setText("Castle [ owner: "+castle.getOwner()+" | units: "+Math.round(castle.getReserveSize())+" | Level: "+castle.getLevel()+" ]");
+				scoreMessage.setText("Castle [ owner: "+castle.getOwner()+"\n	    Gold:   "+Math.round(castle.getGold())+" | Level: "+castle.getLevel()+" ]");
 				manageSelectedCastles(castle);
 				e.consume();
 			});
@@ -419,12 +419,12 @@ public class Main extends Application {
 	private void updateUnitsCount(boolean bool){
 		if(bool) {
 			for (Castle c : castles) {
-				if (c.getUnitProduction()>10) {
+				if (c.getGold()>10) {
 
 					if (c.getOwner()=="player") {
 						Unit u = new Unit(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), 1, 1, 1);
 						u.owner = "player";	
-						double temp=c.getUnitProduction();
+						double temp=c.getGold();
 						c.setUnitProduction(temp-10);
 						c.reserveAdd(u);
 						u.removeFromLayer();
@@ -432,7 +432,7 @@ public class Main extends Application {
 					if(c.getOwner()=="ennemi") {
 						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
 						u.owner="ennemi";
-						double temp=c.getUnitProduction();
+						double temp=c.getGold();
 						c.setUnitProduction(temp-10);
 						c.reserveAdd(u);
 						u.removeFromLayer();
@@ -440,7 +440,7 @@ public class Main extends Application {
 					if(c.getOwner()=="unowned") {
 						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
 						u.owner="unowned";
-						double temp=c.getUnitProduction();
+						double temp=c.getGold();
 						c.setUnitProduction(temp-10);
 						c.reserveAdd(u);
 						u.removeFromLayer();
@@ -713,12 +713,12 @@ public class Main extends Application {
 		
 		//trouve un premier objectif
 		if (test){
-			System.out.println("DEBUG 1");
+			//System.out.println("DEBUG 1");
 			for (Castle c : castles) {
 				if ((c.getOwner()!="ennemi")&&(test)) {
 					aiGoal = c;
-					System.out.println("DEBUG "+aiGoal);
-					System.out.println("DEBUG size: "+castles.size());
+					//System.out.println("DEBUG "+aiGoal);
+					//System.out.println("DEBUG size: "+castles.size());
 					test=false;
 				}
 			}
@@ -729,8 +729,8 @@ public class Main extends Application {
 			for (Castle c : castles) {
 				if ((c.getOwner()!="ennemi")&&(test)) {
 					aiGoal = c;
-					System.out.println("DEBUG "+aiGoal);
-					System.out.println("DEBUG size: "+castles.size());
+					//System.out.println("DEBUG "+aiGoal);
+					//System.out.println("DEBUG size: "+castles.size());
 					test=false;
 				}
 			}
@@ -772,12 +772,10 @@ public class Main extends Application {
 			selected.clear();**/
 	}
 
-	private void updateText() {
-		newMessage.setText(""+castles.get(0).getReserveSize());	
-		
+	private void updateText() {	
 		if (selected.size()>0) {
 			Castle c = selected.get(0);
-			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Units:  "+Math.round(c.getReserveSize())+"\n	    Level:  "+c.getLevel());	
+			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Gold:   "+Math.round(c.getGold())+"\n	    Level:  "+c.getLevel());	
 		}
 		else 
 			setStatusBar(statusBar,Settings.STATE_UNSELECTED);
