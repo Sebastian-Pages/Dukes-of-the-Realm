@@ -41,6 +41,7 @@ public class Main extends Application {
 	private Image castleImageRedS;
 	private Image unitImageR;
 	private Image grassImage;
+	private Image targetImage;
 	
 	//Units images
 	private Image unitImage;
@@ -55,6 +56,7 @@ public class Main extends Application {
 	private List<Unit> units = new ArrayList<>();
 	private List<Ost> osts = new ArrayList<>();
 	private List<Button> buttons = new ArrayList<>();
+	private List<Decoration> targets = new ArrayList<>();
 
 	private Text scoreMessage = new Text();
 	private Text newMessage = new Text();
@@ -114,7 +116,7 @@ public class Main extends Application {
 
 				// check collisions
 				//checkCollisions();
-				checkOrders();
+				//checkOrders();
 				//checkSiege();
 				checkSieges();
 				
@@ -135,6 +137,7 @@ public class Main extends Application {
 				removeSprites(castles);
 				removeSprites(units);
 				removeSprites(osts);
+				removeSprites(targets);
 
 
 				// update score, health, etc
@@ -166,6 +169,7 @@ public class Main extends Application {
 		castleImageRedS = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), 100, 100, true, true);
 		unitImage = new Image(getClass().getResource("/images/blue_castle_selected.png").toExternalForm(), 20, 20, true, true);
 		unitImageR = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), 20, 20, true, true);
+		targetImage = new Image(getClass().getResource("/images/target.png").toExternalForm(), 100, 100, true, true);
 		grassImage = new Image(getClass().getResource("/images/grass.png").toExternalForm(), Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT, false, true);
 		input = new Input(scene);
 		input.addListeners();
@@ -334,7 +338,7 @@ public class Main extends Application {
 			Button sendOstButton= new Button("Send OST"); 
 			sb.getChildren().addAll(sendOstButton);
 			sendOstButton.setOnAction(e -> {
-				sendOst(c);
+				selectTarget(c);
 				e.consume();
 			});
 			buttons.add(sendOstButton);
@@ -652,17 +656,29 @@ public class Main extends Application {
 		}
 
 	}
-	
-	private void sendOst(Castle c){
+	private void selectTarget(Castle c){
+		for(Castle targetc : castles){
+			if (targetc!=c){
+				Decoration target = new Decoration(playfieldLayer, targetImage, targetc.getX(),targetc.getY(), 1, 1);
+				targets.add(target);
+				target.getView().setOnMousePressed(e -> {
+					sendOst(c,targetc);
+					System.out.println("DEBUG: ");
+					e.consume();
+				});
+			}
+		}
+	}
+	private void sendOst(Castle c,Castle d){
 	
 		if((selected.size()>0)/** la condition lorsque l'ost n'dest pas vide &&() **/){
 			Ost o = c.ost;
-			Castle d=castles.get(0);
 			o.setGoalx(d.getCenterX());
 			o.setGoaly(d.getCenterY());
 			osts.add(o);
 			c.isBuildingOst=false;
-			System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
+			targets.forEach(sprite -> sprite.remove());
+			//System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
 		}
 				
 	}
