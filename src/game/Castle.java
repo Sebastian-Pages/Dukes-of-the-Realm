@@ -16,8 +16,10 @@ public class Castle extends Sprite {
 	public boolean isReadyToAttack;
 	public boolean isSelected;
 	public boolean isBuildingOst;
+	public double productionProgress;
 	public Text newMessage = new Text();
 	private List<Unit> reserve = new ArrayList<>();
+	public List<Unit> productionQ = new ArrayList<>();
 	
 	public Ost ost;
 	//private Unitproduction up = new Unitproduction();
@@ -34,6 +36,7 @@ public class Castle extends Sprite {
 		this.isSelected = false;
 		this.isBuildingOst = false;
 		time=0;
+		productionProgress=0;
 		}
 
 	public void setOst(Ost o){
@@ -132,6 +135,22 @@ public class Castle extends Sprite {
 			this.setProductionSpeed(Settings.NEUTRAL_PRODUCTION_SPEED);
 			this.setView(img);
 			this.updateUI();	
+		}
+	}
+	
+	public void trainUnit(){
+		
+		if (!this.productionQ.isEmpty()){
+			this.productionProgress+=0.1;
+			System.out.println("yo "+this.productionProgress);
+			if (this.productionProgress > Settings.PIKEMAN_PRODUCTION_TIME/5){
+				this.productionProgress=0;
+				Unit u = this.productionQ.get(0);
+				this.productionQ.remove(0);
+				this.reserve.add(u);
+				System.out.println("prodQ: "+this.productionQ.size());
+				System.out.println("reserve: "+this.reserve.size());
+			}
 		}
 	}
 	

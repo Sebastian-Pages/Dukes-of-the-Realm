@@ -108,17 +108,13 @@ public class Main extends Application {
 				// AI
 				//AI();
 
-				// check collisions
-				//checkCollisions();
-				//checkOrders();
-				//checkSiege();
 				checkSieges();
 				
 				// update sprites in scene
 				castles.forEach(sprite -> sprite.updateUI());
 				units.forEach(sprite -> sprite.updateUI());
 				osts.forEach(sprite -> sprite.updateUI());
-
+				castles.forEach(sprite-> sprite.trainUnit());
 
 				// check if sprite can be removed
 
@@ -294,6 +290,7 @@ public class Main extends Application {
 			sb.getChildren().addAll(onagreButton);
 			buttons.add(onagreButton);
 			
+			
 		break;
 		
 		case Settings.STATE_SEND:
@@ -337,6 +334,16 @@ public class Main extends Application {
 		break;
 		}
 	}
+	void displayQ(Castle c){
+		for (Unit u : c.productionQ){
+			if (u.type==0){
+				int x=c.productionQ.indexOf(u);
+				Unit un = new Unit(playfieldLayer, unitImage,x*21 +10,770 , 1,1, 1);
+				units.add(un);
+			}
+		}
+	}
+	
 	
 
 
@@ -449,7 +456,10 @@ public class Main extends Application {
 						u.owner = "player";	
 						double temp=c.getGold();
 						c.setUnitProduction(temp-Settings.PIKEMAN_COST);
-						c.reserveAdd(u);
+						
+						c.productionQ.add(u);
+						System.out.println("prodQ: "+c.productionQ.size());
+						//c.reserveAdd(u);
 						u.removeFromLayer();
 					}
 					if(c.getOwner()=="ennemi") {
@@ -798,11 +808,14 @@ public class Main extends Application {
 	private void updateText() {	
 		if (selected.size()>0) {
 			Castle c = selected.get(0);
+			displayQ(c);
 			infoMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Gold:   "+Math.round(c.getGold())+"\n	    Level:  "+c.getLevel());	
 		}
 		else 
 			setStatusBar(statusBar,Settings.STATE_UNSELECTED);
 	}
+	
+	
 	
 	
 	//on peut revoie la séléection et changer les views pour voir ce qui est sélectionner

@@ -11,7 +11,7 @@ public class Unit extends Sprite{
     protected int health;
     protected double damage;
     protected double speed;
-	
+	public int type;
 
 
 
@@ -19,6 +19,7 @@ public class Unit extends Sprite{
 		super(layer, image, x, y);
 		setDy(speed);
 		setDx(speed);
+		this.type=0;
 
 	}
 	
