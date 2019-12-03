@@ -442,13 +442,13 @@ public class Main extends Application {
 	}
 	
 	private void buyUnit(Castle c){	
-				if (c.getGold()>Settings.PIQUIER_COST) {
+				if (c.getGold()>Settings.PIKEMAN_COST) {
 
 					if (c.getOwner()=="player") {
 						Unit u = new Unit(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), 1, 1, 1);
 						u.owner = "player";	
 						double temp=c.getGold();
-						c.setUnitProduction(temp-Settings.PIQUIER_COST);
+						c.setUnitProduction(temp-Settings.PIKEMAN_COST);
 						c.reserveAdd(u);
 						u.removeFromLayer();
 					}
@@ -456,7 +456,7 @@ public class Main extends Application {
 						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
 						u.owner="ennemi";
 						double temp=c.getGold();
-						c.setUnitProduction(temp-Settings.PIQUIER_COST);
+						c.setUnitProduction(temp-Settings.PIKEMAN_COST);
 						c.reserveAdd(u);
 						u.removeFromLayer();
 					}
@@ -464,7 +464,7 @@ public class Main extends Application {
 						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
 						u.owner="unowned";
 						double temp=c.getGold();
-						c.setUnitProduction(temp-Settings.PIQUIER_COST);
+						c.setUnitProduction(temp-Settings.PIKEMAN_COST);
 						c.reserveAdd(u);
 						u.removeFromLayer();
 					}

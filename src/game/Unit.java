@@ -8,8 +8,9 @@ public class Unit extends Sprite{
     protected double dx;
     protected double dy;
 
-    private int health;
-    private double damage;
+    protected int health;
+    protected double damage;
+    protected double speed;
 	
 
 
