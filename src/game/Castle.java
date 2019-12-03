@@ -16,8 +16,11 @@ public class Castle extends Sprite {
 	private int level;
 	public boolean isReadyToAttack;
 	public boolean isSelected;
+	public boolean isBuildingOst;
 	public Text newMessage = new Text();
 	private List<Unit> reserve = new ArrayList<>();
+	
+	public Ost ost;
 	//private Unitproduction up = new Unitproduction();
 	//private Order order = new Order();
 	//private String orientation;
@@ -33,9 +36,13 @@ public class Castle extends Sprite {
 		this.owner = "unowned";
 		this.isReadyToAttack=true;
 		this.isSelected = false;
+		this.isBuildingOst = false;
 		time=0;
 		}
 
+	public void setOst(Ost o){
+		this.ost=o;
+	}
 	@Override
 	public void checkRemovability() {
 
@@ -99,6 +106,12 @@ public class Castle extends Sprite {
 		else
 			selectString ="";
 		newMessage.setText(""+this.getReserveSize()+selectString);
+	}
+	public boolean hasUnit(int unitType){
+		if (this.getReserveSize()>0)
+			return true;
+		else
+			return false;				
 	}
 	
 	public void CastleSet(int type,Image img){

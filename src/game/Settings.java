@@ -8,7 +8,7 @@ public class Settings {
 	
 	public static final int NUMBER_OF_CASTLES = 5;
 	public static final double NEUTRAL_PRODUCTION_SPEED = 0.1;
-	public static final double NORMAL_PRODUCTION_SPEED = 0.2;
+	public static final double NORMAL_PRODUCTION_SPEED = 0.6;
 	public static final int NEUTRAL_MAX_UNIT = 20;
 	public static final int NORMAL_MAX_UNIT = 50;
 	

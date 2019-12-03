@@ -110,7 +110,7 @@ public class Main extends Application {
 				osts.forEach(sprite -> sprite.move());
 				
 				// AI
-				AI();
+				//AI();
 
 				// check collisions
 				//checkCollisions();
@@ -306,7 +306,7 @@ public class Main extends Application {
 			for (Button b : buttons) {
 				sb.getChildren().remove(b);
 			}
-			
+			c = selected.get(0);
 			Button returnButton2 = new Button("<-"); 
 			sb.getChildren().addAll(returnButton2);
 			buttons.add(returnButton2);
@@ -317,13 +317,27 @@ public class Main extends Application {
 			
 			Button piquierButton2 = new Button("Piquier"); 
 			sb.getChildren().addAll(piquierButton2);
+			piquierButton2.setOnAction(e -> {
+				reserveToOst(c,0);
+				e.consume();
+			});
 			buttons.add(piquierButton2);
-			Button chevalierButton2 = new Button("Chevalier"); 
+			
+			Button chevalierButton2 = new Button("Chevalier"); 	
 			sb.getChildren().addAll(chevalierButton2);
 			buttons.add(chevalierButton2);
+			
 			Button onagreButton2 = new Button("Onagre"); 
 			sb.getChildren().addAll(onagreButton2);
 			buttons.add(onagreButton2);
+			
+			Button sendOstButton= new Button("Send OST"); 
+			sb.getChildren().addAll(sendOstButton);
+			sendOstButton.setOnAction(e -> {
+				sendOst(c);
+				e.consume();
+			});
+			buttons.add(sendOstButton);
 			
 		break;
 		}
@@ -457,13 +471,13 @@ public class Main extends Application {
 	}
 	
 	private void buyUnit(Castle c){	
-				if (c.getGold()>10) {
+				if (c.getGold()>Settings.PIQUIER_COST) {
 
 					if (c.getOwner()=="player") {
 						Unit u = new Unit(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), 1, 1, 1);
 						u.owner = "player";	
 						double temp=c.getGold();
-						c.setUnitProduction(temp-10);
+						c.setUnitProduction(temp-Settings.PIQUIER_COST);
 						c.reserveAdd(u);
 						u.removeFromLayer();
 					}
@@ -471,7 +485,7 @@ public class Main extends Application {
 						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
 						u.owner="ennemi";
 						double temp=c.getGold();
-						c.setUnitProduction(temp-10);
+						c.setUnitProduction(temp-Settings.PIQUIER_COST);
 						c.reserveAdd(u);
 						u.removeFromLayer();
 					}
@@ -479,7 +493,7 @@ public class Main extends Application {
 						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
 						u.owner="unowned";
 						double temp=c.getGold();
-						c.setUnitProduction(temp-10);
+						c.setUnitProduction(temp-Settings.PIQUIER_COST);
 						c.reserveAdd(u);
 						u.removeFromLayer();
 					}
@@ -549,7 +563,7 @@ public class Main extends Application {
 				if (c.getReserveSize()==0)
 					selected.clear();**/
 				
-				sendOst(c,d);
+				sendOstAI(c,d);
 				selected.clear();
 			}
 			
@@ -557,7 +571,31 @@ public class Main extends Application {
 
 	}
 	
-	private void sendOst(Castle source,Castle dest) {	
+
+	private void reserveToOst(Castle c,int unitType){
+		if(c.hasUnit(unitType)){
+			String mystring=" ";
+			Image im=unitImage;
+			
+			if (c.getOwner()=="player") {
+				im = unitImage;
+				mystring="player";	
+			}
+			if(c.getOwner()=="ennemi") {
+				im = unitImageR;
+				mystring="ennemi";			
+			}
+			if (!c.isBuildingOst){
+				Ost o = new Ost(playfieldLayer,im, c.getCenterX(), c.getCenterY(), 1, 1, 1);
+				o.owner = mystring;	
+				c.setOst(o);
+				c.isBuildingOst=true;
+			}
+			Unit u = c.reservePull();
+			c.ost.reserveAdd(u);
+		}
+	}
+	private void sendOstAI(Castle source,Castle dest) {	
 		
 		//on veux au moins 1 unité dans l'ost
 		if (source.getReserveSize()>0) {
@@ -613,6 +651,20 @@ public class Main extends Application {
 			
 		}
 
+	}
+	
+	private void sendOst(Castle c){
+	
+		if((selected.size()>0)/** la condition lorsque l'ost n'dest pas vide &&() **/){
+			Ost o = c.ost;
+			Castle d=castles.get(0);
+			o.setGoalx(d.getCenterX());
+			o.setGoaly(d.getCenterY());
+			osts.add(o);
+			c.isBuildingOst=false;
+			System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
+		}
+				
 	}
 	
 	private void checkSiege() {
@@ -709,7 +761,8 @@ public class Main extends Application {
 							}	
 							//c = CastleSet(c ,type);
 							c.CastleSet(type, im);
-							setOnClickBehaviour(c);		
+							setOnClickBehaviour(c);	
+							c.reserveAdd(u);
 						}
 						}
 						else {
@@ -788,7 +841,7 @@ public class Main extends Application {
 					//System.out.println("timediff: "+(timestamp-now)+"\n");
 					if (now-c2.time>5000) {
 						c2.time=now;
-						sendOst(c2,aiGoal);
+						sendOstAI(c2,aiGoal);
 					}
 					
 					
