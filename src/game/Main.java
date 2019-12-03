@@ -100,7 +100,7 @@ public class Main extends Application {
 				player.processInput();
 
 				//update army count
-				updateUnitsCount(true);
+				updateUnitsCount(false);
 
 				// movement
 				player.move();
@@ -115,7 +115,7 @@ public class Main extends Application {
 				// check collisions
 				//checkCollisions();
 				checkOrders();
-				checkSiege();
+				//checkSiege();
 				checkSieges();
 				
 				// update sprites in scene
@@ -287,6 +287,11 @@ public class Main extends Application {
 			Button piquierButton = new Button("Piquier 100£"); 
 			sb.getChildren().addAll(piquierButton);
 			buttons.add(piquierButton);
+			c = selected.get(0);
+			piquierButton.setOnAction(e -> {
+				buyUnit(c);
+				e.consume();
+			});
 			Button chevalierButton = new Button("Chevalier 500£"); 
 			sb.getChildren().addAll(chevalierButton);
 			buttons.add(chevalierButton);
@@ -448,6 +453,39 @@ public class Main extends Application {
 				}			
 			}
 		}
+		
+	}
+	
+	private void buyUnit(Castle c){	
+				if (c.getGold()>10) {
+
+					if (c.getOwner()=="player") {
+						Unit u = new Unit(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), 1, 1, 1);
+						u.owner = "player";	
+						double temp=c.getGold();
+						c.setUnitProduction(temp-10);
+						c.reserveAdd(u);
+						u.removeFromLayer();
+					}
+					if(c.getOwner()=="ennemi") {
+						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
+						u.owner="ennemi";
+						double temp=c.getGold();
+						c.setUnitProduction(temp-10);
+						c.reserveAdd(u);
+						u.removeFromLayer();
+					}
+					if(c.getOwner()=="unowned") {
+						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
+						u.owner="unowned";
+						double temp=c.getGold();
+						c.setUnitProduction(temp-10);
+						c.reserveAdd(u);
+						u.removeFromLayer();
+					}
+				}			
+			
+		
 		
 	}
 	
@@ -736,8 +774,9 @@ public class Main extends Application {
 			}
 		
 		//Attaquer aiGoal
-		for (Castle c2 : castles) {
+		for (Castle c2 : castles) {		
 			if (c2.getOwner()=="ennemi") {
+				buyUnit(c2);
 				if (c2.getReserveSize()>0) {
 					//Unit u = c2.reservePull();
 					/**
