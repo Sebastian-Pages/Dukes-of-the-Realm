@@ -4,14 +4,14 @@ import java.util.List;
 
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-public class Ost extends Sprite{
+public class Ost extends Unit{
 	double goalx;
 	double goaly;
 	String owner;
 	private List<Unit> reserve = new ArrayList<>();
 	
 	public Ost(Pane layer, Image image, double x, double y, int health,double damage, double speed) {
-		super(layer, image, x, y, health, damage);
+		super(layer, image, x, y,health,damage,speed);
 		setDy(speed);
 		setDx(speed);
 
@@ -35,7 +35,7 @@ public class Ost extends Sprite{
 	
 	public void checkRemovability() {
 
-		if (!isAlive())
+		if (false)		
 			remove();
 	}
 	

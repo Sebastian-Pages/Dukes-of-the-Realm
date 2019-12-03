@@ -1,27 +1,27 @@
 BUGS :
-	status [✅]: empecher le fait de s'attaquer soit meme (meme chateau vers meme chateau) -> rajouter une condition.
-	status [✅]: lorsqu'on envoie trop d'unités ca bug beacuoup sont détruites. -> remplacer par les ost🔄
+	status [âœ…]: empecher le fait de s'attaquer soit meme (meme chateau vers meme chateau) -> rajouter une condition.
+	status [âœ…]: lorsqu'on envoie trop d'unitÃ©s ca bug beacuoup sont dÃ©truites. -> remplacer par les ostðŸ”„
 	
-	status [❌]: terminer la game lorsque le joueur n'a plus de chateau ou dans le cadre d'un combat d'ia plus qu'un joueur en vie.
-				(en plus des neutres nsm les gens non politisés).
-	status [❌]:apres avoir sélectionner deux chateau on clique sur l'herbe. 
-				L'étoile de sélection reste afficher alors que la HBox montre qu'on n'a rien de sélectionner
+	status [done]: terminer la game lorsque le joueur n'a plus de chateau ou dans le cadre d'un combat d'ia plus qu'un joueur en vie.
+				(en plus des neutres nsm les gens non politisÃ©s).
+	status [done]:apres avoir sÃ©lectionner deux chateau on clique sur l'herbe. 
+				L'Ã©toile de sÃ©lection reste afficher alors que la HBox montre qu'on n'a rien de sÃ©lectionner
 				--ne servira pas, on fera la selection avec des images plutot non ?
 	
 A FAIRE POUR LA VERSION DE BASE
-	status [❌]: corriger bugs
-	status [❌]: netoyer code (commenter aussi)
-	status [❌]: git branch pour version minimale
-	status [❌]: faire le README.md
+	status [â�Œ]: corriger bugs
+	status [â�Œ]: netoyer code (commenter aussi)
+	status [â�Œ]: git branch pour version minimale
+	status [â�Œ]: faire le README.md
 	
 
 A FAIRE AVANT LES VACANCES:
-	status [❌]: ajouter l'argent
-	status [❌]: faire menu [send] [train] [trade] (en bas ou a coté du chateau). afficher les unité ne cours de train
-	status [❌]: gérer les nouvelles image (on attend RV) sous forme de sets. créer des tableaux par joueur, donner un tableau à cahque joueur
-	status [❌]: ajouter les nouvelle unités
-	status [❌]: gérer les contournements de chateau (passer par la porte)
-	status [❌]: menu avant la partie pour lancer un match entre IA et choisir le set d'image jouer (peut etre choisir des level)
+	status [â�Œ]: ajouter l'argent
+	status [â�Œ]: faire menu [send] [train] [trade] (en bas ou a cotÃ© du chateau). afficher les unitÃ© ne cours de train
+	status [â�Œ]: gÃ©rer les nouvelles image (on attend RV) sous forme de sets. crÃ©er des tableaux par joueur, donner un tableau Ã  cahque joueur
+	status [â�Œ]: ajouter les nouvelle unitÃ©s
+	status [â�Œ]: gÃ©rer les contournements de chateau (passer par la porte)
+	status [â�Œ]: menu avant la partie pour lancer un match entre IA et choisir le set d'image jouer (peut etre choisir des level)
 	
 	
 FONCTIONNEMENT DU MENU

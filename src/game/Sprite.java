@@ -13,25 +13,16 @@ public abstract class Sprite {
     protected double x;
     protected double y;
 
-    protected double dx;
-    protected double dy;
-
-    private int health;
-    private double damage;
-
     private boolean removable = false;
 
     private double w;
     private double h;
 
-    public Sprite(Pane layer, Image image, double x, double y, int health, double damage) {
+    public Sprite(Pane layer, Image image, double x, double y) {
 
         this.layer = layer;
         this.x = x;
         this.y = y;
-
-        this.health = health;
-        this.damage = damage;
 
         this.imageView = new ImageView(image);
         this.imageView.relocate(x, y);
@@ -67,45 +58,8 @@ public abstract class Sprite {
         this.y = y;
     }
 
-    public double getDx() {
-        return dx;
-    }
-
-    public void setDx(double dx) {
-        this.dx = dx;
-    }
-
-    public double getDy() {
-        return dy;
-    }
-
-    public void setDy(double dy) {
-        this.dy = dy;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public double getDamage() {
-        return damage;
-    }
-
-    public void setDamage(double damage) {
-        this.damage = damage;
-    }
-
     public boolean isRemovable() {
         return removable;
-    }
-
-    public void move() {
-        x += dx;
-        y += dy;
-    }
-
-    public boolean isAlive() {
-        return health > 0;
     }
 
     protected ImageView getView() {
@@ -144,9 +98,7 @@ public abstract class Sprite {
     	return getView().getBoundsInParent().intersects(sprite.getView().getBoundsInParent());
     }
 
-    public void damagedBy( Sprite sprite) {
-        health -= sprite.getDamage();
-    }
+
 
     public void remove() {
         this.removable = true;

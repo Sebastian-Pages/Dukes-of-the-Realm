@@ -4,28 +4,18 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 public class Unit extends Sprite{
-	double goalx;
-	double goaly;
 	String owner;
+    protected double dx;
+    protected double dy;
 
-	public double getGoalx() {
-		return goalx;
-	}
+    private int health;
+    private double damage;
+	
 
-	public void setGoalx(double goalx) {
-		this.goalx = goalx;
-	}
 
-	public double getGoaly() {
-		return goaly;
-	}
-
-	public void setGoaly(double goaly) {
-		this.goaly = goaly;
-	}
 
 	public Unit(Pane layer, Image image, double x, double y, int health,double damage, double speed) {
-		super(layer, image, x, y, health, damage);
+		super(layer, image, x, y);
 		setDy(speed);
 		setDx(speed);
 
@@ -36,17 +26,45 @@ public class Unit extends Sprite{
 		if (!isAlive())
 			remove();
 	}
-	
+    
 	public void move() {
-		if (this.x < this.goalx)
-			x += dx;
-		
-		if (this.x > this.goalx)
-			x -= dx;
-		if (this.y < this.goaly)
-			y += dy;
-		
-		if (this.y > this.goaly)
-			y -= dy;
+        x += dx;
+        y += dy;
     }
+	
+    public boolean isAlive() {
+        return health > 0;
+    }
+    
+    public void damagedBy(Unit unit) {
+        health -= unit.getDamage();
+    }
+
+public double getDx() {
+    return dx;
+}
+
+public void setDx(double dx) {
+    this.dx = dx;
+}
+
+public double getDy() {
+    return dy;
+}
+
+public void setDy(double dy) {
+    this.dy = dy;
+}
+
+public int getHealth() {
+    return health;
+}
+
+public double getDamage() {
+    return damage;
+}
+
+public void setDamage(double damage) {
+    this.damage = damage;
+}
 }

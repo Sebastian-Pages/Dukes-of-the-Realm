@@ -8,7 +8,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 public class Castle extends Sprite {
-	private double maxY;
 	long time;
 	private String owner;
 	private double gold;
@@ -26,11 +25,8 @@ public class Castle extends Sprite {
 	//private String orientation;
 	
 	public Castle(Pane layer, Image image, double x, double y, int health,double damage, double speed) {
-		super(layer, image, x, y, health, damage);
-		setDy(0);
-		setDx(0);
+		super(layer, image, x, y);
 		this.productionSpeed=speed;
-		maxY = Settings.SCENE_HEIGHT - image.getHeight();
 		this.gold= 0;
 		this.level = 1;
 		this.owner = "unowned";
@@ -45,8 +41,7 @@ public class Castle extends Sprite {
 	}
 	@Override
 	public void checkRemovability() {
-
-		if (getY() > maxY || !isAlive())
+		if(false)
 			remove();
 	}
 

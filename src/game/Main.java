@@ -49,7 +49,6 @@ public class Main extends Application {
 	//Selected castles
 	private List<Castle> selected = new ArrayList<>();;
 
-	private Player player;
 	//private List<Enemy> enemies = new ArrayList<>();
 	//private List<Missile> missiles = new ArrayList<>();
 	private List<Castle> castles = new ArrayList<>();
@@ -58,7 +57,7 @@ public class Main extends Application {
 	private List<Button> buttons = new ArrayList<>();
 	private List<Decoration> targets = new ArrayList<>();
 
-	private Text scoreMessage = new Text();
+	private Text infoMessage = new Text();
 	private Text newMessage = new Text();
 	private int scoreValue = 0;
 	private boolean collision = false;
@@ -98,16 +97,11 @@ public class Main extends Application {
 			public void handle(long now) {
 				processInput(input, now);
 
-				// player input
-				player.processInput();
 
 				//update army count
 				updateUnitsCount(false);
 
 				// movement
-				player.move();
-				//enemies.forEach(sprite -> sprite.move());
-				//missiles.forEach(sprite -> sprite.move());
 				units.forEach(sprite -> sprite.move());
 				osts.forEach(sprite -> sprite.move());
 				
@@ -121,7 +115,6 @@ public class Main extends Application {
 				checkSieges();
 				
 				// update sprites in scene
-				player.updateUI();
 				castles.forEach(sprite -> sprite.updateUI());
 				units.forEach(sprite -> sprite.updateUI());
 				osts.forEach(sprite -> sprite.updateUI());
@@ -129,7 +122,7 @@ public class Main extends Application {
 
 				// check if sprite can be removed
 
-				castles.forEach(sprite -> sprite.checkRemovability());
+				//castles.forEach(sprite -> sprite.checkRemovability());
 				units.forEach(sprite -> sprite.checkRemovability());
 				osts.forEach(sprite -> sprite.checkRemovability());
 
@@ -174,8 +167,6 @@ public class Main extends Application {
 		input = new Input(scene);
 		input.addListeners();
 
-		createPlayer();
-		player.removeFromLayer();
 		createStatusBar();
 		
 		//Initialize pause input
@@ -221,8 +212,8 @@ public class Main extends Application {
 		switch(state) {
 		case Settings.STATE_INIT:
 			hboxState=Settings.STATE_INIT;
-			scoreMessage.setText("Click on a castle");
-			sb.getChildren().addAll(scoreMessage);
+			infoMessage.setText("Click on a castle");
+			sb.getChildren().addAll(infoMessage);
 			sb.getStyleClass().add("statusBar"); 
 			sb.setSpacing(15);	
 			break;
@@ -232,7 +223,7 @@ public class Main extends Application {
 			for (Button b : buttons) {
 				sb.getChildren().remove(b);
 			}
-			scoreMessage.setText("Click on a castle");
+			infoMessage.setText("Click on a castle");
 			break;
 		
 		case Settings.STATE_FIRST:
@@ -241,7 +232,7 @@ public class Main extends Application {
 				sb.getChildren().remove(b);
 			}
 			Castle c = selected.get(0);
-			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Gold:   "+Math.round(c.getGold())+"\n	    Level:  "+c.getLevel());
+			infoMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Gold:   "+Math.round(c.getGold())+"\n	    Level:  "+c.getLevel());
 			
 			
 			Button trainButton = new Button("Train"); 
@@ -271,7 +262,7 @@ public class Main extends Application {
 				sb.getChildren().remove(b);
 			}
 			c = selected.get(0);
-			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Gold:   "+Math.round(c.getGold())+"\n	    Level:  "+c.getLevel());		
+			infoMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Gold:   "+Math.round(c.getGold())+"\n	    Level:  "+c.getLevel());		
 		break;
 				
 		case Settings.STATE_TRAIN:
@@ -348,30 +339,6 @@ public class Main extends Application {
 	}
 	
 
-	private void createPlayer() {
-		double x = (Settings.SCENE_WIDTH - playerImage.getWidth()) / 2.0;
-		double y = Settings.SCENE_HEIGHT * 0.7;
-		player = new Player(playfieldLayer, playerImage, x, y, Settings.PLAYER_HEALTH, Settings.PLAYER_DAMAGE,
-				Settings.PLAYER_SPEED, input);
-		
-		
-		player.getView().setOnMousePressed(e -> {
-			System.out.println("Click on player");
-			e.consume();
-		});
-		
-		player.getView().setOnContextMenuRequested(e -> {
-			ContextMenu contextMenu = new ContextMenu();
-			MenuItem low = new MenuItem("Slow");
-			MenuItem medium= new MenuItem("Regular");
-			MenuItem high= new MenuItem("Fast");
-			low.setOnAction(evt -> player.setFireFrequencyLow());
-			medium.setOnAction(evt -> player.setFireFrequencyMedium());
-			high.setOnAction(evt -> player.setFireFrequencyHigh());
-			contextMenu.getItems().addAll(low, medium, high);
-			contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
-		});
-	}
 
 	/**INITIALISE LES CHATEAUX**/
 	private void spawnCastles() {
@@ -387,7 +354,7 @@ public class Main extends Application {
 			Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed);
 			
 			castle.getView().setOnMousePressed(e -> {
-				scoreMessage.setText("Castle [ owner: "+castle.getOwner()+"\n	    Gold:   "+Math.round(castle.getGold())+" | Level: "+castle.getLevel()+" ]");
+				infoMessage.setText("Castle [ owner: "+castle.getOwner()+"\n	    Gold:   "+Math.round(castle.getGold())+" | Level: "+castle.getLevel()+" ]");
 				manageSelectedCastles(castle);
 				e.consume();
 			});
@@ -642,10 +609,6 @@ public class Main extends Application {
 				System.out.println(selected.get(0).getOwner() +" attacks -> "+ (selected.get(1).getOwner()));
 				Unit u = c.reservePull();
 				
-				//set destination of unit
-				u.setGoalx(d.getCenterX());
-				u.setGoaly(d.getCenterY());
-				
 				u.addToLayer();
 				units.add(u);
 				if (c.getReserveSize()==0)
@@ -683,55 +646,7 @@ public class Main extends Application {
 				
 	}
 	
-	private void checkSiege() {
-		for (Unit u : units) {	
-			// La condition est comme ça pour laisser de la marge d'erreur et ne pas rater la collision
-			if(
-			( (int)u.getGoalx()-5 < (int)u.getX() )&&
-			( (int)u.getX() < (int)u.getGoalx()+5 )&&
-			( (int)u.getGoaly()-5 < (int)u.getY() )&&
-			( (int)u.getY() < (int)u.getGoaly()+5 ) ) 
-			{		
-				for (Castle c : castles) {	
-					if (u.collidesWith(c)) {	
-						u.remove();
-						/// ne pas mettre cette ligne. On met son attribut removable à"true" ensuite la fct remove sprite le retire de la lsite
-						//units.remove(u);
-						
-						//removSrpite le fait deja
-						//u.removeFromLayer();
-						if (c.getReserveSize()>0) {	
-							if (c.getOwner()==u.owner) {
-								c.reserveAdd(u);
-							}
-							else {
-								Unit t =c.reservePull();
-								t.remove();
-							}						
-						}
-						else {
-							int type =0;
-							Image im = castleImage;
-							if (u.owner=="player") {
-								type = 0;
-								im = castleImageBlue;
-							}
-
-							if (u.owner=="ennemi") {
-								type = 1;
-								im = castleImageRed;
-								test=true;
-							}	
-							//c = CastleSet(c ,type);
-							c.CastleSet(type, im);
-							setOnClickBehaviour(c);		
-						}
-					}		
-				}
-			}
-		}
-	}
-
+	
 	private void checkSieges() {
 		for (Ost o : osts) {	
 			// La condition est comme ça pour laisser de la marge d'erreur et ne pas rater la collision
@@ -794,9 +709,9 @@ public class Main extends Application {
 	// ne marche pas lorqu'il reste des chateaux neutre
 	private void checkIfGameOver() {
 		boolean areAllOwnedByTheSame = true;
-		String s = castles.get(0).getOwner();
+		String s = castles.get(2).getOwner();
 		for (Castle c : castles) {
-			if (c.getOwner() != s ) {
+			if (c.getOwner() != s && c.getOwner()!="unowned" ) {
 				areAllOwnedByTheSame=false;
 			}		
 		}
@@ -883,7 +798,7 @@ public class Main extends Application {
 	private void updateText() {	
 		if (selected.size()>0) {
 			Castle c = selected.get(0);
-			scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Gold:   "+Math.round(c.getGold())+"\n	    Level:  "+c.getLevel());	
+			infoMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Gold:   "+Math.round(c.getGold())+"\n	    Level:  "+c.getLevel());	
 		}
 		else 
 			setStatusBar(statusBar,Settings.STATE_UNSELECTED);
