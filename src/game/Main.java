@@ -892,6 +892,7 @@ public class Main extends Application {
 	
 	//on peut revoie la séléection et changer les views pour voir ce qui est sélectionner
 	private void manageSelectedCastles(Castle c){
+		/**
 		if (selected.size()>=2) {
 			Castle temp = selected.get(1);
 			selected.clear();
@@ -910,7 +911,9 @@ public class Main extends Application {
 				if (cas != c)
 					cas.isSelected = false;
 			}
-		}
+		}**/
+		selected.clear();
+		selected.add(c);
 		if (c.getOwner()=="player")
 				setStatusBar(statusBar,Settings.STATE_FIRST);
 		else
