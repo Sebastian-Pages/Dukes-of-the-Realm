@@ -9,6 +9,8 @@ public class Knight extends Unit {
 		super(layer, image, x, y,health,damage,speed);
 		this.health=Settings.KNIGHT_HEALTH;
 		this.damage=Settings.KNIGHT_DAMAGE;
+		this.type=Settings.KNIGHT_TYPE;
+		this.cost=Settings.KNIGHT_COST;
 	}
 		
 }

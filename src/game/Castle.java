@@ -142,7 +142,7 @@ public class Castle extends Sprite {
 		
 		if (!this.productionQ.isEmpty()){
 			this.productionProgress+=0.1;
-			if (this.productionProgress > Settings.PIKEMAN_PRODUCTION_TIME/5){
+			if (this.productionProgress > Settings.PIKEMAN_PRODUCTION_TIME/8){
 				this.productionProgress=0;
 				Unit u = this.productionQ.get(0);
 				this.productionQ.remove(0);

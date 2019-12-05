@@ -4,14 +4,14 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 public class Unit extends Sprite{
-	String owner;
+	protected String owner;
     protected double dx;
     protected double dy;
-
-    protected int health;
-    protected double damage;
     protected double speed;
-	public int type;
+    protected int health;
+    protected int damage; 
+	protected int type;
+	protected int cost;
 
 
 
@@ -42,31 +42,47 @@ public class Unit extends Sprite{
         health -= unit.getDamage();
     }
 
-public double getDx() {
+    public double getDx() {
     return dx;
-}
+    }	
 
-public void setDx(double dx) {
-    this.dx = dx;
-}
+    public void setDx(double dx) {
+    	this.dx = dx;
+    }
 
-public double getDy() {
-    return dy;
-}
+    public double getDy() {
+    	return dy;
+    }
 
-public void setDy(double dy) {
-    this.dy = dy;
-}
+    public void setDy(double dy) {
+    	this.dy = dy;
+    }
 
-public int getHealth() {
-    return health;
-}
+    public int getHealth() {
+    	return health;
+    }
 
-public double getDamage() {
-    return damage;
-}
+    public double getDamage() {
+    	return damage;
+    }
 
-public void setDamage(double damage) {
-    this.damage = damage;
-}
+    public void setDamage(int damage) {
+    	this.damage = damage;
+    }
+    
+    public double getType() {
+    	return type;
+    }
+    public void setType(int type) {
+    	this.type = type;
+    }
+    public double getCost() {
+    	return cost;
+    }
+    public void setCost(int cost) {
+    	this.cost = cost;
+    }
+    
+
+ 
 }
