@@ -4,7 +4,7 @@ import javafx.scene.layout.Pane;
 
 public class Decoration extends Sprite {
 
-	public Decoration(Pane layer, Image image, double x, double y, int health, double damage) {
+	public Decoration(Pane layer, Image image, double x, double y) {
 		super(layer, image, x, y);
 
 	}

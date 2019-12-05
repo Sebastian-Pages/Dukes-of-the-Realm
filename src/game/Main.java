@@ -56,6 +56,7 @@ public class Main extends Application {
 	private List<Ost> osts = new ArrayList<>();
 	private List<Button> buttons = new ArrayList<>();
 	private List<Decoration> targets = new ArrayList<>();
+	private List<Decoration> trainingQ = new ArrayList<>();
 
 	private Text infoMessage = new Text();
 	private Text newMessage = new Text();
@@ -128,7 +129,6 @@ public class Main extends Application {
 				removeSprites(osts);
 				removeSprites(targets);
 
-
 				// update score, health, etc
 				updateText();	
 				castles.forEach(castle -> castle.update());
@@ -180,7 +180,7 @@ public class Main extends Application {
 				});
 		
 		//Initialize map
-		Decoration grass = new Decoration(playfieldLayer, grassImage, 0, 0, 1, 1);
+		Decoration grass = new Decoration(playfieldLayer, grassImage, 0, 0);
 		grass.getView().setOnMousePressed(e -> {
 			for (Castle c3: selected) {
 				c3.isSelected=false;
@@ -352,13 +352,17 @@ public class Main extends Application {
 	}
 	void displayQ(Castle c){
 		for (Unit u : c.productionQ){
-			if (u.type==0){
-				int x=c.productionQ.indexOf(u);
-				Unit un = new Unit(playfieldLayer, unitImage,x*21 +10,770 , 1,1, 1);
-				units.add(un);
+			Image img = unitImage;
+			if (u.type==0)
+				img = unitImage;
+			
+			int x=c.productionQ.indexOf(u);
+			Decoration un = new Decoration(playfieldLayer,img,x*21 +10,770);
+			trainingQ.add(un);
 			}
+			
 		}
-	}
+	
 	
 	
 
@@ -486,7 +490,7 @@ public class Main extends Application {
 					double temp=c.getGold();				
 					c.setUnitProduction(temp-u.getCost());					
 					c.productionQ.add(u);
-					System.out.println("prodQ: "+c.productionQ.size()+u);
+					System.out.println(u+" added to prodQ");
 					u.removeFromLayer();
 					}
 				}			
@@ -645,7 +649,7 @@ public class Main extends Application {
 	private void selectTarget(Castle c){
 		for(Castle targetc : castles){
 			if (targetc!=c){
-				Decoration target = new Decoration(playfieldLayer, targetImage, targetc.getX(),targetc.getY(), 1, 1);
+				Decoration target = new Decoration(playfieldLayer, targetImage, targetc.getX(),targetc.getY());
 				targets.add(target);
 				target.getView().setOnMousePressed(e -> {
 					sendOst(c,targetc);
@@ -821,6 +825,10 @@ public class Main extends Application {
 	private void updateText() {	
 		if (selected.size()>0) {
 			Castle c = selected.get(0);
+			for (Decoration d : trainingQ){
+				d.removeFromLayer();
+				d.remove();
+			}
 			displayQ(c);
 			infoMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Gold:   "+Math.round(c.getGold())+"\n	    Level:  "+c.getLevel());	
 		}
