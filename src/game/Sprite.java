@@ -6,9 +6,9 @@ import javafx.scene.layout.Pane;
 
 public abstract class Sprite {
 
-    private ImageView imageView;
+    protected ImageView imageView;
 
-    private Pane layer;
+    protected Pane layer;
 
     protected double x;
     protected double y;

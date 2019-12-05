@@ -280,16 +280,24 @@ public class Main extends Application {
 			buttons.add(piquierButton);
 			c = selected.get(0);
 			piquierButton.setOnAction(e -> {
-				buyUnit(c);
+				buyUnit(c,0,Settings.PIKEMAN_COST);
 				e.consume();
 			});
 			Button chevalierButton = new Button("Chevalier 500£"); 
 			sb.getChildren().addAll(chevalierButton);
 			buttons.add(chevalierButton);
+			chevalierButton.setOnAction(e -> {
+				buyUnit(c,1,Settings.KNIGHT_COST);
+				e.consume();
+			});
+			
 			Button onagreButton = new Button("Onagre 900£"); 
 			sb.getChildren().addAll(onagreButton);
 			buttons.add(onagreButton);
-			
+			onagreButton.setOnAction(e -> {
+				buyUnit(c,2,Settings.ONAGER_COST);
+				e.consume();
+			});
 			
 		break;
 		
@@ -310,7 +318,7 @@ public class Main extends Application {
 			Button piquierButton2 = new Button("Piquier"); 
 			sb.getChildren().addAll(piquierButton2);
 			piquierButton2.setOnAction(e -> {
-				reserveToOst(c,0);
+				reserveToOst(c,Settings.PIKEMAN_TYPE);
 				e.consume();
 			});
 			buttons.add(piquierButton2);
@@ -318,10 +326,18 @@ public class Main extends Application {
 			Button chevalierButton2 = new Button("Chevalier"); 	
 			sb.getChildren().addAll(chevalierButton2);
 			buttons.add(chevalierButton2);
+			chevalierButton2.setOnAction(e -> {
+				reserveToOst(c,Settings.KNIGHT_TYPE);
+				e.consume();
+			});
 			
 			Button onagreButton2 = new Button("Onagre"); 
 			sb.getChildren().addAll(onagreButton2);
 			buttons.add(onagreButton2);
+			onagreButton2.setOnAction(e -> {
+				reserveToOst(c,Settings.ONAGER_TYPE);
+				e.consume();
+			});
 			
 			Button sendOstButton= new Button("Send OST"); 
 			sb.getChildren().addAll(sendOstButton);
@@ -448,41 +464,36 @@ public class Main extends Application {
 		
 	}
 	
-	private void buyUnit(Castle c){	
-				if (c.getGold()>Settings.PIKEMAN_COST) {
-
-					if (c.getOwner()=="player") {
-						Unit u = new Unit(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), 1, 1, 1);
-						u.owner = "player";	
-						double temp=c.getGold();
-						c.setUnitProduction(temp-Settings.PIKEMAN_COST);
+	private void buyUnit(Castle c,int type,int cost){	
+				if (c.getGold()>cost) {
+					String owner = c.getOwner();
+					Unit u = null;
+					Image img = unitImage;
+					if (c.getOwner()=="player")
+						img = unitImage;
+					if(c.getOwner()=="ennemi") 
+						img = unitImageR;
+					if(c.getOwner()=="unowned") 
+						img = unitImageR;
 						
-						c.productionQ.add(u);
-						System.out.println("prodQ: "+c.productionQ.size());
-						//c.reserveAdd(u);
-						u.removeFromLayer();
-					}
-					if(c.getOwner()=="ennemi") {
-						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
-						u.owner="ennemi";
-						double temp=c.getGold();
-						c.setUnitProduction(temp-Settings.PIKEMAN_COST);
-						c.reserveAdd(u);
-						u.removeFromLayer();
-					}
-					if(c.getOwner()=="unowned") {
-						Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
-						u.owner="unowned";
-						double temp=c.getGold();
-						c.setUnitProduction(temp-Settings.PIKEMAN_COST);
-						c.reserveAdd(u);
-						u.removeFromLayer();
+					if (type == Settings.PIKEMAN_TYPE){
+						u = new Pikeman(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), owner);}
+					if (type == Settings.KNIGHT_TYPE){
+						u = new Knight(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), owner);}
+					if (type == Settings.ONAGER_TYPE){
+						u = new Onager(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), owner);}
+					
+					double temp=c.getGold();				
+					c.setUnitProduction(temp-u.getCost());					
+					c.productionQ.add(u);
+					System.out.println("prodQ: "+c.productionQ.size()+u);
+					u.removeFromLayer();
 					}
 				}			
 			
 		
 		
-	}
+	
 	
 
 	private void removeSprites(List<? extends Sprite> spriteList) {
@@ -572,8 +583,10 @@ public class Main extends Application {
 				c.setOst(o);
 				c.isBuildingOst=true;
 			}
-			Unit u = c.reservePull();
+			Unit u = c.reservePull(unitType);
 			c.ost.reserveAdd(u);
+			u.remove();
+			u.removeFromLayer();
 		}
 	}
 	private void sendOstAI(Castle source,Castle dest) {	
@@ -596,7 +609,7 @@ public class Main extends Application {
 			
 			//pour chaque unité dans le chateau, l'ajouter à l'ost
 			while (source.getReserveSize()>0) {
-				Unit u = source.reservePull();
+				Unit u = source.reservePull(0);
 				o.reserveAdd(u);
 			}
 			o.setGoalx(dest.getCenterX());
@@ -617,7 +630,7 @@ public class Main extends Application {
 				Castle d=selected.get(1);
 
 				System.out.println(selected.get(0).getOwner() +" attacks -> "+ (selected.get(1).getOwner()));
-				Unit u = c.reservePull();
+				Unit u = c.reservePull(0);
 				
 				u.addToLayer();
 				units.add(u);
@@ -683,7 +696,7 @@ public class Main extends Application {
 								c.reserveAdd(u);
 							}
 							else {
-								Unit t =c.reservePull();
+								Unit t =c.reservePull(0);
 								t.remove();
 							}						
 						}
@@ -770,7 +783,7 @@ public class Main extends Application {
 		//Attaquer aiGoal
 		for (Castle c2 : castles) {		
 			if (c2.getOwner()=="ennemi") {
-				buyUnit(c2);
+				buyUnit(c2,0,100);
 				if (c2.getReserveSize()>0) {
 					//Unit u = c2.reservePull();
 					/**

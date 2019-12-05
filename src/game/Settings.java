@@ -20,14 +20,14 @@ public class Settings {
 	public static final int PIKEMAN_DAMAGE= 1;
 	
 	public static final int KNIGHT_TYPE= 1;
-	public static final int KNIGHT_COST= 100;
+	public static final int KNIGHT_COST= 150;
 	public static final int KNIGHT_PRODUCTION_TIME= 100;
 	public static final int KNIGHT_SPEED= 1;
 	public static final int KNIGHT_HEALTH= 1;
 	public static final int KNIGHT_DAMAGE= 1;
 	
 	public static final int ONAGER_TYPE= 2;
-	public static final int ONAGER_COST= 100;
+	public static final int ONAGER_COST= 200;
 	public static final int ONAGER_PRODUCTION_TIME= 100;
 	public static final int ONAGER_SPEED= 1;
 	public static final int ONAGER_HEALTH= 1;

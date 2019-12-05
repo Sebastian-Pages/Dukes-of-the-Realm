@@ -1,6 +1,7 @@
 package game;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 public class Unit extends Sprite{
@@ -12,6 +13,7 @@ public class Unit extends Sprite{
     protected int damage; 
 	protected int type;
 	protected int cost;
+	private Image image;
 
 
 
@@ -22,7 +24,18 @@ public class Unit extends Sprite{
 		this.type=0;
 
 	}
-	
+	public Unit(Pane layer, Image image, double x, double y,String owner) {
+		super(layer, image, x, y);
+		setDy(speed);
+		setDx(speed);
+		this.type=0;
+		this.owner=owner;
+		this.image=image;
+
+	}
+	public Unit(Unit u) {		
+		this(u.layer,u.image, u.x, u.y,u.owner);
+	}
 	public void checkRemovability() {
 
 		if (!isAlive())

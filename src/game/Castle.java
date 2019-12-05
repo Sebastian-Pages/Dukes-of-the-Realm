@@ -92,10 +92,16 @@ public class Castle extends Sprite {
 	public void reserveAdd(Unit u) {
 		reserve.add(u);
 	}
-	public Unit reservePull() {
-		Unit u = reserve.get(getReserveSize()-1);
-		reserve.remove(getReserveSize()-1);
-		return u;
+	public Unit reservePull(int type) {
+		Unit u2 = null;
+		for (Unit u : reserve){
+			if (u.getType()==type){
+				u2 = new Unit(u);	
+				reserve.remove(u);
+				return u2;
+			}
+		}
+		return u2;
 	}
 	public void update() {
 		String selectString ="";
@@ -106,8 +112,15 @@ public class Castle extends Sprite {
 		newMessage.setText(""+this.getReserveSize()+selectString);
 	}
 	public boolean hasUnit(int unitType){
-		if (this.getReserveSize()>0)
-			return true;
+		
+		if (this.getReserveSize()>0){
+			boolean result=false;
+			for (Unit u : reserve){
+				if (u.getType()==unitType)
+					result=true;
+			}
+			return result;
+		}	
 		else
 			return false;				
 	}
