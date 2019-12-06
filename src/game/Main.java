@@ -1,12 +1,14 @@
 package game;
 //this is a test
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
-
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -207,6 +209,12 @@ public class Main extends Application {
 		backgroundImage = new Image(getClass().getResource("/images/grass.png").toExternalForm(), Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT+Settings.STATUS_BAR_HEIGHT, false, true);
 		input = new Input(scene);
 		input.addListeners();
+		
+		/**
+		String bip = "/images/music.mp3";
+		Media hit = new Media(new File(bip).toURI().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(hit);		
+		mediaPlayer.play();**/
 		
 		Decoration menuBackground = new Decoration(playfieldLayer, backgroundImage, 0, 0);
 		Decoration classique = new Decoration(playfieldLayer, classiqueImage, (Settings.SCENE_WIDTH/2)-175, (Settings.SCENE_HEIGHT/2)-150);
