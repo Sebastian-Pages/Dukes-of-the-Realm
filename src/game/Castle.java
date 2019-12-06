@@ -182,5 +182,10 @@ public class Castle extends Sprite {
 		}
 		return result;				
 	}
+
+	public void setGold(double i) {
+		this.gold=i;
+		
+	}
 	
 }

@@ -398,6 +398,10 @@ public class Main extends Application {
 			if (placed_well){
 				castle.CastleSet(2, castleImage);
 				castle.time = System.currentTimeMillis();
+				castle.setGold(1000);
+				for(int i=0;i<8;i++){
+					buyUnit(castle, 0, 100);
+				}
 				setOnClickBehaviour(castle);
 				castles.remove(castle);
 				
@@ -664,6 +668,7 @@ public class Main extends Application {
 	
 		if((selected.size()>0)/** la condition lorsque l'ost n'dest pas vide &&() **/){
 			Ost o = c.ost;
+			o.setSpeed(o.getOstSpeed());
 			o.setGoalx(d.getCenterX());
 			o.setGoaly(d.getCenterY());
 			osts.add(o);

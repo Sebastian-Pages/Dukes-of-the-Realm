@@ -41,15 +41,15 @@ public class Ost extends Unit{
 	
 	public void move() {
 		if (this.x < this.goalx)
-			x += dx;
+			x += speed;
 		
 		if (this.x > this.goalx)
-			x -= dx;
+			x -= speed;
 		if (this.y < this.goaly)
-			y += dy;
+			y += speed;
 		
 		if (this.y > this.goaly)
-			y -= dy;
+			y -= speed;
     }
 	
 	public int getReserveSize() {
@@ -87,6 +87,22 @@ public class Ost extends Unit{
 			}
 		}
 		return result;				
+	}
+	
+	public double getOstSpeed() {
+		double s=0;
+		if (this.getReserveSize()>0){
+			s=1000;
+			for (Unit u : reserve){
+				if (u.getSpeed()<s)
+					s=u.getSpeed();
+			}
+		}
+		return s;
+	}
+	
+	public void setSpeed(double speed){
+		this.speed=speed;
 	}
 }
 

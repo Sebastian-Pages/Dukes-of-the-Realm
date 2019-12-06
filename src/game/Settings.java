@@ -15,7 +15,7 @@ public class Settings {
 	public static final int PIKEMAN_TYPE= 0;
 	public static final int PIKEMAN_COST= 100;
 	public static final int PIKEMAN_PRODUCTION_TIME= 100;
-	public static final int PIKEMAN_SPEED= 1;
+	public static final int PIKEMAN_SPEED= 4;
 	public static final int PIKEMAN_HEALTH= 1;
 	public static final int PIKEMAN_DAMAGE= 1;
 	

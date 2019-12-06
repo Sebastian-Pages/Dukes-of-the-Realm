@@ -11,6 +11,7 @@ public class Pikeman extends Unit {
 		this.damage=Settings.PIKEMAN_DAMAGE;
 		this.type=Settings.PIKEMAN_TYPE;
 		this.cost=Settings.PIKEMAN_COST;
+		this.speed=Settings.PIKEMAN_SPEED;
 	}
 		
 }

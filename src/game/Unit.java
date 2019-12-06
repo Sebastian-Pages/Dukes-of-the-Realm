@@ -43,8 +43,8 @@ abstract public class Unit extends Sprite{
 	}
     
 	public void move() {
-        x += dx;
-        y += dy;
+        x += speed;
+        y += speed;
     }
 	
     public boolean isAlive() {
@@ -95,6 +95,9 @@ abstract public class Unit extends Sprite{
     public void setCost(int cost) {
     	this.cost = cost;
     }
+	public double getSpeed() {
+		return speed;
+	}
     
 
  

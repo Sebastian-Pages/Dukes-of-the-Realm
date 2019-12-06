@@ -11,6 +11,7 @@ public class Onager extends Unit {
 		this.damage=Settings.ONAGER_DAMAGE;
 		this.type=Settings.ONAGER_TYPE;
 		this.cost=Settings.ONAGER_COST;
+		this.speed=Settings.ONAGER_SPEED;
 	}
 		
 }
