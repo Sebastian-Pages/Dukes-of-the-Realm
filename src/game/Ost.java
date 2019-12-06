@@ -64,4 +64,29 @@ public class Ost extends Unit{
 		reserve.remove(getReserveSize()-1);
 		return u;
 	}
+	public boolean hasUnit(int unitType){
+		
+		if (this.getReserveSize()>0){
+			boolean result=false;
+			for (Unit u : reserve){
+				if (u.getType()==unitType)
+					result=true;
+			}
+			return result;
+		}	
+		else
+			return false;				
+	}
+	public int countUnits(int unitType){
+		// gérer le cas sans ost
+		int result=0;
+		if (this.getReserveSize()>0){	
+			for (Unit u : reserve){
+				if (u.getType()==unitType)
+					result+=1;
+			}
+		}
+		return result;				
+	}
 }
+

@@ -100,7 +100,7 @@ public class Main extends Application {
 
 
 				//update army count
-				updateUnitsCount(false);
+				//updateUnitsCount(false);
 
 				// movement
 				units.forEach(sprite -> sprite.move());
@@ -314,11 +314,12 @@ public class Main extends Application {
 				setStatusBar(sb,Settings.STATE_FIRST);
 				e.consume();
 			});
-			
-			Button piquierButton2 = new Button("Piquier"); 
+			int unitCount = c.countUnits(Settings.PIKEMAN_TYPE);
+			Button piquierButton2 = new Button("Piquier: "+unitCount); 		
 			sb.getChildren().addAll(piquierButton2);
 			piquierButton2.setOnAction(e -> {
 				reserveToOst(c,Settings.PIKEMAN_TYPE);
+				setStatusBar(sb,Settings.STATE_SEND);
 				e.consume();
 			});
 			buttons.add(piquierButton2);
@@ -432,7 +433,7 @@ public class Main extends Application {
 		
 		
 	}
-	
+	/**
 	private void updateUnitsCount(boolean bool){
 		if(bool) {
 			for (Castle c : castles) {
@@ -466,7 +467,7 @@ public class Main extends Application {
 			}
 		}
 		
-	}
+	}**/
 	
 	private void buyUnit(Castle c,int type,int cost){	
 				if (c.getGold()>cost) {
@@ -834,6 +835,7 @@ public class Main extends Application {
 		}
 		else 
 			setStatusBar(statusBar,Settings.STATE_UNSELECTED);
+		//setStatusBar(statusBar,hboxState); // à debug
 	}
 	
 	

@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-public class Unit extends Sprite{
+abstract public class Unit extends Sprite{
 	protected String owner;
     protected double dx;
     protected double dy;
