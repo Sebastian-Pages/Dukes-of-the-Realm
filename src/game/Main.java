@@ -28,6 +28,7 @@ public class Main extends Application {
 	private Random rnd = new Random();
 
 	private Pane playfieldLayer;
+	private Pane menuLayer;
 
 	private Image playerImage;
 	//private Image enemyImage;
@@ -42,6 +43,9 @@ public class Main extends Application {
 	private Image unitImageR;
 	private Image grassImage;
 	private Image targetImage;
+	private Image backgroundImage;
+	private Image classiqueImage;
+	private Image iavsiaImage;
 	
 	//Units images
 	private Image unitImage;
@@ -64,10 +68,12 @@ public class Main extends Application {
 	private boolean collision = false;
 	private boolean test = true;
 	private boolean pauseState = false;
+	private boolean playerIsIA=false;
 	private Castle aiGoal;
 	long timestamp;
 	private HBox statusBar;
 	private int hboxState;
+	public int global;
 
 	private Scene scene;
 	private Input input;
@@ -87,17 +93,23 @@ public class Main extends Application {
 
 		// create layers
 		playfieldLayer = new Pane();
+		menuLayer = new Pane();
 		root.getChildren().add(playfieldLayer);
 		
 		/**INITIALISATION DU JEU**/
-		loadGame();
+		//loadGame();
+		loadMenu();
 		
 		/**DEBUT DE LA LOOP**/
 		gameLoop = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
 				processInput(input, now);
-
+				if(global==1){
+					loadGame();
+					global=2;
+				}
+				if(global==2){
 
 				//update army count
 				//updateUnitsCount(false);
@@ -133,6 +145,7 @@ public class Main extends Application {
 				updateText();	
 				castles.forEach(castle -> castle.update());
 				checkIfGameOver();
+				}
 			}
 
 			private void processInput(Input input, long now) {
@@ -148,9 +161,6 @@ public class Main extends Application {
 	}
 
 	private void loadGame() {
-		playerImage = new Image(getClass().getResource("/images/alien.png").toExternalForm(), 100, 100, true, true);
-		//enemyImage = new Image(getClass().getResource("/images/enemy.png").toExternalForm(), 50, 50, true, true);
-		missileImage = new Image(getClass().getResource("/images/pinapple.png").toExternalForm(), 20, 20, true, true);
 		castleImage = new Image(getClass().getResource("/images/neutral_castle.png").toExternalForm(), 100, 100, true, true);	
 		castleImageBlue = new Image(getClass().getResource("/images/blue_castle.png").toExternalForm(), 100, 100, true, true);
 		castleImageBlueS = new Image(getClass().getResource("/images/blue_castle_selected.png").toExternalForm(), 100, 100, true, true);
@@ -162,7 +172,7 @@ public class Main extends Application {
 		grassImage = new Image(getClass().getResource("/images/grass.png").toExternalForm(), Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT, false, true);
 		input = new Input(scene);
 		input.addListeners();
-
+		
 		createStatusBar();
 		
 		//Initialize pause input
@@ -189,15 +199,34 @@ public class Main extends Application {
 			selected.clear();
 			e.consume();
 		});
-		spawnCastles();
+		spawnCastles();		
+	}
+	private void loadMenu(){
+		classiqueImage = new Image(getClass().getResource("/images/classique.png").toExternalForm(), 350, 120, false, true);
+		iavsiaImage = new Image(getClass().getResource("/images/iavsia.png").toExternalForm(), 350, 120, false, false);
+		backgroundImage = new Image(getClass().getResource("/images/grass.png").toExternalForm(), Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT+Settings.STATUS_BAR_HEIGHT, false, true);
+		input = new Input(scene);
+		input.addListeners();
 		
-		
+		Decoration menuBackground = new Decoration(playfieldLayer, backgroundImage, 0, 0);
+		Decoration classique = new Decoration(playfieldLayer, classiqueImage, (Settings.SCENE_WIDTH/2)-175, (Settings.SCENE_HEIGHT/2)-150);
+		Decoration iavsia = new Decoration(playfieldLayer, iavsiaImage, (Settings.SCENE_WIDTH/2)-175, (Settings.SCENE_HEIGHT/2)+150);
+		classique.getView().setOnMousePressed(e -> {
+			global=1;
+			e.consume();
+		});
+		iavsia.getView().setOnMousePressed(e -> {
+			global=1;
+			playerIsIA=true;
+			e.consume();
+		});
 	}
 
 
 	public void createStatusBar() {
 		statusBar = new HBox();
 		setStatusBar(statusBar,Settings.STATE_INIT);
+		
 		statusBar.relocate(0, Settings.SCENE_HEIGHT);
 		statusBar.setPrefSize(Settings.SCENE_WIDTH, Settings.STATUS_BAR_HEIGHT);		
 		root.getChildren().add(statusBar);
