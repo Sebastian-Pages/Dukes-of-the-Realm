@@ -8,7 +8,7 @@ public class Ost extends Unit{
 	double goalx;
 	double goaly;
 	String owner;
-	private List<Unit> reserve = new ArrayList<>();
+	public List<Unit> reserve = new ArrayList<>();
 	
 	public Ost(Pane layer, Image image, double x, double y, int health,double damage, double speed) {
 		super(layer, image, x, y,health,damage,speed);

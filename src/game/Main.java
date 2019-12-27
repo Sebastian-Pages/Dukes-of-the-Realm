@@ -436,9 +436,10 @@ public class Main extends Application {
 				castle.CastleSet(2, castleImage);
 				castle.time = System.currentTimeMillis();
 				castle.setGold(1000);
-				for(int i=0;i<8;i++){
+				/**for(int i=0;i<1;i++){
 					buyUnit(castle, 0, 100);
 				}
+				**/
 				setOnClickBehaviour(castle);
 				castles.remove(castle);
 				
@@ -513,6 +514,7 @@ public class Main extends Application {
 	private void buyUnit(Castle c,int type,int cost){	
 				if (c.getGold()>cost) {
 					String owner = c.getOwner();
+					System.out.println(""+owner);
 					Unit u = null;
 					Image img = unitImage;
 					if (c.getOwner()=="player")
@@ -530,7 +532,7 @@ public class Main extends Application {
 						u = new Onager(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), owner);}
 					
 					double temp=c.getGold();				
-					c.setUnitProduction(temp-u.getCost());					
+					c.setGold(temp-u.getCost());					
 					c.productionQ.add(u);
 					System.out.println(u+" added to prodQ");
 					u.removeFromLayer();
@@ -616,7 +618,7 @@ public class Main extends Application {
 			Image im=unitImage;
 			
 			if (c.getOwner()=="player") {
-				im = unitImage;
+				im = unitImageR;
 				mystring="player";	
 			}
 			if(c.getOwner()=="ennemi") {
@@ -628,11 +630,12 @@ public class Main extends Application {
 				o.owner = mystring;	
 				c.setOst(o);
 				c.isBuildingOst=true;
+				osts.add(o);
 			}
 			Unit u = c.reservePull(unitType);
 			c.ost.reserveAdd(u);
-			u.remove();
-			u.removeFromLayer();
+			//u.remove();
+			//u.removeFromLayer();
 		}
 	}
 	private void sendOstAI(Castle source,Castle dest) {	
@@ -706,45 +709,49 @@ public class Main extends Application {
 		if((selected.size()>0)/** la condition lorsque l'ost n'dest pas vide &&() **/){
 			Ost o = c.ost;
 			o.setSpeed(o.getOstSpeed());
-			o.setGoalx(d.getCenterX());
-			o.setGoaly(d.getCenterY());
-			osts.add(o);
+			for(Unit u : o.reserve) {
+				u.setSpeed(o.getSpeed());
+				u.setGoalx(d.getCenterX());
+				u.setGoaly(d.getCenterY());
+				units.add(u);
+				u.addToLayer();
+				//System.out.println("u.x "+u.goalx+"u.goalx "+u.getGoalx());
+				//System.out.println("added to list");
+			}
+			System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
+			o.reserve.clear();
+			o.remove();
 			c.isBuildingOst=false;
 			targets.forEach(sprite -> sprite.remove());
-			//System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
+			
 		}
 				
 	}
 	
 	
 	private void checkSieges() {
-		for (Ost o : osts) {	
+		List<Unit> unitsToDelete = new ArrayList<>();
+		for (Unit u : units) {	
 			// La condition est comme Ã§a pour laisser de la marge d'erreur et ne pas rater la collision
 			if(
-			( (int)o.getGoalx()-5 < (int)o.getX() )&&
-			( (int)o.getX() < (int)o.getGoalx()+5 )&&
-			( (int)o.getGoaly()-5 < (int)o.getY() )&&
-			( (int)o.getY() < (int)o.getGoaly()+5 ) ) 
+			( (int)u.getGoalx()-5 < (int)u.getX() )&&
+			( (int)u.getX() < (int)u.getGoalx()+5 )&&
+			( (int)u.getGoaly()-5 < (int)u.getY() )&&
+			( (int)u.getY() < (int)u.getGoaly()+5 ) ) 
 			{		
 				for (Castle c : castles) {	
-					if (o.collidesWith(c)) {	
-						//o.remove();
-						if(o.getReserveSize()>0) {
-							
-						
-						Unit u = o.reservePull();
-						/// ne pas mettre cette ligne. On met son attribut removable Ã "true" ensuite la fct remove sprite le retire de la lsite
-						//units.remove(u);
-						
-						//removSrpite le fait deja
-						//u.removeFromLayer();
+					if (u.collidesWith(c)) {
+						System.out.println("collision");
 						if (c.getReserveSize()>0) {	
-							if (c.getOwner()==u.owner) {
+							System.out.println("c "+c.getOwner()+ " u "+u.owner);
+							if (c.getOwner()==u.owner) { //même owner -> ajout à la garnison
 								c.reserveAdd(u);
+
 							}
-							else {
-								Unit t =c.reservePull(0);
-								t.remove();
+							else { // attaque
+								System.out.println("attaque");
+								c.takeDamage(u);
+
 							}						
 						}
 						else {
@@ -760,20 +767,22 @@ public class Main extends Application {
 								im = castleImageRed;
 								test=true;
 							}	
-							//c = CastleSet(c ,type);
 							c.CastleSet(type, im);
 							setOnClickBehaviour(c);	
 							c.reserveAdd(u);
 						}
+						//u.remove();	
+						unitsToDelete.add(u);
 						}
-						else {
-							o.remove();
-						}
-					}		
+					}	
+				
 				}
+				//u.removeFromLayer();
 			}
+		units.removeAll(unitsToDelete);
+		unitsToDelete.clear();
 		}
-	}
+	
 
 	
 	// ne marche pas lorqu'il reste des chateaux neutre

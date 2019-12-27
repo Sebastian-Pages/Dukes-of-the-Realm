@@ -23,15 +23,15 @@ public class Settings {
 	public static final int KNIGHT_COST= 150;
 	public static final int KNIGHT_PRODUCTION_TIME= 100;
 	public static final int KNIGHT_SPEED= 1;
-	public static final int KNIGHT_HEALTH= 1;
-	public static final int KNIGHT_DAMAGE= 1;
+	public static final int KNIGHT_HEALTH= 3;
+	public static final int KNIGHT_DAMAGE= 5;
 	
 	public static final int ONAGER_TYPE= 2;
 	public static final int ONAGER_COST= 200;
 	public static final int ONAGER_PRODUCTION_TIME= 100;
 	public static final int ONAGER_SPEED= 1;
-	public static final int ONAGER_HEALTH= 1;
-	public static final int ONAGER_DAMAGE= 1;
+	public static final int ONAGER_HEALTH= 5;
+	public static final int ONAGER_DAMAGE= 10;
 	
     public static final int STATE_INIT=0;
     public static final int STATE_FIRST=1;

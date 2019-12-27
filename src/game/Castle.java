@@ -2,10 +2,12 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+
 
 public class Castle extends Sprite {
 	long time;
@@ -110,6 +112,17 @@ public class Castle extends Sprite {
 		return u;
 	}
 	
+	public Unit getUnit(int type) {
+		Unit u2 = null;
+		for (Unit u : reserve){
+			if (u.getType()==type){
+				u2 = u;	
+				return u2;
+			}
+		}
+		return u2;
+	}
+	
 	public void update() {
 		String selectString ="";
 		if (this.isSelected)
@@ -167,8 +180,9 @@ public class Castle extends Sprite {
 				Unit u = this.productionQ.get(0);
 				this.productionQ.remove(0);
 				this.reserve.add(u);
-				System.out.println("prodQ: "+this.productionQ.size());
-				System.out.println("reserve: "+this.reserve.size());
+				System.out.println("owner :"+u.owner);
+				//System.out.println("prodQ: "+this.productionQ.size());
+				//System.out.println("reserve: "+this.reserve.size());
 			}
 		}
 	}
@@ -187,5 +201,20 @@ public class Castle extends Sprite {
 		this.gold=i;
 		
 	}
+	
+	public void takeDamage(Unit attacker) {
+		if(this.getReserveSize()>0) {
+			Random rnd = new Random();
+			boolean attackNotDone=true;
+			while(attackNotDone) {
+				int type = rnd.nextInt(3);
+				if(this.hasUnit(type)) {
+					this.getUnit(type).damagedBy(attacker);
+					attackNotDone=true;
+				}
+			}
+		}
+	}
+	
 	
 }

@@ -12,6 +12,7 @@ public class Knight extends Unit {
 		this.type=Settings.KNIGHT_TYPE;
 		this.cost=Settings.KNIGHT_COST;
 		this.speed=Settings.KNIGHT_SPEED;
+		this.owner=owner;
 	}
 		
 }

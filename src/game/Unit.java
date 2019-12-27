@@ -14,6 +14,8 @@ abstract public class Unit extends Sprite{
 	protected int type;
 	protected int cost;
 	private Image image;
+	protected double goalx;
+	protected double goaly;
 
 
 
@@ -43,8 +45,16 @@ abstract public class Unit extends Sprite{
 	}
     
 	public void move() {
-        x += speed;
-        y += speed;
+		if (this.x < this.goalx)
+			x += speed;
+		
+		if (this.x > this.goalx)
+			x -= speed;
+		if (this.y < this.goaly)
+			y += speed;
+		
+		if (this.y > this.goaly)
+			y -= speed;
     }
 	
     public boolean isAlive() {
@@ -97,6 +107,24 @@ abstract public class Unit extends Sprite{
     }
 	public double getSpeed() {
 		return speed;
+	}
+	public double getGoalx() {
+		return goalx;
+	}
+
+	public void setGoalx(double goalx) {
+		this.goalx = goalx;
+	}
+
+	public double getGoaly() {
+		return goaly;
+	}
+
+	public void setGoaly(double goaly) {
+		this.goaly = goaly;
+	}
+	public void setSpeed(double speed) {
+		this.speed = speed;
 	}
     
 
