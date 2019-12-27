@@ -431,11 +431,7 @@ public class Main extends Application {
 			if (placed_well){
 				castle.CastleSet(2, castleImage);
 				castle.time = System.currentTimeMillis();
-				castle.setGold(1000);
-				/**for(int i=0;i<1;i++){
-					buyUnit(castle, 0, 100);
-				}
-				**/
+				castle.setGold(1000);			
 				setOnClickBehaviour(castle);
 				castles.remove(castle);
 				
@@ -468,6 +464,14 @@ public class Main extends Application {
 		castle_2.CastleSet(1, castleImageRed);
 		setOnClickBehaviour(castle_2);	
 		castles.add(3, castle_2);
+		
+		for (Castle castle : castles) {
+			for(int i=0;i<4;i++){
+				buyUnit(castle, 0, 100);
+			}
+			
+		}
+		
 		
 		
 	}
@@ -510,7 +514,7 @@ public class Main extends Application {
 	private void buyUnit(Castle c,int type,int cost){	
 				if (c.getGold()>cost) {
 					String owner = c.getOwner();
-					System.out.println(""+owner);
+					//System.out.println(""+owner);
 					Unit u = null;
 					Image img = unitImage;
 					if (c.getOwner()=="player")
@@ -530,7 +534,7 @@ public class Main extends Application {
 					double temp=c.getGold();				
 					c.setGold(temp-u.getCost());					
 					c.productionQ.add(u);
-					System.out.println(u+" added to prodQ");
+					//System.out.println(u+" added to prodQ");
 					u.removeFromLayer();
 					}
 				}			
@@ -696,7 +700,7 @@ public class Main extends Application {
 				targets.add(target);
 				target.getView().setOnMousePressed(e -> {
 					sendOst(c,targetc);
-					System.out.println("DEBUG: ");
+					//System.out.println("DEBUG: ");
 					e.consume();
 				});
 			}
@@ -719,7 +723,7 @@ public class Main extends Application {
 				}
 				
 			}
-			System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
+			//System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
 			o.reserve.clear();
 			c.isBuildingOst=false;
 			targets.forEach(sprite -> sprite.remove());
@@ -742,7 +746,7 @@ public class Main extends Application {
 					if (u.collidesWith(c)) {
 						System.out.println("collision");
 						if (c.getReserveSize()>0) {	
-							System.out.println("c "+c.getOwner()+ " u "+u.owner);
+							System.out.println("c "+c.getOwner()+ " u "+u.owner+ "bite");
 							if (c.getOwner()==u.owner) { //même owner -> ajout à la garnison
 								c.reserveAdd(u);
 
@@ -750,7 +754,7 @@ public class Main extends Application {
 							else { // attaque
 								System.out.println("attaque");
 								c.takeDamage(u);
-
+								unitsToDelete.add(u);
 							}						
 						}
 						else {
@@ -778,7 +782,9 @@ public class Main extends Application {
 				}
 				//u.removeFromLayer();
 			}
+		
 		units.removeAll(unitsToDelete);
+		unitsToDelete.forEach(sprite -> sprite.removeFromLayer());
 		unitsToDelete.clear();
 		}
 	

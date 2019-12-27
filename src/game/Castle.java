@@ -209,8 +209,13 @@ public class Castle extends Sprite {
 			while(attackNotDone) {
 				int type = rnd.nextInt(3);
 				if(this.hasUnit(type)) {
-					this.getUnit(type).damagedBy(attacker);
-					attackNotDone=true;
+					Unit defender = this.getUnit(type); 
+					defender.damagedBy(attacker);
+					attackNotDone=false;
+					System.out.println("attaque done");
+					if(!defender.isAlive()) {
+						this.reserve.remove(defender);
+					}
 				}
 			}
 		}
