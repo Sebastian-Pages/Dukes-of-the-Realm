@@ -118,7 +118,6 @@ public class Main extends Application {
 
 				// movement
 				units.forEach(sprite -> sprite.move());
-				osts.forEach(sprite -> sprite.move());
 				
 				// AI
 				//AI();
@@ -128,19 +127,16 @@ public class Main extends Application {
 				// update sprites in scene
 				castles.forEach(sprite -> sprite.updateUI());
 				units.forEach(sprite -> sprite.updateUI());
-				osts.forEach(sprite -> sprite.updateUI());
 				castles.forEach(sprite-> sprite.trainUnit());
 
 				// check if sprite can be removed
 
 				//castles.forEach(sprite -> sprite.checkRemovability());
 				units.forEach(sprite -> sprite.checkRemovability());
-				osts.forEach(sprite -> sprite.checkRemovability());
 
 				// remove removables from list, layer, etc
 				removeSprites(castles);
 				removeSprites(units);
-				removeSprites(osts);
 				removeSprites(targets);
 
 				// update score, health, etc
@@ -603,7 +599,7 @@ public class Main extends Application {
 				if (c.getReserveSize()==0)
 					selected.clear();**/
 				
-				sendOstAI(c,d);
+				//sendOstAI(c,d);
 				selected.clear();
 			}
 			
@@ -626,7 +622,7 @@ public class Main extends Application {
 				mystring="ennemi";			
 			}
 			if (!c.isBuildingOst){
-				Ost o = new Ost(playfieldLayer,im, c.getCenterX(), c.getCenterY(), 1, 1, 1);
+				Ost o = new Ost();
 				o.owner = mystring;	
 				c.setOst(o);
 				c.isBuildingOst=true;
@@ -638,6 +634,7 @@ public class Main extends Application {
 			//u.removeFromLayer();
 		}
 	}
+	/**
 	private void sendOstAI(Castle source,Castle dest) {	
 		
 		//on veux au moins 1 unité dans l'ost
@@ -672,7 +669,7 @@ public class Main extends Application {
 		if(selected.size()>1) {
 			//System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));			
 			if(
-			(selected.get(0).getOwner()=="player" && selected.get(1)!=selected.get(0) /**&&( selected.get(1).getOwner()=="unowned")||(selected.get(1).getOwner()=="ennemi")**/)&&
+			(selected.get(0).getOwner()=="player" && selected.get(1)!=selected.get(0) &&( selected.get(1).getOwner()=="unowned")||(selected.get(1).getOwner()=="ennemi"))&&
 			(selected.get(0).getReserveSize()>0) &&(selected.get(0).isReadyToAttack))
 			{
 				Castle c=selected.get(0);
@@ -691,6 +688,7 @@ public class Main extends Application {
 		}
 
 	}
+	**/
 	private void selectTarget(Castle c){
 		for(Castle targetc : castles){
 			if (targetc!=c){
@@ -714,20 +712,21 @@ public class Main extends Application {
 				u.setGoalx(d.getCenterX());
 				u.setGoaly(d.getCenterY());
 				units.add(u);
-				u.addToLayer();
 				//System.out.println("u.x "+u.goalx+"u.goalx "+u.getGoalx());
 				//System.out.println("added to list");
+				if (!playfieldLayer.getChildren().contains(u.imageView)) {
+					u.addToLayer();
+				}
+				
 			}
 			System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
 			o.reserve.clear();
-			o.remove();
 			c.isBuildingOst=false;
 			targets.forEach(sprite -> sprite.remove());
 			
 		}
-				
+		
 	}
-	
 	
 	private void checkSieges() {
 		List<Unit> unitsToDelete = new ArrayList<>();
@@ -851,7 +850,7 @@ public class Main extends Application {
 					//System.out.println("timediff: "+(timestamp-now)+"\n");
 					if (now-c2.time>5000) {
 						c2.time=now;
-						sendOstAI(c2,aiGoal);
+						//sendOstAI(c2,aiGoal);
 					}
 					
 					

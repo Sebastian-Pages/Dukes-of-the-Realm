@@ -4,53 +4,15 @@ import java.util.List;
 
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-public class Ost extends Unit{
-	double goalx;
-	double goaly;
+public class Ost {
 	String owner;
 	public List<Unit> reserve = new ArrayList<>();
+	double speed;
+	public Ost() {
+		this.speed=0;
+	}
+
 	
-	public Ost(Pane layer, Image image, double x, double y, int health,double damage, double speed) {
-		super(layer, image, x, y,health,damage,speed);
-		setDy(speed);
-		setDx(speed);
-
-	}
-
-	public double getGoalx() {
-		return goalx;
-	}
-
-	public void setGoalx(double goalx) {
-		this.goalx = goalx;
-	}
-
-	public double getGoaly() {
-		return goaly;
-	}
-
-	public void setGoaly(double goaly) {
-		this.goaly = goaly;
-	}
-	
-	public void checkRemovability() {
-
-		if (false)		
-			remove();
-	}
-	
-	public void move() {
-		if (this.x < this.goalx)
-			x += speed;
-		
-		if (this.x > this.goalx)
-			x -= speed;
-		if (this.y < this.goaly)
-			y += speed;
-		
-		if (this.y > this.goaly)
-			y -= speed;
-    }
 	
 	public int getReserveSize() {
 		return this.reserve.size();
@@ -89,6 +51,12 @@ public class Ost extends Unit{
 		return result;				
 	}
 	
+	public double getSpeed() {
+		return speed;
+	}
+
+
+
 	public double getOstSpeed() {
 		double s=0;
 		if (this.getReserveSize()>0){
