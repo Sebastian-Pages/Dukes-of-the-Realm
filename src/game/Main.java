@@ -63,6 +63,7 @@ public class Main extends Application {
 	private List<Button> buttons = new ArrayList<>();
 	private List<Decoration> targets = new ArrayList<>();
 	private List<Decoration> trainingQ = new ArrayList<>();
+	public double orientationA[] = {0, 90, 180, 270};
 
 	private Text infoMessage = new Text();
 	private Text newMessage = new Text();
@@ -412,7 +413,9 @@ public class Main extends Application {
 			double speed = 0;
 			double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - castleImage.getWidth());
 			double y = rnd.nextDouble() * (Settings.SCENE_HEIGHT- castleImage.getHeight());
-			Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed);
+			int rndOrientationIndex=rnd.nextInt(4);
+			double orientation = orientationA[rndOrientationIndex];
+			Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed,orientation);
 			
 			castle.getView().setOnMousePressed(e -> {
 				infoMessage.setText("Castle [ owner: "+castle.getOwner()+"\n	    Gold:   "+Math.round(castle.getGold())+" | Level: "+castle.getLevel()+" ]");

@@ -72,7 +72,14 @@ public abstract class Sprite {
         imageView.relocate(this.x, this.y);
         this.addToLayer();
     }
-
+    protected void setView(Image image,double angle) {
+    	this.removeFromLayer();
+        this.imageView=new ImageView(image);
+        imageView.relocate(this.x, this.y);
+        this.imageView.setRotate(angle);
+        this.addToLayer();
+    }
+    
     public void updateUI() {
         imageView.relocate(x, y);
     }

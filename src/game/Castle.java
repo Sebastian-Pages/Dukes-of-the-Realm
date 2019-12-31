@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -15,6 +16,7 @@ public class Castle extends Sprite {
 	private double gold;
 	private double productionSpeed;
 	private int level;
+	private double orientation;
 	public boolean isReadyToAttack;
 	public boolean isSelected;
 	public boolean isBuildingOst;
@@ -28,7 +30,7 @@ public class Castle extends Sprite {
 	//private Order order = new Order();
 	//private String orientation;
 	
-	public Castle(Pane layer, Image image, double x, double y, int health,double damage, double speed) {
+	public Castle(Pane layer, Image image, double x, double y, int health,double damage, double speed, double orientation) {
 		super(layer, image, x, y);
 		this.productionSpeed=speed;
 		this.gold= 0;
@@ -37,6 +39,7 @@ public class Castle extends Sprite {
 		this.isReadyToAttack=true;
 		this.isSelected = false;
 		this.isBuildingOst = false;
+		this.orientation=orientation;
 		time=0;
 		productionProgress=0;
 		}
@@ -145,20 +148,21 @@ public class Castle extends Sprite {
 			return false;				
 	}
 	
+
 	public void CastleSet(int type,Image img){
 		
 		// On dit que 0 c'est les chateau alliés
 		if (type == 0) {		
 			this.setOwner("player");
 			this.setProductionSpeed(Settings.NORMAL_PRODUCTION_SPEED);
-			this.setView(img);
+			this.setView(img,orientation);
 			this.updateUI();
 		}
 		//1 est le type de l'ennemi
 		if (type == 1) {
 			this.setOwner("ennemi");
 			this.setProductionSpeed(Settings.NORMAL_PRODUCTION_SPEED);
-			this.setView(img);
+			this.setView(img,orientation);
 			this.updateUI();	
 		}	
 		//Chateau 3 de type neutre
@@ -166,10 +170,12 @@ public class Castle extends Sprite {
 			//change the attributes
 			this.setOwner("unowned");
 			this.setProductionSpeed(Settings.NEUTRAL_PRODUCTION_SPEED);
-			this.setView(img);
+			this.setView(img,orientation);
 			this.updateUI();	
 		}
 	}
+	
+
 	
 	public void trainUnit(){
 		
