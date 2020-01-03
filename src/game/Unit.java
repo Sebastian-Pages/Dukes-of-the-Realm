@@ -58,10 +58,10 @@ abstract public class Unit extends Sprite {
     }
 
     public void move() {
-        if (((int) this.path.get(0)[0] - 2 < (int) this.x) &&
-                ((int) this.x < (int) this.path.get(0)[0] + 2) &&
-                ((int) this.path.get(0)[1] - 2 < (int) this.y) &&
-                ((int) this.y < (int) this.path.get(0)[1] + 2)) {
+        if (((int) this.path.get(0)[0] - 3 < (int) this.x) &&
+                ((int) this.x < (int) this.path.get(0)[0] + 3) &&
+                ((int) this.path.get(0)[1] - 3 < (int) this.y) &&
+                ((int) this.y < (int) this.path.get(0)[1] + 3)) {
             this.path.remove(0);
             this.isNotAtDoor = true;
         }
@@ -80,12 +80,12 @@ abstract public class Unit extends Sprite {
             this.movingW = true;
 			isMoving=true;
         }
-        if ((this.y < this.path.get(0)[1])&&!isMoving) {
+        if ((this.y < this.path.get(0)[1]-1)&&!isMoving) {
             y += speed;
             this.movingS = true;
 			isMoving=true;
         }
-        if ((this.y > this.path.get(0)[1])&&!isMoving) {
+        if ((this.y > this.path.get(0)[1]+1)&&!isMoving) {
             y -= speed;
             this.movingN = true;
 			isMoving=true;

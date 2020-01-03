@@ -475,7 +475,8 @@ public class Main extends Application {
                 Castle c = it.next();
                 double deltaX = Math.abs(castle.getCenterX()-c.getCenterX());
                 double deltaY = Math.abs(castle.getCenterY()-c.getCenterY());
-                if (castle.collidesWith(c)&&(deltaX<400)&&(deltaY<400)) {
+
+                if (castle.collidesWith(c) || (deltaX<120) || (deltaY<120)) {
                     placed_well = false;
                 }
             }
@@ -501,6 +502,7 @@ public class Main extends Application {
                 castle.remove();
             }
             placed_well = true;
+            System.out.println(""+castles.size());
         }
         // pick 1 starting castles
         Castle castle_1 = castles.get(2);
@@ -854,17 +856,17 @@ public class Main extends Application {
                     double[] p= new double[]{ u.getX(),u.getY()};
 
                     double deltaX =c.getCenterX() - u.getX()-10;
-                    double deltaY =c.getCenterY() - u.getY()-10;
+                    double deltaY =u.getY()-10-c.getCenterY() ;
 
                     //hitting north border
                     if(u.movingS) {
                         p[0] += 60-deltaX;
-                        p[1] -= 2;
+                        p[1] -= 4;
                         System.out.println("DEBUG : N Border | X: "+ (60-deltaX));
                     }
                     if(u.movingN) {
                         p[0] += 60-deltaX;
-                        p[1] += 2;
+                        p[1] += 4;
                         System.out.println("DEBUG : S Border | X: "+ (60-deltaX));
                     }
                     if(u.movingE) { // -> [
@@ -877,7 +879,7 @@ public class Main extends Application {
                         p[1] += 60-deltaY;
                         System.out.println("DEBUG : E Border | Y: "+ (60-deltaY));
                     }
-
+                    System.out.println("DEBUG : Point added");
                     u.path.add(0,p);
 
                 }
