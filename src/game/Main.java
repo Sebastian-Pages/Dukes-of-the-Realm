@@ -452,6 +452,7 @@ public class Main extends Application {
      **/
     private void spawnCastles() {
         boolean placed_well = true;
+        int counter=0;
 
 
         /**ON GENERE N CHATEAU AU DEBUT DE LA PARTIE**/
@@ -476,7 +477,7 @@ public class Main extends Application {
                 double deltaX = Math.abs(castle.getCenterX()-c.getCenterX());
                 double deltaY = Math.abs(castle.getCenterY()-c.getCenterY());
 
-                if (castle.collidesWith(c) || (deltaX<120) || (deltaY<120)) {
+                if (castle.collidesWith(c) || (deltaX<(200)-counter) || (deltaY<(200)-counter)) {
                     placed_well = false;
                 }
             }
@@ -502,6 +503,7 @@ public class Main extends Application {
                 castle.remove();
             }
             placed_well = true;
+            counter+=10;
             System.out.println(""+castles.size());
         }
         // pick 1 starting castles
@@ -861,25 +863,24 @@ public class Main extends Application {
                     //hitting north border
                     if(u.movingS) {
                         p[0] += 60-deltaX;
-                        p[1] -= 4;
+                        p[1] += 2;
                         System.out.println("DEBUG : N Border | X: "+ (60-deltaX));
                     }
                     if(u.movingN) {
                         p[0] += 60-deltaX;
-                        p[1] += 4;
+                        p[1] -= 2;
                         System.out.println("DEBUG : S Border | X: "+ (60-deltaX));
                     }
                     if(u.movingE) { // -> [
                         p[0] -= 2;
                         p[1] += 60-deltaY;
-                        System.out.println("DEBUG : W Border | Y: "+ (60-deltaY));
+                        System.out.println("DEBUG : W Border | Y: "+ (60+deltaY)+" u.y: "+u.getY());
                     }
                     if(u.movingW) {
                         p[0] += 2;
                         p[1] += 60-deltaY;
-                        System.out.println("DEBUG : E Border | Y: "+ (60-deltaY));
+                        System.out.println("DEBUG : E Border | Y: "+ (60+deltaY)+" u.y: "+u.getY());
                     }
-                    System.out.println("DEBUG : Point added");
                     u.path.add(0,p);
 
                 }

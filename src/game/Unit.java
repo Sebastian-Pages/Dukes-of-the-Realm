@@ -58,6 +58,9 @@ abstract public class Unit extends Sprite {
     }
 
     public void move() {
+        while (this.path.size() > 3){
+            this.path.remove(0);
+        }
         if (((int) this.path.get(0)[0] - 3 < (int) this.x) &&
                 ((int) this.x < (int) this.path.get(0)[0] + 3) &&
                 ((int) this.path.get(0)[1] - 3 < (int) this.y) &&
@@ -70,16 +73,7 @@ abstract public class Unit extends Sprite {
         movingS = false;
         movingW = false;
 		boolean isMoving=false;
-        if ((this.x < this.path.get(0)[0]-1)&&!isMoving){
-            x += speed;
-            this.movingE = true;
-			isMoving=true;
-        }
-        if ((this.x > this.path.get(0)[0]+1)&&!isMoving) {
-            x -= speed;
-            this.movingW = true;
-			isMoving=true;
-        }
+
         if ((this.y < this.path.get(0)[1]-1)&&!isMoving) {
             y += speed;
             this.movingS = true;
@@ -89,6 +83,16 @@ abstract public class Unit extends Sprite {
             y -= speed;
             this.movingN = true;
 			isMoving=true;
+        }
+        if ((this.x < this.path.get(0)[0]-1)&&!isMoving){
+            x += speed;
+            this.movingE = true;
+            isMoving=true;
+        }
+        if ((this.x > this.path.get(0)[0]+1)&&!isMoving) {
+            x -= speed;
+            this.movingW = true;
+            isMoving=true;
         }
 		isMoving=false;
     }
