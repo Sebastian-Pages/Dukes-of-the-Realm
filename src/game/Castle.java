@@ -227,7 +227,7 @@ public class Castle extends Sprite {
 		}
 	}
 	
-	private void levelUp() {
+	public void levelUp() {
 		if(this.getLevel()<2 && this.getGold()>=this.getLevel()*Settings.LVL_UP_COST) {
 			this.setLevel(this.getLevel()+1);
 		}

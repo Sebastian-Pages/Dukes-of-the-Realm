@@ -41,4 +41,5 @@ public class Settings {
     public static final int STATE_SEND=3;
     public static final int STATE_UNSELECTED=4;
     public static final int STATE_INFO=5;
+	public static final int STATE_UPGRADE=6;
 }

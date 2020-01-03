@@ -340,53 +340,82 @@ public class Main extends Application {
 		break;
 		
 		case Settings.STATE_SEND:
-			hboxState=Settings.STATE_SEND;
-			for (Button b : buttons) {
-				sb.getChildren().remove(b);
-			}
-			c = selected.get(0);
-			Button returnButton2 = new Button("<-"); 
-			sb.getChildren().addAll(returnButton2);
-			buttons.add(returnButton2);
-			returnButton2.setOnAction(e -> {
-				setStatusBar(sb,Settings.STATE_FIRST);
-				e.consume();
-			});
-			int unitCount = c.countUnits(Settings.PIKEMAN_TYPE);
-			Button piquierButton2 = new Button("Piquier: "+unitCount); 		
-			sb.getChildren().addAll(piquierButton2);
-			piquierButton2.setOnAction(e -> {
-				reserveToOst(c,Settings.PIKEMAN_TYPE);
-				setStatusBar(sb,Settings.STATE_SEND);
-				e.consume();
-			});
-			buttons.add(piquierButton2);
-			
-			Button chevalierButton2 = new Button("Chevalier"); 	
-			sb.getChildren().addAll(chevalierButton2);
-			buttons.add(chevalierButton2);
-			chevalierButton2.setOnAction(e -> {
-				reserveToOst(c,Settings.KNIGHT_TYPE);
-				e.consume();
-			});
-			
-			Button onagreButton2 = new Button("Onagre"); 
-			sb.getChildren().addAll(onagreButton2);
-			buttons.add(onagreButton2);
-			onagreButton2.setOnAction(e -> {
-				reserveToOst(c,Settings.ONAGER_TYPE);
-				e.consume();
-			});
-			
-			Button sendOstButton= new Button("Send OST"); 
-			sb.getChildren().addAll(sendOstButton);
-			sendOstButton.setOnAction(e -> {
-				selectTarget(c);
-				e.consume();
-			});
-			buttons.add(sendOstButton);
-			
-		break;
+				hboxState=Settings.STATE_SEND;
+				for (Button b : buttons) {
+					sb.getChildren().remove(b);
+				}
+				c = selected.get(0);
+				Button returnButton2 = new Button("<-");
+				sb.getChildren().addAll(returnButton2);
+				buttons.add(returnButton2);
+				returnButton2.setOnAction(e -> {
+					setStatusBar(sb,Settings.STATE_FIRST);
+					e.consume();
+				});
+				int unitCount = c.countUnits(Settings.PIKEMAN_TYPE);
+				Button piquierButton2 = new Button("Piquier: "+unitCount);
+				sb.getChildren().addAll(piquierButton2);
+				piquierButton2.setOnAction(e -> {
+					reserveToOst(c,Settings.PIKEMAN_TYPE);
+					setStatusBar(sb,Settings.STATE_SEND);
+					e.consume();
+				});
+				buttons.add(piquierButton2);
+
+				Button chevalierButton2 = new Button("Chevalier");
+				sb.getChildren().addAll(chevalierButton2);
+				buttons.add(chevalierButton2);
+				chevalierButton2.setOnAction(e -> {
+					reserveToOst(c,Settings.KNIGHT_TYPE);
+					e.consume();
+				});
+
+				Button onagreButton2 = new Button("Onagre");
+				sb.getChildren().addAll(onagreButton2);
+				buttons.add(onagreButton2);
+				onagreButton2.setOnAction(e -> {
+					reserveToOst(c,Settings.ONAGER_TYPE);
+					e.consume();
+				});
+
+				Button sendOstButton= new Button("Send OST");
+				sb.getChildren().addAll(sendOstButton);
+				sendOstButton.setOnAction(e -> {
+					selectTarget(c);
+					e.consume();
+				});
+				buttons.add(sendOstButton);
+
+				break;
+
+			case Settings.STATE_UPGRADE:
+				hboxState=Settings.STATE_UPGRADE;
+				for (Button b : buttons) {
+					sb.getChildren().remove(b);
+				}
+				c = selected.get(0);
+				Button returnButton3 = new Button("<-");
+				sb.getChildren().addAll(returnButton3);
+				buttons.add(returnButton3);
+				returnButton3.setOnAction(e -> {
+					setStatusBar(sb,Settings.STATE_FIRST);
+					e.consume();
+				});
+				Button levelUp = new Button("Level Up");
+				sb.getChildren().addAll(levelUp);
+				levelUp.setOnAction(e -> {
+					c.levelUp();
+					e.consume();
+				});
+				buttons.add(levelUp);
+
+				Button mercenary = new Button("Mercenaire");
+				sb.getChildren().addAll(mercenary);
+				buttons.add(mercenary);
+				mercenary.setOnAction(e -> {
+					//reserveToOst(c,Settings.KNIGHT_TYPE);
+					e.consume();
+				});
 		}
 	}
 	void displayQ(Castle c){
