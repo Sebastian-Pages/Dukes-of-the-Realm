@@ -72,7 +72,8 @@ public class Main extends Application {
 	private boolean test = true;
 	private boolean pauseState = false;
 	private boolean playerIsIA=false;
-	private Castle aiGoal;
+	private Castle aiGoalennemi;
+	private Castle aiGoalplayer;
 	long timestamp;
 	private HBox statusBar;
 	private int hboxState;
@@ -121,7 +122,10 @@ public class Main extends Application {
 				units.forEach(sprite -> sprite.move());
 				
 				// AI
-				//AI();
+				AI("ennemi");
+				if (playerIsIA==true)
+					AI("player");
+
 
 				checkSieges();
 				
@@ -817,58 +821,66 @@ public class Main extends Application {
 		root.getChildren().add(hbox);
 		gameLoop.stop();
 	}
-	
-	private void AI() {
-		
+
+	private void AI(String team) {
+
 		//trouve un premier objectif
 		if (test){
 			//System.out.println("DEBUG 1");
 			for (Castle c : castles) {
-				if ((c.getOwner()!="ennemi")&&(test)) {
-					aiGoal = c;
-					//System.out.println("DEBUG "+aiGoal);
-					//System.out.println("DEBUG size: "+castles.size());
-					test=false;
-				}
-			}
-		}
-		
-		//trouver nouvo objectif si aiGoal est "ennemi"
-		if (!false) {
-			for (Castle c : castles) {
-				if ((c.getOwner()!="ennemi")&&(test)) {
-					aiGoal = c;
-					//System.out.println("DEBUG "+aiGoal);
-					//System.out.println("DEBUG size: "+castles.size());
-					test=false;
-				}
-			}
-		
-		//Attaquer aiGoal
-		for (Castle c2 : castles) {		
-			if (c2.getOwner()=="ennemi") {
-				buyUnit(c2,0,100);
-				if (c2.getReserveSize()>0) {
-					//Unit u = c2.reservePull();
-					/**
-					u.setGoalx(aiGoal.getCenterX());
-					u.setGoaly(aiGoal.getCenterY());
-					u.addToLayer();
-					units.add(u);**/ 
-					long now = System.currentTimeMillis();
-					//System.out.println("timediff: "+(timestamp-now)+"\n");
-					if (now-c2.time>5000) {
-						c2.time=now;
-						//sendOstAI(c2,aiGoal);
+					if ((c.getOwner()!=team)&&(test)) {
+						if (team == "ennemi")
+							aiGoalennemi = c;
+						if (team == "player")
+							aiGoalplayer = c;
+						test=false;
 					}
-					
-					
 				}
 			}
-		}
-		}
-	
-		
+
+			//trouver nouvo objectif si aiGoal est dans le meme camp
+			if (!false) {
+				for (Castle c : castles) {
+					if ((c.getOwner()!=team)&&(test)) {
+						if (team == "ennemi")
+							aiGoalennemi = c;
+						if (team == "player")
+							aiGoalplayer = c;
+						//System.out.println("DEBUG "+aiGoal);
+						//System.out.println("DEBUG size: "+castles.size());
+						test=false;
+					}
+				}
+
+				//Attaquer aiGoal
+				for (Castle c2 : castles) {
+					if (c2.getOwner()==team) {
+						buyUnit(c2,0,100);
+						if (c2.getReserveSize()>0) {
+							//Unit u = c2.reservePull();
+							/**
+							 u.setGoalx(aiGoal.getCenterX());
+							 u.setGoaly(aiGoal.getCenterY());
+							 u.addToLayer();
+							 units.add(u);**/
+							long now = System.currentTimeMillis();
+							//System.out.println("timediff: "+(timestamp-now)+"\n");
+							if (now-c2.time>5000) {
+								c2.time=now;
+								for (int i=0; i<c2.getReserveSize(); i++){
+									reserveToOst(c2,Settings.PIKEMAN_TYPE);
+								}
+								if (team == "ennemi")
+									sendOst(c2,aiGoalennemi);
+								if (team == "player")
+									sendOst(c2,aiGoalplayer);
+							}
+
+
+						}
+					}
+				}
+			}
 		/**&& (aiGoal.getOwner()!="ennemi")
 		Unit u = c.reservePull();
 		
