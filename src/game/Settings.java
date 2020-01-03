@@ -33,6 +33,8 @@ public class Settings {
 	public static final int ONAGER_HEALTH= 5;
 	public static final int ONAGER_DAMAGE= 10;
 	
+	public static final int LVL_UP_COST=1000;
+	
     public static final int STATE_INIT=0;
     public static final int STATE_FIRST=1;
     public static final int STATE_TRAIN=2;
