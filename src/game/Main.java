@@ -278,6 +278,10 @@ public class Main extends Application {
 			buttons.add(sendButton);
 			sb.getChildren().addAll(sendButton);
 
+			Button upgradeButton = new Button("Upgrade");
+			buttons.add(upgradeButton);
+			sb.getChildren().addAll(upgradeButton);
+
 			//gérer les actions
 			trainButton.setOnAction(e -> {
 				setStatusBar(sb,Settings.STATE_TRAIN);
@@ -285,6 +289,10 @@ public class Main extends Application {
 			});
 			sendButton.setOnAction(e -> {
 				setStatusBar(sb,Settings.STATE_SEND);
+				e.consume();
+			});
+			upgradeButton.setOnAction(e -> {
+				setStatusBar(sb,Settings.STATE_UPGRADE);
 				e.consume();
 			});
 			
