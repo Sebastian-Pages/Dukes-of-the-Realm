@@ -14,5 +14,11 @@ public class Onager extends Unit {
 		this.speed=Settings.ONAGER_SPEED;
 		this.owner=owner;
 	}
+
+	@Override
+	public double getProductionTime() {
+		// TODO Auto-generated method stub
+		return Settings.ONAGER_PRODUCTION_TIME;
+	}
 		
 }

@@ -14,5 +14,13 @@ public class Pikeman extends Unit {
 		this.speed=Settings.PIKEMAN_SPEED;
 		this.owner=owner;
 	}
+
+	@Override
+	public double getProductionTime() {
+		// TODO Auto-generated method stub
+		return Settings.PIKEMAN_PRODUCTION_TIME;
+		
+	}
+	
 		
 }

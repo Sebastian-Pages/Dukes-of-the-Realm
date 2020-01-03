@@ -126,6 +126,8 @@ abstract public class Unit extends Sprite{
 	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
+	
+	abstract public double getProductionTime();
     
 
  

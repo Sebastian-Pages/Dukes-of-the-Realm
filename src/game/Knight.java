@@ -14,5 +14,11 @@ public class Knight extends Unit {
 		this.speed=Settings.KNIGHT_SPEED;
 		this.owner=owner;
 	}
+
+	@Override
+	public double getProductionTime() {
+		// TODO Auto-generated method stub
+		return Settings.KNIGHT_PRODUCTION_TIME;
+	}
 		
 }
