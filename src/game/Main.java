@@ -473,7 +473,9 @@ public class Main extends Application {
             //parcours des chateaux pour éviter les collisions et une distance min entre eux
             while (it.hasNext()) {
                 Castle c = it.next();
-                if (castle.collidesWith(c)) {
+                double deltaX = Math.abs(castle.getCenterX()-c.getCenterX());
+                double deltaY = Math.abs(castle.getCenterY()-c.getCenterY());
+                if (castle.collidesWith(c)&&(deltaX<400)&&(deltaY<400)) {
                     placed_well = false;
                 }
             }
@@ -856,20 +858,24 @@ public class Main extends Application {
 
                     //hitting north border
                     if(u.movingS) {
-                        p[0] += 100;
-                        p[1] -= u.getSpeed();
+                        p[0] += 60-deltaX;
+                        p[1] -= 2;
+                        System.out.println("DEBUG : N Border | X: "+ (60-deltaX));
                     }
                     if(u.movingN) {
-                        p[0] += 100;
-                        p[1] += u.getSpeed();
+                        p[0] += 60-deltaX;
+                        p[1] += 2;
+                        System.out.println("DEBUG : S Border | X: "+ (60-deltaX));
                     }
                     if(u.movingE) { // -> [
-                        p[0] -= u.getSpeed();
-                        p[1] += 100;
+                        p[0] -= 2;
+                        p[1] += 60-deltaY;
+                        System.out.println("DEBUG : W Border | Y: "+ (60-deltaY));
                     }
                     if(u.movingW) {
-                        p[0] += u.getSpeed();
-                        p[1] += 100;
+                        p[0] += 2;
+                        p[1] += 60-deltaY;
+                        System.out.println("DEBUG : E Border | Y: "+ (60-deltaY));
                     }
 
                     u.path.add(0,p);
