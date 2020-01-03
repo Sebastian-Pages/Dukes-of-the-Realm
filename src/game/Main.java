@@ -850,14 +850,28 @@ public class Main extends Application {
                     u.isColliding=true;
                     //calculate new coordinates
                     double[] p= new double[]{ u.getX(),u.getY()};
-                    if (u.movingN)
-                        p[0]+=2;//p= new double[]{ u.getX()+10,u.getY()-5};System.out.println("N");
-                    if (u.movingE)
-                        p[1]+=4;//p= new double[]{ u.getX()-5,u.getY()+10};System.out.println("E");
-                    if (u.movingS)
-                        p[0]+=2;//p= new double[]{ u.getX()+10,u.getY()+5};System.out.println("S");
-                    if (u.movingW)
-                        p[1]+=4;//p= new double[]{ u.getX()+5,u.getY()+10};System.out.println("W");
+
+                    double deltaX =c.getCenterX() - u.getX()-10;
+                    double deltaY =c.getCenterY() - u.getY()-10;
+
+                    //hitting north border
+                    if(u.movingS) {
+                        p[0] += 100;
+                        p[1] -= u.getSpeed();
+                    }
+                    if(u.movingN) {
+                        p[0] += 100;
+                        p[1] += u.getSpeed();
+                    }
+                    if(u.movingE) { // -> [
+                        p[0] -= u.getSpeed();
+                        p[1] += 100;
+                    }
+                    if(u.movingW) {
+                        p[0] += u.getSpeed();
+                        p[1] += 100;
+                    }
+
                     u.path.add(0,p);
 
                 }

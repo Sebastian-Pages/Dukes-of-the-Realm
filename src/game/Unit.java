@@ -69,23 +69,28 @@ abstract public class Unit extends Sprite {
         movingE = false;
         movingS = false;
         movingW = false;
-
-        if (this.x < this.path.get(0)[0]) {
+		boolean isMoving=false;
+        if ((this.x < this.path.get(0)[0]-1)&&!isMoving){
             x += speed;
             this.movingE = true;
+			isMoving=true;
         }
-        if (this.x > this.path.get(0)[0]) {
+        if ((this.x > this.path.get(0)[0]+1)&&!isMoving) {
             x -= speed;
             this.movingW = true;
+			isMoving=true;
         }
-        if (this.y < this.path.get(0)[1]) {
+        if ((this.y < this.path.get(0)[1])&&!isMoving) {
             y += speed;
             this.movingS = true;
+			isMoving=true;
         }
-        if (this.y > this.path.get(0)[1]) {
+        if ((this.y > this.path.get(0)[1])&&!isMoving) {
             y -= speed;
             this.movingN = true;
+			isMoving=true;
         }
+		isMoving=false;
     }
 
     public void addToPath(double tab[]) {
