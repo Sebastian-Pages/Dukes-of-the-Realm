@@ -760,27 +760,23 @@ public class Main extends Application {
 
     private void sendOst(Castle c, Castle d) {
 
-        if ((selected.size() > 0)/** la condition lorsque l'ost n'dest pas vide &&() **/) {
-            Ost o = c.ost;
-            o.setSpeed(o.getOstSpeed());
-            for (Unit u : o.reserve) {
-                u.setSpeed(o.getSpeed());
-                u.setGoalx(d.getCenterX());
-                u.setGoaly(d.getCenterY());
-                units.add(u);
-                //System.out.println("u.x "+u.goalx+"u.goalx "+u.getGoalx());
-                //System.out.println("added to list");
-                if (!playfieldLayer.getChildren().contains(u.imageView)) {
-                    u.addToLayer();
-                }
-
+        Ost o = c.ost;
+        o.setSpeed(o.getOstSpeed());
+        for (Unit u : o.reserve) {
+            u.setSpeed(o.getSpeed());
+            u.setGoalx(d.getCenterX());
+            u.setGoaly(d.getCenterY());
+            units.add(u);
+            //System.out.println("u.x "+u.goalx+"u.goalx "+u.getGoalx());
+            //System.out.println("added to list");
+            if (!playfieldLayer.getChildren().contains(u.imageView)) {
+                u.addToLayer();
             }
-            //System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
-            o.reserve.clear();
-            c.isBuildingOst = false;
-            targets.forEach(sprite -> sprite.remove());
-
         }
+        //System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
+        o.reserve.clear();
+        c.isBuildingOst = false;
+        targets.forEach(sprite -> sprite.remove());
 
     }
 
@@ -889,7 +885,7 @@ public class Main extends Application {
                 buyUnit(c2, 0, 100);
                 if (c2.getReserveSize() > 0) {
                     long now = System.currentTimeMillis();
-                    if (now - c2.time > 5000) {
+                    if (now - c2.time > 2000) {
                         c2.time = now;
                         for (int i = 0; i < c2.getReserveSize(); i++) {
                             reserveToOst(c2, Settings.PIKEMAN_TYPE);
@@ -897,9 +893,7 @@ public class Main extends Application {
                         if (team == "ennemi")
                             sendOst(c2, aiGoalennemi);
                         if (team == "player") {
-                            System.out.println("DEBUG AI: " + aiGoalplayer);
                             sendOst(c2, aiGoalplayer);
-                            System.out.println("DEBUG AI: " + aiGoalplayer);
                         }
                     }
                 }
