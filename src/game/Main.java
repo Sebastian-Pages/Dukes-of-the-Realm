@@ -57,7 +57,6 @@ public class Main extends Application {
 
     //Selected castles
     private List<Castle> selected = new ArrayList<>();
-    ;
 
     //private List<Enemy> enemies = new ArrayList<>();
     //private List<Missile> missiles = new ArrayList<>();
@@ -124,6 +123,7 @@ public class Main extends Application {
                     //updateUnitsCount(false);
 
                     // movement
+                    checkUnitCollision();
                     units.forEach(sprite -> sprite.move());
 
                     // AI
@@ -567,6 +567,7 @@ public class Main extends Application {
             //System.out.println(""+owner);
             Unit u = null;
             Image img = unitImage;
+            double offset = img.getWidth()/2;
             if (c.getOwner() == "player")
                 img = unitImage;
             if (c.getOwner() == "ennemi")
@@ -575,13 +576,13 @@ public class Main extends Application {
                 img = unitImageR;
 
             if (type == Settings.PIKEMAN_TYPE) {
-                u = new Pikeman(playfieldLayer, unitImage, c.getCenterX(), c.getCenterY(), owner);
+                u = new Pikeman(playfieldLayer, unitImage, c.getCenterX()-offset, c.getCenterY()-offset, owner);
             }
             if (type == Settings.KNIGHT_TYPE) {
-                u = new Knight(playfieldLayer, unitImage, c.getCenterX(), c.getCenterY(), owner);
+                u = new Knight(playfieldLayer, unitImage, c.getCenterX()-offset, c.getCenterY()-offset, owner);
             }
             if (type == Settings.ONAGER_TYPE) {
-                u = new Onager(playfieldLayer, unitImage, c.getCenterX(), c.getCenterY(), owner);
+                u = new Onager(playfieldLayer, unitImage, c.getCenterX()-offset, c.getCenterY()-offset, owner);
             }
 
             double temp = c.getGold();
@@ -764,8 +765,13 @@ public class Main extends Application {
         o.setSpeed(o.getOstSpeed());
         for (Unit u : o.reserve) {
             u.setSpeed(o.getSpeed());
-            u.setGoalx(d.getCenterX());
-            u.setGoaly(d.getCenterY());
+            u.setGoalx(d.getCenterX()-10);
+            u.setGoaly(d.getCenterY()-10);
+            u.addToPath(c.getEntrance());
+            u.addToPath(d.getEntrance());
+            double[] doubleArray = new double[]{ d.getCenterX()-10,d.getCenterY()-10};
+            u.addToPath(doubleArray);
+            //System.out.println("Path: "+u.path.get(0)[0] +","+u.path.get(0)[1]);
             units.add(u);
             //System.out.println("u.x "+u.goalx+"u.goalx "+u.getGoalx());
             //System.out.println("added to list");
@@ -791,14 +797,14 @@ public class Main extends Application {
                             ((int) u.getY() < (int) u.getGoaly() + 5)) {
                 for (Castle c : castles) {
                     if (u.collidesWith(c)) {
-                        System.out.println("collision");
+                        //System.out.println("collision");
                         if (c.getReserveSize() > 0) {
-                            System.out.println("c " + c.getOwner() + " u " + u.owner + "bite");
+                            //System.out.println("c " + c.getOwner() + " u " + u.owner );
                             if (c.getOwner() == u.owner) { //même owner -> ajout à la garnison
                                 c.reserveAdd(u);
 
                             } else { // attaque
-                                System.out.println("attaque");
+                                //System.out.println("attaque");
                                 c.takeDamage(u);
                                 unitsToDelete.add(u);
                             }
@@ -819,6 +825,7 @@ public class Main extends Application {
                             c.CastleSet(type, im);
                             setOnClickBehaviour(c);
                             c.reserveAdd(u);
+                            u.path.clear();
                         }
                         //u.remove();
                         unitsToDelete.add(u);
@@ -834,6 +841,30 @@ public class Main extends Application {
         unitsToDelete.clear();
     }
 
+    private void checkUnitCollision() {
+        for (Unit u : units) {
+            if (u.path.size()<2)
+                u.isNotAtDoor=false;
+            for (Castle c : castles) {
+                if (u.collidesWith(c)&&u.isNotAtDoor) {
+                    u.isColliding=true;
+                    //calculate new coordinates
+                    double[] p= new double[]{ u.getX(),u.getY()};
+                    if (u.movingN)
+                        p[0]+=2;//p= new double[]{ u.getX()+10,u.getY()-5};System.out.println("N");
+                    if (u.movingE)
+                        p[1]+=4;//p= new double[]{ u.getX()-5,u.getY()+10};System.out.println("E");
+                    if (u.movingS)
+                        p[0]+=2;//p= new double[]{ u.getX()+10,u.getY()+5};System.out.println("S");
+                    if (u.movingW)
+                        p[1]+=4;//p= new double[]{ u.getX()+5,u.getY()+10};System.out.println("W");
+                    u.path.add(0,p);
+
+                }
+            }
+            u.isColliding=false;
+        }
+    }
 
     // ne marche pas lorqu'il reste des chateaux neutre
     private void checkIfGameOver() {

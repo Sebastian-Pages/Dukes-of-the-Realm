@@ -2,8 +2,8 @@ package game;
 
 public class Settings {
 
-	public static final double SCENE_WIDTH = 1000;
-    public static final double SCENE_HEIGHT = 800;
+	public static final double SCENE_WIDTH = 1400;
+    public static final double SCENE_HEIGHT = 900;
 	public static final double STATUS_BAR_HEIGHT = 80;
 	
 	public static final int NUMBER_OF_CASTLES = 5;
@@ -15,7 +15,7 @@ public class Settings {
 	public static final int PIKEMAN_TYPE= 0;
 	public static final int PIKEMAN_COST= 100;
 	public static final int PIKEMAN_PRODUCTION_TIME= 10;
-	public static final int PIKEMAN_SPEED= 4;
+	public static final int PIKEMAN_SPEED= 1;
 	public static final int PIKEMAN_HEALTH= 1;
 	public static final int PIKEMAN_DAMAGE= 1;
 	

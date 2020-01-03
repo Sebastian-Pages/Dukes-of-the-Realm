@@ -15,8 +15,8 @@ public abstract class Sprite {
 
     private boolean removable = false;
 
-    private double w;
-    private double h;
+    protected double w;
+    protected double h;
 
     public Sprite(Pane layer, Image image, double x, double y) {
 

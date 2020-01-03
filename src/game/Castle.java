@@ -179,7 +179,7 @@ public class Castle extends Sprite {
 				Unit u = this.productionQ.get(0);
 				this.productionQ.remove(0);
 				this.reserve.add(u);
-				System.out.println("owner :"+u.owner);
+				//System.out.println("owner :"+u.owner);
 				//System.out.println("prodQ: "+this.productionQ.size());
 				//System.out.println("reserve: "+this.reserve.size());
 			}
@@ -213,7 +213,7 @@ public class Castle extends Sprite {
 					Unit defender = this.getUnit(type); 
 					defender.damagedBy(attacker);
 					attackNotDone=false;
-					System.out.println("attaque done");
+					//System.out.println("attaque done");
 					if(!defender.isAlive()) {
 						this.reserve.remove(defender);
 					}
@@ -228,6 +228,26 @@ public class Castle extends Sprite {
 			this.setGold(this.getGold()-Settings.LVL_UP_COST);
 		}
 		
+	}
+
+	public double[] getEntrance(){
+		double[] entrance = new double[]{0,0};
+		//System.out.println("orientation: "+(int)this.orientation);
+		switch ((int)this.orientation) {
+			case 0: //Nord
+				entrance[0] = this.getCenterX()-10;entrance[1] = this.getCenterY()-15-(this.w/2)-10; //(this.w);
+				return entrance;
+			case 90: //Est
+				entrance[0] = this.getCenterX()+15+(this.w/2)-10;entrance[1] = this.getCenterY()-10;
+				return entrance;
+			case 180: //South
+				entrance[0] = this.getCenterX()-10;entrance[1] = this.getCenterY()+15+(this.w/2)-10;
+				return entrance;
+			case 270: //West
+				entrance[0] = this.getCenterX()-15-(this.w/2)-10;entrance[1] = this.getCenterY()-10;
+				return entrance;
+		}
+		return entrance;
 	}
 	
 	
