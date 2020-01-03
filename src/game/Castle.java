@@ -14,7 +14,7 @@ public class Castle extends Sprite {
 	long time;
 	private String owner;
 	private double gold;
-	private double productionSpeed;
+	private double incomeSpeed;
 	private int level;
 	private double orientation;
 	public boolean isReadyToAttack;
@@ -26,13 +26,10 @@ public class Castle extends Sprite {
 	public List<Unit> productionQ = new ArrayList<>();
 	
 	public Ost ost;
-	//private Unitproduction up = new Unitproduction();
-	//private Order order = new Order();
-	//private String orientation;
-	
+
 	public Castle(Pane layer, Image image, double x, double y, int health,double damage, double speed, double orientation) {
 		super(layer, image, x, y);
-		this.productionSpeed=speed;
+		this.incomeSpeed=speed;
 		this.gold= 0;
 		this.level = 1;
 		this.owner = "unowned";
@@ -65,16 +62,12 @@ public class Castle extends Sprite {
 		return gold;
 	}
 
-	public void setUnitProduction(double UnitProduction) {
-		this.gold = UnitProduction;
+	public double getIncomeSpeed() {
+		return incomeSpeed;
 	}
 
-	public double getProductionSpeed() {
-		return productionSpeed;
-	}
-
-	public void setProductionSpeed(double productionSpeed) {
-		this.productionSpeed = productionSpeed;
+	public void setIncomeSpeed(double incomeSpeed) {
+		this.incomeSpeed = incomeSpeed;
 	}
 
 	public int getLevel() {
@@ -86,8 +79,8 @@ public class Castle extends Sprite {
 		this.level = level;
 	}
 	
-	public void updateUI() {
-        gold += this.productionSpeed;
+	public void income() {
+        gold += this.incomeSpeed*this.getLevel();
     }
 	
 	public int getReserveSize() {
@@ -154,14 +147,14 @@ public class Castle extends Sprite {
 		// On dit que 0 c'est les chateau alliés
 		if (type == 0) {		
 			this.setOwner("player");
-			this.setProductionSpeed(Settings.NORMAL_PRODUCTION_SPEED);
+			this.setIncomeSpeed(Settings.NORMAL_PRODUCTION_SPEED);
 			this.setView(img,orientation);
 			this.updateUI();
 		}
 		//1 est le type de l'ennemi
 		if (type == 1) {
 			this.setOwner("ennemi");
-			this.setProductionSpeed(Settings.NORMAL_PRODUCTION_SPEED);
+			this.setIncomeSpeed(Settings.NORMAL_PRODUCTION_SPEED);
 			this.setView(img,orientation);
 			this.updateUI();	
 		}	
@@ -169,7 +162,7 @@ public class Castle extends Sprite {
 		if (type == 2) {
 			//change the attributes
 			this.setOwner("unowned");
-			this.setProductionSpeed(Settings.NEUTRAL_PRODUCTION_SPEED);
+			this.setIncomeSpeed(Settings.NEUTRAL_PRODUCTION_SPEED);
 			this.setView(img,orientation);
 			this.updateUI();	
 		}
@@ -181,7 +174,7 @@ public class Castle extends Sprite {
 		
 		if (!this.productionQ.isEmpty()){
 			this.productionProgress+=0.1;
-			if (this.productionProgress > Settings.PIKEMAN_PRODUCTION_TIME/8){
+			if(this.productionProgress>this.productionQ.get(0).getProductionTime()){
 				this.productionProgress=0;
 				Unit u = this.productionQ.get(0);
 				this.productionQ.remove(0);
@@ -192,6 +185,8 @@ public class Castle extends Sprite {
 			}
 		}
 	}
+	
+	
 	public int countUnits(int unitType){
 		int result=0;
 		if (this.getReserveSize()>0){	

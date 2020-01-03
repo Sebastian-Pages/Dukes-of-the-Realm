@@ -128,9 +128,10 @@ public class Main extends Application {
 
 
 				checkSieges();
-				
+				//generate gold income
+				castles.forEach(sprite -> sprite.income());
 				// update sprites in scene
-				castles.forEach(sprite -> sprite.updateUI());
+				
 				units.forEach(sprite -> sprite.updateUI());
 				castles.forEach(sprite-> sprite.trainUnit());
 
