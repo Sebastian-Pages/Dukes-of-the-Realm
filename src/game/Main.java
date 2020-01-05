@@ -334,7 +334,7 @@ public class Main extends Application {
                     e.consume();
                 });
 
-                Button piquierButton = new Button("Piquier 100£");
+                Button piquierButton = new Button("Pikeman "+Settings.PIKEMAN_COST);
                 sb.getChildren().addAll(piquierButton);
                 buttons.add(piquierButton);
                 c = selected.get(0);
@@ -342,7 +342,7 @@ public class Main extends Application {
                     buyUnit(c, 0, Settings.PIKEMAN_COST);
                     e.consume();
                 });
-                Button chevalierButton = new Button("Chevalier 500£");
+                Button chevalierButton = new Button("Knight "+Settings.KNIGHT_COST);
                 sb.getChildren().addAll(chevalierButton);
                 buttons.add(chevalierButton);
                 chevalierButton.setOnAction(e -> {
@@ -350,7 +350,7 @@ public class Main extends Application {
                     e.consume();
                 });
 
-                Button onagreButton = new Button("Onagre 900£");
+                Button onagreButton = new Button("Onager "+Settings.ONAGER_COST);
                 sb.getChildren().addAll(onagreButton);
                 buttons.add(onagreButton);
                 onagreButton.setOnAction(e -> {
@@ -373,8 +373,8 @@ public class Main extends Application {
                     setStatusBar(sb, Settings.STATE_FIRST);
                     e.consume();
                 });
-                int unitCount = c.countUnits(Settings.PIKEMAN_TYPE);
-                Button piquierButton2 = new Button("Piquier: " + unitCount);
+                int pikemanCount = c.countUnits(Settings.PIKEMAN_TYPE);
+                Button piquierButton2 = new Button("Pikeman: " + pikemanCount);
                 sb.getChildren().addAll(piquierButton2);
                 piquierButton2.setOnAction(e -> {
                     reserveToOst(c, Settings.PIKEMAN_TYPE);
@@ -383,19 +383,23 @@ public class Main extends Application {
                 });
                 buttons.add(piquierButton2);
 
-                Button chevalierButton2 = new Button("Chevalier");
+                int knightCount = c.countUnits(Settings.KNIGHT_TYPE);
+                Button chevalierButton2 = new Button("Knight: "+knightCount);
                 sb.getChildren().addAll(chevalierButton2);
                 buttons.add(chevalierButton2);
                 chevalierButton2.setOnAction(e -> {
                     reserveToOst(c, Settings.KNIGHT_TYPE);
+                    setStatusBar(sb, Settings.STATE_SEND);
                     e.consume();
                 });
 
-                Button onagreButton2 = new Button("Onagre");
+                int onagerCount = c.countUnits(Settings.ONAGER_TYPE);
+                Button onagreButton2 = new Button("Onager: "+onagerCount);
                 sb.getChildren().addAll(onagreButton2);
                 buttons.add(onagreButton2);
                 onagreButton2.setOnAction(e -> {
                     reserveToOst(c, Settings.ONAGER_TYPE);
+                    setStatusBar(sb, Settings.STATE_SEND);
                     e.consume();
                 });
 
