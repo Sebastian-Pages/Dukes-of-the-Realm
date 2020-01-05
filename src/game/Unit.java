@@ -58,7 +58,7 @@ abstract public class Unit extends Sprite {
     }
 
     public void move() {
-        if (((int) this.path.get(0)[0] - 3 < (int) this.x) &&
+        if (((int) this.path.get(0)[0] - 3 < (int) this.x) &&      //valeur arbitraire marge pour toucher le point malgré la vitesse
                 ((int) this.x < (int) this.path.get(0)[0] + 3) &&
                 ((int) this.path.get(0)[1] - 3 < (int) this.y) &&
                 ((int) this.y < (int) this.path.get(0)[1] + 3)) {

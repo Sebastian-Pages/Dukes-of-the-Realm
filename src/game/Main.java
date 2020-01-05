@@ -768,7 +768,7 @@ public class Main extends Application {
         Ost o = c.ost;
         o.setSpeed(o.getOstSpeed());
         for (Unit u : o.reserve) {
-            u.setSpeed(o.getSpeed());
+            u.setSpeed(o.getSpeed()); // techniquement on a plus besoin de ça car chaque unit est indépendante
             u.setGoalx(d.getCenterX()-10);
             u.setGoaly(d.getCenterY()-10);
             u.addToPath(c.getEntrance());
@@ -855,8 +855,8 @@ public class Main extends Application {
                     //calculate new coordinates
                     double[] p= new double[]{ u.getX(),u.getY()};
 
-                    double deltaX =c.getCenterX() - u.getX()-10;
-                    double deltaY =u.getY()-10-c.getCenterY() ;
+                    double deltaX =c.getCenterX() - u.getX()+10;
+                    double deltaY =u.getY()+10-c.getCenterY() ;
 
                     //hitting north border
                     if(u.movingS) {
