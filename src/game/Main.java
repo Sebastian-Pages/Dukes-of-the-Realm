@@ -121,7 +121,10 @@ public class Main extends Application {
 
                     //update army count
                     //updateUnitsCount(false);
-
+                	for(Castle c : castles) {
+                    	deploy(c);
+                    }
+                    //on déploit une unit  tous les X  tours
                     // movement
                     checkUnitCollision();
                     units.forEach(sprite -> sprite.move());
@@ -139,6 +142,10 @@ public class Main extends Application {
 
                     units.forEach(sprite -> sprite.updateUI());
                     castles.forEach(sprite -> sprite.trainUnit());
+                    castles.forEach(sprite ->sprite.upgradeCastle());
+                    
+
+                    
 
                     // check if sprite can be removed
 
@@ -476,7 +483,7 @@ public class Main extends Application {
                 double deltaX = Math.abs(castle.getCenterX()-c.getCenterX());
                 double deltaY = Math.abs(castle.getCenterY()-c.getCenterY());
 
-                if (castle.collidesWith(c) || (deltaX<120) || (deltaY<120)) {
+                if (castle.collidesWith(c) || (deltaX<120) || (deltaY<120) || castle.getCenterX()<100 || castle.getCenterX()>Settings.SCENE_WIDTH-100 || castle.getCenterY()<100 || castle.getCenterX()>Settings.SCENE_HEIGHT-100  ) {
                     placed_well = false;
                 }
             }
@@ -768,7 +775,8 @@ public class Main extends Application {
         Ost o = c.ost;
         o.setSpeed(o.getOstSpeed());
         for (Unit u : o.reserve) {
-            u.setSpeed(o.getSpeed()); // techniquement on a plus besoin de ça car chaque unit est indépendante
+            u.path.clear();
+        	u.setSpeed(o.getSpeed());
             u.setGoalx(d.getCenterX()-10);
             u.setGoaly(d.getCenterY()-10);
             u.addToPath(c.getEntrance());
@@ -777,11 +785,11 @@ public class Main extends Application {
             u.addToPath(doubleArray);
             //System.out.println("Path: "+u.path.get(0)[0] +","+u.path.get(0)[1]);
             u.isNotAtDoor = false;
-            units.add(u);
+            c.deploymentQ.add(u);
             //System.out.println("u.x "+u.goalx+"u.goalx "+u.getGoalx());
             //System.out.println("added to list");
             if (!playfieldLayer.getChildren().contains(u.imageView)) {
-                u.addToLayer();
+                //u.addToLayer();
             }
         }
         //System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
@@ -791,6 +799,22 @@ public class Main extends Application {
         	targets.forEach(sprite -> sprite.remove());
 
     }
+    
+    private void deploy(Castle c) {
+    	if(c.turnUntilDeployment==0&& c.deploymentQ.size()>0) {
+    		Unit u = c.deploymentQ.get(0);
+    		units.add(u);
+    		u.addToLayer();
+    		c.deploymentQ.remove(u);
+    		c.turnUntilDeployment=10;
+    	}
+    	if(c.turnUntilDeployment>0) {
+    		c.turnUntilDeployment--;
+    	}
+    }
+    
+
+    
 
     private void checkSieges() {
         List<Unit> unitsToDelete = new ArrayList<>();

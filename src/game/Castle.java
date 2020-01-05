@@ -20,10 +20,13 @@ public class Castle extends Sprite {
 	public boolean isReadyToAttack;
 	public boolean isSelected;
 	public boolean isBuildingOst;
-	public double productionProgress;
+	public int productionProgress;
+	public int levelUpProgress;
+	public int turnUntilDeployment;
 	public Text newMessage = new Text();
 	private List<Unit> reserve = new ArrayList<>();
 	public List<Unit> productionQ = new ArrayList<>();
+	public List<Unit> deploymentQ=new ArrayList<>();
 	
 	public Ost ost;
 
@@ -37,8 +40,9 @@ public class Castle extends Sprite {
 		this.isSelected = false;
 		this.isBuildingOst = false;
 		this.orientation=orientation;
-		time=0;
-		productionProgress=0;
+		this.time=0;
+		this.productionProgress=0;
+		this.levelUpProgress=0;
 		}
 
 	public void setOst(Ost o){
@@ -173,7 +177,7 @@ public class Castle extends Sprite {
 	public void trainUnit(){
 		
 		if (!this.productionQ.isEmpty()){
-			this.productionProgress+=0.1;
+			this.productionProgress+=1;
 			if(this.productionProgress>this.productionQ.get(0).getProductionTime()){
 				this.productionProgress=0;
 				Unit u = this.productionQ.get(0);
@@ -185,7 +189,6 @@ public class Castle extends Sprite {
 			}
 		}
 	}
-	
 	
 	public int countUnits(int unitType){
 		int result=0;
@@ -224,8 +227,19 @@ public class Castle extends Sprite {
 	
 	public void levelUp() {
 		if(this.getLevel()<2 && this.getGold()>=this.getLevel()*Settings.LVL_UP_COST) {
-			this.setLevel(this.getLevel()+1);
 			this.setGold(this.getGold()-Settings.LVL_UP_COST);
+			this.levelUpProgress=1;
+		}
+		
+	}
+	
+	public void upgradeCastle() {
+		if(this.levelUpProgress>0) {
+			this.levelUpProgress+=1;
+			if(this.levelUpProgress>this.getLevel()*50+100) {
+				this.levelUpProgress=0;
+				this.setLevel(this.getLevel()+1);
+			}
 		}
 		
 	}
