@@ -776,6 +776,7 @@ public class Main extends Application {
             double[] doubleArray = new double[]{ d.getCenterX()-10,d.getCenterY()-10};
             u.addToPath(doubleArray);
             //System.out.println("Path: "+u.path.get(0)[0] +","+u.path.get(0)[1]);
+            u.isNotAtDoor = false;
             units.add(u);
             //System.out.println("u.x "+u.goalx+"u.goalx "+u.getGoalx());
             //System.out.println("added to list");
