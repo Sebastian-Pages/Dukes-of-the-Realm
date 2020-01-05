@@ -786,7 +786,8 @@ public class Main extends Application {
         //System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
         o.reserve.clear();
         c.isBuildingOst = false;
-        targets.forEach(sprite -> sprite.remove());
+        if(c.getOwner()=="player")
+        	targets.forEach(sprite -> sprite.remove());
 
     }
 
@@ -854,29 +855,40 @@ public class Main extends Application {
                     u.isColliding=true;
                     //calculate new coordinates
                     double[] p= new double[]{ u.getX(),u.getY()};
+                    double[] p2 =new double[]{ u.getX(),u.getY()};
 
                     double deltaX =c.getCenterX() - u.getX()+10;
                     double deltaY =u.getY()+10-c.getCenterY() ;
 
                     //hitting north border
                     if(u.movingS) {
-                        p[0] += 60-deltaX;
+                        p[0] -= 100;
                         p[1] -= 4;
+                        u.setY(u.getY()-4);
+                        p2[0]=p[0];
+                        p2[1]=p[1]+130;
+                        u.path.add(0,p2);
                         System.out.println("DEBUG : N Border | X: "+ (60-deltaX));
                     }
                     if(u.movingN) {
-                        p[0] += 60-deltaX;
+                        p[0] += 100;
                         p[1] += 4;
+                        u.setY(u.getY()+4);
+                        p2[0]=p[0];
+                        p2[1]=p[1]-130;
+                        u.path.add(0,p2);
                         System.out.println("DEBUG : S Border | X: "+ (60-deltaX));
                     }
                     if(u.movingE) { // -> [
-                        p[0] -= 2;
-                        p[1] += 60-deltaY;
+                        p[0] -= 4;
+                        p[1] += 100;
+                        u.setX(u.getX()-4);
                         System.out.println("DEBUG : W Border | Y: "+ (60-deltaY));
                     }
                     if(u.movingW) {
-                        p[0] += 2;
-                        p[1] += 60-deltaY;
+                        p[0] += 4;
+                        p[1] -= 100;
+                        u.setX(u.getX()+4);
                         System.out.println("DEBUG : E Border | Y: "+ (60-deltaY));
                     }
                     System.out.println("DEBUG : Point added");
