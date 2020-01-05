@@ -938,7 +938,18 @@ public class Main extends Application {
                 areAllOwnedByTheSame = false;
             }
         }
-        if (areAllOwnedByTheSame)
+        boolean unitRemaining = true;
+        if(units.size()>0) {
+        	String s2 = units.get(0).getOwner();
+        	for(Unit u : units) {
+                if (u.getOwner() != s2) {
+                    unitRemaining = false;
+                }
+        	}
+        }
+        
+        
+        if (areAllOwnedByTheSame && unitRemaining)
             gameOver();
     }
 

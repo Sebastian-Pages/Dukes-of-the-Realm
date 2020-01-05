@@ -175,5 +175,12 @@ abstract public class Unit extends Sprite {
 
     abstract public double getProductionTime();
 
+	public String getOwner() {
+		return owner;
+	}
+
+    
+    
+
 
 }
