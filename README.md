@@ -18,6 +18,7 @@ Après avoir sélectionné un mode de jeu, la partie commence. la carte est gén
 chateaux à des positions aléatoires. Un chateau bleu vous appartenant, un rouge appartenant
 à l'IA et 3 blancs qui sont neutres et ne font que se défendre. Chaque chateau génère passivement de l'or dans sa réserve vous permettant de faire des achats de soldats dans le menu.
 
+<<<<<<< HEAD
 Appuyez sur "Train" puis sur l'unité de votre choix pour lancer sa production.
 Un indicateur visuel en bas à gauche de l'écran vous montre les unités dans votre
 file de production. Une fois entrainé, l'unité rejoint votre réserve et incrémente
@@ -28,15 +29,33 @@ appuyez sur "Send OST". Une cible apparaît sur les chateaux. Choisissez la dest
 de l'ost. Si le chateau est allié, l'ost va rejoindre la réserve du chateau. Si le
 chateau est ennemi, les unités vont soustraire la valeur de leur attaque à celle de la
 vie d'une unité dans la réserve du chateau en défense.
+=======
+Appuyez sur les "Train" puis sur l'unité de votre choix pour lancer sa production. 
+Un indicateur visuel en bas à gauche de l'écran pour montre les unités dans votre 
+file de production. Une fois entrainé, l'unité rejoins votre réserve et incrémente 
+le compteur du chateau. les unités dans la réserve défendent le chateau. Appuyez 
+sur "Send" pour choisir les unité à envoyer. Appuyer sur le bouton corespondant à 
+l'unité de votre choix. Elle est placé dans l'ost du chateau. Une fois l'ost complété, 
+appuyé sur "Send OST". Une cible apparait sur les chateaux. Choisissez la destination 
+de l'ost. SI le chateau est allié, l'ost vas rejoindre la réserve du chateau. Si le 
+chateau est ennemi, Les unité vont soustraire la valeur de leur attaque à celle de la 
+vie d'une unité aléatoire dans la réserve du chateau en défense. Si la réserve attaqué
+est vide, Le chateau passe sous votre controle. Vous gardez l'or de ce chateau. 
+>>>>>>> 1f69dbf5517467a9b6dbe1c1f3b0660b1e213a59
 
-```java
-public int getGold(){
-    return this.gold;
-}
-```
+Voici un tableau détaillé des unités du jeu:
 
+<<<<<<< HEAD
 | Tables        | Are           | Cool  |
 | ------------- |:-------------:| -----:|
 | col 3 is      | right-aligned | $1600 |
 | col 2 is      | centered      |   $12 |
 | zebra stripes | are neat      |    $1 |
+=======
+|                   | Pikeman       | Knight | Onagre  |
+| :-----------:     |:-------------:| :-----:| :------:|
+| Attaque           | 1             | 3      | 10      |
+| Vie               | 1             | 2      | 5       |
+| Cout              | 100           | 300    | 300     |
+| Temp de Production| 100           | 100    | 200     | 
+>>>>>>> 1f69dbf5517467a9b6dbe1c1f3b0660b1e213a59
