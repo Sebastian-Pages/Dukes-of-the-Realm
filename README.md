@@ -35,5 +35,23 @@ Voici un tableau détaillé des unités du jeu:
 | :-----------:     |:-------------:| :-----:| :------:|
 | Attaque           | 1             | 3      | 10      |
 | Vie               | 1             | 2      | 5       |
-| Cout              | 100           | 300    | 300     |
-| Temp de Production| 100           | 100    | 200     |
+| Coût              | 100           | 200    | 300     |
+| Temps de Production| 30           | 100    | 200     |
+
+
+##Fonctionnalités supplémentaires
+* Barre de production des unités
+* Affichage visuel de la cible d'envoi d'un OST
+* Compteur des unités d'un chateau sur la carte
+* Compteur de chaque type d'unité dans la reserve dans le menu Send
+* Mode de jeu IA VS IA et mode de jeu Classique (Joueur VS IA)
+* IA (Envoi de piquiers sur une même cible à intervalles réguliers, si plusieurs chateaux ils attaquent la même cible)
+* Fichier Settings permettant de modifier les valeurs du jeu
+
+
+##Fonctionnalités non implémentées
+* Sauvegarde et chargement du jeu
+
+##Bugs
+* Pathfinding déffectueux lorsque la vitesse des unités est trop importante
+* Compteur des unités dans le chateau qui ne se met pas correctement à jour

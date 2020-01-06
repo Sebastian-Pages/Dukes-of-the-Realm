@@ -484,7 +484,6 @@ public class Main extends Application {
             double speed = 0;
             double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - castleImage.getWidth());
             double y = rnd.nextDouble() * (Settings.SCENE_HEIGHT - castleImage.getHeight());
-            System.out.println(""+x+","+y);
             int rndOrientationIndex = rnd.nextInt(4);
             double orientation = orientationA[rndOrientationIndex];
             Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed, orientation);
@@ -529,7 +528,6 @@ public class Main extends Application {
                 castle.remove();
             }
             placed_well = true;
-            System.out.println(""+castles.size());
         }
         // pick 1 starting castles
         Castle castle_1 = castles.get(2);
@@ -887,7 +885,6 @@ public class Main extends Application {
 
         //trouve un premier objectif
         if (needsAIGoalplayer | needsAIGoalennemi) {
-            //System.out.println("DEBUG 1");
             for (Castle c : castles) {
                 if ((c.getOwner() != team)) {
                     if (team == "ennemi") {
