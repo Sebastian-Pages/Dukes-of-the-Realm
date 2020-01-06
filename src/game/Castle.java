@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -143,7 +142,7 @@ public class Castle extends Sprite {
 
 	public void CastleSet(int type,Image img){
 		
-		// On dit que 0 c'est les chateau alliÃ©s
+		// On dit que 0 c'est les chateau alliés
 		if (type == 0) {		
 			this.setOwner("player");
 			this.setIncomeSpeed(Settings.NORMAL_PRODUCTION_SPEED);
@@ -178,9 +177,6 @@ public class Castle extends Sprite {
 				Unit u = this.productionQ.get(0);
 				this.productionQ.remove(0);
 				this.reserve.add(u);
-				//System.out.println("owner :"+u.owner);
-				//System.out.println("prodQ: "+this.productionQ.size());
-				//System.out.println("reserve: "+this.reserve.size());
 			}
 		}
 	}
@@ -211,7 +207,6 @@ public class Castle extends Sprite {
 					Unit defender = this.getUnit(type); 
 					defender.damagedBy(attacker);
 					attackNotDone=false;
-					//System.out.println("attaque done");
 					if(!defender.isAlive()) {
 						this.reserve.remove(defender);
 					}
@@ -241,7 +236,6 @@ public class Castle extends Sprite {
 
 	public double[] getEntrance(){
 		double[] entrance = new double[]{0,0};
-		//System.out.println("orientation: "+(int)this.orientation);
 		switch ((int)this.orientation) {
 			case 0: //Nord
 				entrance[0] = this.getCenterX()-10;entrance[1] = this.getCenterY()-15-(this.w/2)-10; //(this.w);

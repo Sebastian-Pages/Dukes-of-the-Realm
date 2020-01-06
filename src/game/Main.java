@@ -164,14 +164,14 @@ public class Main extends Application {
     }
 
     private void loadGame() {
-        castleImage = new Image(getClass().getResource("/images/neutral_castle.png").toExternalForm(), 100, 100, true, true);
-        castleImageBlue = new Image(getClass().getResource("/images/blue_castle.png").toExternalForm(), 100, 100, true, true);
-        castleImageBlueS = new Image(getClass().getResource("/images/blue_castle_selected.png").toExternalForm(), 100, 100, true, true);
-        castleImageRed = new Image(getClass().getResource("/images/red_castle.png").toExternalForm(), 100, 100, true, true);
-        castleImageRedS = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), 100, 100, true, true);
-        unitImage = new Image(getClass().getResource("/images/blue_castle_selected.png").toExternalForm(), 20, 20, true, true);
-        unitImageR = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), 20, 20, true, true);
-        targetImage = new Image(getClass().getResource("/images/target.png").toExternalForm(), 100, 100, true, true);
+        castleImage = new Image(getClass().getResource("/images/neutral_castle.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
+        castleImageBlue = new Image(getClass().getResource("/images/blue_castle.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
+        castleImageBlueS = new Image(getClass().getResource("/images/blue_castle_selected.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
+        castleImageRed = new Image(getClass().getResource("/images/red_castle.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
+        castleImageRedS = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
+        unitImage = new Image(getClass().getResource("/images/pikeman_blue.png").toExternalForm(), Settings.UNIT_SIZE, Settings.UNIT_SIZE, true, true);
+        unitImageR = new Image(getClass().getResource("/images/pikeman_red.png").toExternalForm(), Settings.UNIT_SIZE, Settings.UNIT_SIZE, true, true);
+        targetImage = new Image(getClass().getResource("/images/target.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
         grassImage = new Image(getClass().getResource("/images/grass.png").toExternalForm(), Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT, false, true);
         input = new Input(scene);
         input.addListeners();
@@ -444,6 +444,7 @@ public class Main extends Application {
             double speed = 0;
             double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - castleImage.getWidth());
             double y = rnd.nextDouble() * (Settings.SCENE_HEIGHT - castleImage.getHeight());
+            System.out.println(""+x+","+y);
             int rndOrientationIndex = rnd.nextInt(4);
             double orientation = orientationA[rndOrientationIndex];
             Castle castle = new Castle(playfieldLayer, castleImage, x, y, 1, 1, speed, orientation);
@@ -557,34 +558,6 @@ public class Main extends Application {
         }
     }
 
-    private void checkOrders() {
-        if (selected.size() > 1) {
-            //System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));
-            if (
-                    (selected.get(0).getOwner() == "player" && selected.get(1) != selected.get(0) /**&&( selected.get(1).getOwner()=="unowned")||(selected.get(1).getOwner()=="ennemi")**/) &&
-                            (selected.get(0).getReserveSize() > 0) && (selected.get(0).isReadyToAttack)) {
-                Castle c = selected.get(0);
-                Castle d = selected.get(1);
-                /**
-                 System.out.println(selected.get(0).getOwner() +" attacks -> "+ (selected.get(1).getOwner()));
-                 Unit u = c.reservePull();
-                 //set destination of unit
-                 u.setGoalx(d.getCenterX());
-                 u.setGoaly(d.getCenterY());
-
-                 u.addToLayer();
-                 units.add(u);
-                 if (c.getReserveSize()==0)
-                 selected.clear();**/
-
-                //sendOstAI(c,d);
-                selected.clear();
-            }
-
-        }
-
-    }
-
 
     private void reserveToOst(Castle c, int unitType) {
         if (c.hasUnit(unitType)) {
@@ -659,9 +632,6 @@ public class Main extends Application {
     	}
     }
     
-
-    
-
     private void checkSieges() {
         List<Unit> unitsToDelete = new ArrayList<>();
         for (Unit u : units) {
@@ -767,7 +737,6 @@ public class Main extends Application {
         }
     }
 
-    // ne marche pas lorqu'il reste des chateaux neutre
     private void checkIfGameOver() {
         boolean areAllOwnedByTheSame = true;
         String s = castles.get(2).getOwner();
@@ -855,32 +824,10 @@ public class Main extends Application {
             infoMessage.setText("Castle: owner: " + c.getOwner() + "\n	    Gold:   " + Math.round(c.getGold()) + "\n	    Level:  " + c.getLevel());
         } else
             setStatusBar(statusBar, Settings.STATE_UNSELECTED);
-        //setStatusBar(statusBar,hboxState); // à debug
     }
 
 
-    //on peut revoie la séléection et changer les views pour voir ce qui est sélectionner
     private void manageSelectedCastles(Castle c) {
-        /**
-         if (selected.size()>=2) {
-         Castle temp = selected.get(1);
-         selected.clear();
-         selected.add(temp);
-         selected.add(c);
-         c.isSelected=true;
-         for (Castle cas : castles) {
-         if (cas != c)
-         cas.isSelected = false;
-         }
-         }
-         else {
-         selected.add(c);
-         c.isSelected=true;
-         for (Castle cas : castles) {
-         if (cas != c)
-         cas.isSelected = false;
-         }
-         }**/
         selected.clear();
         selected.add(c);
         if (c.getOwner() == "player")
@@ -891,7 +838,6 @@ public class Main extends Application {
 
     public void setOnClickBehaviour(Castle c) {
         c.getView().setOnMousePressed(e -> {
-            //scoreMessage.setText("Castle: owner: "+c.getOwner()+"\n	    Units:  "+Math.round(c.getReserveSize())+"\n	    Level:  "+c.getLevel());
             manageSelectedCastles(c);
             e.consume();
         });

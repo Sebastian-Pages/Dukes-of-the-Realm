@@ -2,8 +2,6 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 public class Ost {
 	String owner;
 	public List<Unit> reserve = new ArrayList<>();
@@ -40,7 +38,6 @@ public class Ost {
 			return false;				
 	}
 	public int countUnits(int unitType){
-		// gérer le cas sans ost
 		int result=0;
 		if (this.getReserveSize()>0){	
 			for (Unit u : reserve){
