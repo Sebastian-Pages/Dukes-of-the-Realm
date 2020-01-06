@@ -454,9 +454,13 @@ public class Main extends Application {
      */
     void displayQ(Castle c) {
         for (Unit u : c.productionQ) {
-            Image img = unitImage;
-            if (u.type == 0)
-                img = unitImage;
+            Image img=pikeman_blue;
+            if (u.type == Settings.PIKEMAN_TYPE)
+                img = pikeman_blue;
+            if(u.type==Settings.KNIGHT_TYPE)
+            	img=knight_blue;
+            if(u.type==Settings.ONAGER_TYPE)
+            	img=onager_blue;
 
             int x = c.productionQ.indexOf(u);
             Decoration un = new Decoration(playfieldLayer, img, x * 21 + 10, 770);
@@ -778,6 +782,9 @@ public class Main extends Application {
         unitsToDelete.clear();
     }
 
+    /**
+     * Make the unit go around castles when they collide
+     */
     private void pathfindingCollision() {
         for (Unit u : units) {
             if (u.path.size()<2)
@@ -788,9 +795,6 @@ public class Main extends Application {
                     //calculate new coordinates
                     double[] p= new double[]{ u.getX(),u.getY()};
                     double[] p2 =new double[]{ u.getX(),u.getY()};
-
-                    double deltaX =c.getCenterX() - u.getX()+10;
-                    double deltaY =u.getY()+10-c.getCenterY() ;
 
                     //hitting north border
                     if(u.movingS) {
@@ -818,7 +822,6 @@ public class Main extends Application {
                         p[0] += 4;
                         p[1] -= Settings.CASTLE_SIZE;
                         u.setX(u.getX()+4);
-                        System.out.println("DEBUG : E Border | Y: "+ (60-deltaY));
                     }
                     u.path.add(0,p);
 
@@ -829,29 +832,36 @@ public class Main extends Application {
     }
 
     /**
-     * Check if there is at least two different castles owner Or if there is still units on the map
+     * Check if a player has at least a unit or a castle on the map.
      */
     private void checkIfGameOver() {
-        boolean areAllOwnedByTheSame = true;
-        String s = castles.get(2).getOwner();
+        boolean castleRemainingBlue=false;
+        boolean castleRemainingRed=false;
         for (Castle c : castles) {
-            if (c.getOwner() != s && c.getOwner() != "unowned") {
-                areAllOwnedByTheSame = false;
+        	if (c.getOwner()=="player") {
+                castleRemainingBlue=true;
+            }
+            if(c.getOwner()=="ennemi") {
+            	castleRemainingRed=true;
             }
         }
-        boolean unitRemaining = true;
+
+        boolean unitRemainingBlue =false;
+        boolean unitRemainingRed=false;
         if(units.size()>0) {
-        	String s2 = units.get(0).getOwner();
         	for(Unit u : units) {
-                if (u.getOwner() != s2) {
-                    unitRemaining = false;
+                if (u.getOwner() =="player") {
+                    unitRemainingBlue = true;
+                }
+                else {
+                	unitRemainingRed=true;
                 }
         	}
         }
-        
-        
-        if (areAllOwnedByTheSame && unitRemaining)
-            gameOver();
+        if(!castleRemainingBlue && !unitRemainingBlue)
+        	gameOver();
+        if(!castleRemainingRed &&!unitRemainingRed)
+        	gameOver();  
     }
 
     /**
@@ -869,6 +879,10 @@ public class Main extends Application {
         gameLoop.stop();
     }
 
+    /**
+     * AI behaviour
+     * @param team
+     */
     private void AI(String team) {
 
         //trouve un premier objectif
@@ -910,6 +924,9 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * update castle's information bar
+     */
     private void updateText() {
         if (selected.size() > 0) {
             Castle c = selected.get(0);
