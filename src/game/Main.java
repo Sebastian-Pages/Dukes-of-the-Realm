@@ -905,7 +905,7 @@ public class Main extends Application {
                 buyUnit(c2, 0, 100);
                 if (c2.getReserveSize() > 0) {
                     long now = System.currentTimeMillis();
-                    if (now - c2.time > 2000) {
+                    if (now - c2.time > 5000) {
                         c2.time = now;
                         for (int i = 0; i < c2.getReserveSize(); i++) {
                             reserveToOst(c2, Settings.PIKEMAN_TYPE);
