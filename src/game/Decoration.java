@@ -8,12 +8,4 @@ public class Decoration extends Sprite {
 		super(layer, image, x, y);
 
 	}
-
-	@Override
-	public void checkRemovability() {
-
-		if (false)
-			remove();
-	}
-
 }

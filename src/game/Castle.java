@@ -48,11 +48,6 @@ public class Castle extends Sprite {
 	public void setOst(Ost o){
 		this.ost=o;
 	}
-	@Override
-	public void checkRemovability() {
-		if(false)
-			remove();
-	}
 
 	public String getOwner() {
 		return owner;

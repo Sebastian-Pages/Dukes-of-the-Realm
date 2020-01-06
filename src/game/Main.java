@@ -35,10 +35,6 @@ public class Main extends Application {
     private Pane playfieldLayer;
     private Pane menuLayer;
 
-    private Image playerImage;
-    //private Image enemyImage;
-    private Image missileImage;
-
     //castle images
     private Image castleImage;
     private Image castleImageBlue;
@@ -58,8 +54,6 @@ public class Main extends Application {
     //Selected castles
     private List<Castle> selected = new ArrayList<>();
 
-    //private List<Enemy> enemies = new ArrayList<>();
-    //private List<Missile> missiles = new ArrayList<>();
     private List<Castle> castles = new ArrayList<>();
     private List<Unit> units = new ArrayList<>();
     private List<Ost> osts = new ArrayList<>();
@@ -69,9 +63,6 @@ public class Main extends Application {
     public double orientationA[] = {0, 90, 180, 270};
 
     private Text infoMessage = new Text();
-    private Text newMessage = new Text();
-    private int scoreValue = 0;
-    private boolean collision = false;
     private boolean needsAIGoalplayer = true;
     private boolean needsAIGoalennemi = true;
     private boolean pauseState = false;
@@ -119,12 +110,11 @@ public class Main extends Application {
                 }
                 if (global == 2) {
 
-                    //update army count
-                    //updateUnitsCount(false);
+                	//Sending ost's units with delay
                 	for(Castle c : castles) {
                     	deploy(c);
                     }
-                    //on déploit une unit  tous les X  tours
+                    
                     // movement
                     checkUnitCollision();
                     units.forEach(sprite -> sprite.move());
@@ -134,22 +124,18 @@ public class Main extends Application {
                     if (playerIsIA == true)
                         AI("player");
 
-
+                    //Resolving attacks
                     checkSieges();
+                    
                     //generate gold income
                     castles.forEach(sprite -> sprite.income());
+                    
                     // update sprites in scene
-
                     units.forEach(sprite -> sprite.updateUI());
                     castles.forEach(sprite -> sprite.trainUnit());
                     castles.forEach(sprite ->sprite.upgradeCastle());
                     
-
-                    
-
-                    // check if sprite can be removed
-
-                    //castles.forEach(sprite -> sprite.checkRemovability());
+                    // check if units can be removed
                     units.forEach(sprite -> sprite.checkRemovability());
 
                     // remove removables from list, layer, etc
@@ -157,9 +143,10 @@ public class Main extends Application {
                     removeSprites(units);
                     removeSprites(targets);
 
-                    // update score, health, etc
+                    //update information bar
                     updateText();
                     castles.forEach(castle -> castle.update());
+                    
                     checkIfGameOver();
                 }
             }
@@ -214,6 +201,7 @@ public class Main extends Application {
             selected.clear();
             e.consume();
         });
+        
         spawnCastles();
     }
 
@@ -223,13 +211,6 @@ public class Main extends Application {
         backgroundImage = new Image(getClass().getResource("/images/grass.png").toExternalForm(), Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT + Settings.STATUS_BAR_HEIGHT, false, true);
         input = new Input(scene);
         input.addListeners();
-
-        /**
-         String bip = "/images/music.mp3";
-         Media hit = new Media(new File(bip).toURI().toString());
-         MediaPlayer mediaPlayer = new MediaPlayer(hit);
-         mediaPlayer.play();**/
-
         Decoration menuBackground = new Decoration(playfieldLayer, backgroundImage, 0, 0);
         Decoration classique = new Decoration(playfieldLayer, classiqueImage, (Settings.SCENE_WIDTH / 2) - 175, (Settings.SCENE_HEIGHT / 2) - 150);
         Decoration iavsia = new Decoration(playfieldLayer, iavsiaImage, (Settings.SCENE_WIDTH / 2) - 175, (Settings.SCENE_HEIGHT / 2) + 150);
@@ -254,7 +235,7 @@ public class Main extends Application {
         root.getChildren().add(statusBar);
     }
 
-    //GESTION DES SOUS-MENUS
+    //MENUS AND BUTTONS
     public void setStatusBar(HBox sb, int state) {
         switch (state) {
             case Settings.STATE_INIT:
@@ -334,7 +315,7 @@ public class Main extends Application {
                     e.consume();
                 });
 
-                Button piquierButton = new Button("Pikeman "+Settings.PIKEMAN_COST);
+                Button piquierButton = new Button("Pikeman: "+Settings.PIKEMAN_COST);
                 sb.getChildren().addAll(piquierButton);
                 buttons.add(piquierButton);
                 c = selected.get(0);
@@ -342,7 +323,7 @@ public class Main extends Application {
                     buyUnit(c, 0, Settings.PIKEMAN_COST);
                     e.consume();
                 });
-                Button chevalierButton = new Button("Knight "+Settings.KNIGHT_COST);
+                Button chevalierButton = new Button("Knight: "+Settings.KNIGHT_COST);
                 sb.getChildren().addAll(chevalierButton);
                 buttons.add(chevalierButton);
                 chevalierButton.setOnAction(e -> {
@@ -350,7 +331,7 @@ public class Main extends Application {
                     e.consume();
                 });
 
-                Button onagreButton = new Button("Onager "+Settings.ONAGER_COST);
+                Button onagreButton = new Button("Onager: "+Settings.ONAGER_COST);
                 sb.getChildren().addAll(onagreButton);
                 buttons.add(onagreButton);
                 onagreButton.setOnAction(e -> {
@@ -433,14 +414,6 @@ public class Main extends Application {
                     e.consume();
                 });
                 buttons.add(levelUp);
-
-                Button mercenary = new Button("Mercenaire");
-                sb.getChildren().addAll(mercenary);
-                buttons.add(mercenary);
-                mercenary.setOnAction(e -> {
-                    //reserveToOst(c,Settings.KNIGHT_TYPE);
-                    e.consume();
-                });
         }
     }
 
@@ -459,13 +432,13 @@ public class Main extends Application {
 
 
     /**
-     * INITIALISE LES CHATEAUX
+     * Castle initialization
      **/
     private void spawnCastles() {
         boolean placed_well = true;
 
 
-        /**ON GENERE N CHATEAU AU DEBUT DE LA PARTIE**/
+        /**Generate Settings.NUMBER_OF_CASTLES castles at the beginning of the  game**/
         while ((castles.size() < Settings.NUMBER_OF_CASTLES)) {
             ListIterator<Castle> it = castles.listIterator();
             double speed = 0;
@@ -481,7 +454,7 @@ public class Main extends Application {
                 e.consume();
             });
 
-            //parcours des chateaux pour Ã©viter les collisions et une distance min entre eux
+            //check if castles collide
             while (it.hasNext()) {
                 Castle c = it.next();
                 double deltaX = Math.abs(castle.getCenterX()-c.getCenterX());
@@ -499,7 +472,7 @@ public class Main extends Application {
                 setOnClickBehaviour(castle);
                 castles.remove(castle);
 
-                //pour tous les chateau faire une HBOX
+                //making a unit count on castles
                 HBox unitCount = new HBox();
                 castle.newMessage.setText("0");
                 unitCount.getChildren().addAll(castle.newMessage);
@@ -522,7 +495,7 @@ public class Main extends Application {
         setOnClickBehaviour(castle_1);
         castles.add(2, castle_1);
 
-        // pick ennemy starting castles
+        // pick enemy starting castles
         Castle castle_2 = castles.get(3);
         castles.remove(3);
         castle_2.CastleSet(1, castleImageRed);
@@ -539,47 +512,9 @@ public class Main extends Application {
 
     }
 
-    /**
-     * private void updateUnitsCount(boolean bool){
-     * if(bool) {
-     * for (Castle c : castles) {
-     * if (c.getGold()>10) {
-     * <p>
-     * if (c.getOwner()=="player") {
-     * Unit u = new Unit(playfieldLayer,unitImage, c.getCenterX(), c.getCenterY(), 1, 1, 1);
-     * u.owner = "player";
-     * double temp=c.getGold();
-     * c.setUnitProduction(temp-10);
-     * c.reserveAdd(u);
-     * u.removeFromLayer();
-     * }
-     * if(c.getOwner()=="ennemi") {
-     * Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
-     * u.owner="ennemi";
-     * double temp=c.getGold();
-     * c.setUnitProduction(temp-10);
-     * c.reserveAdd(u);
-     * u.removeFromLayer();
-     * }
-     * if(c.getOwner()=="unowned") {
-     * Unit u = new Unit(playfieldLayer,unitImageR, c.getCenterX(), c.getCenterY(), 1, 1, 1);
-     * u.owner="unowned";
-     * double temp=c.getGold();
-     * c.setUnitProduction(temp-10);
-     * c.reserveAdd(u);
-     * u.removeFromLayer();
-     * }
-     * }
-     * }
-     * }
-     * <p>
-     * }
-     **/
-
     private void buyUnit(Castle c, int type, int cost) {
         if (c.getGold() > cost) {
             String owner = c.getOwner();
-            //System.out.println(""+owner);
             Unit u = null;
             Image img = unitImage;
             double offset = img.getWidth()/2;
@@ -603,7 +538,6 @@ public class Main extends Application {
             double temp = c.getGold();
             c.setGold(temp - u.getCost());
             c.productionQ.add(u);
-            //System.out.println(u+" added to prodQ");
             u.removeFromLayer();
         }
     }
@@ -623,32 +557,6 @@ public class Main extends Application {
         }
     }
 
-    /**
-     * private void checkCollisions() {
-     * collision = false;
-     * <p>
-     * <p>
-     * <p>
-     * for (Enemy enemy : enemies) {
-     * for (Missile missile : missiles) {
-     * if (missile.collidesWith(enemy)) {
-     * enemy.damagedBy(missile);
-     * missile.remove();
-     * collision = true;
-     * scoreValue += 10 + (Settings.SCENE_HEIGHT - player.getY()) / 10;
-     * }
-     * }
-     * <p>
-     * if (player.collidesWith(enemy)) {
-     * collision = true;
-     * enemy.remove();
-     * player.damagedBy(enemy);
-     * if (player.getHealth() < 1)
-     * gameOver();
-     * }
-     * }
-     * }
-     **/
     private void checkOrders() {
         if (selected.size() > 1) {
             //System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));
@@ -700,66 +608,9 @@ public class Main extends Application {
             }
             Unit u = c.reservePull(unitType);
             c.ost.reserveAdd(u);
-            //u.remove();
-            //u.removeFromLayer();
         }
     }
 
-    /**
-     * private void sendOstAI(Castle source,Castle dest) {
-     * <p>
-     * //on veux au moins 1 unitÃ© dans l'ost
-     * if (source.getReserveSize()>0) {
-     * String mystring=" ";
-     * Image im=unitImage;
-     * <p>
-     * if (source.getOwner()=="player") {
-     * im = unitImage;
-     * mystring="player";
-     * }
-     * if(source.getOwner()=="ennemi") {
-     * im = unitImageR;
-     * mystring="ennemi";
-     * }
-     * Ost o = new Ost(playfieldLayer,im, source.getCenterX(), source.getCenterY(), 1, 1, 1);
-     * o.owner = mystring;
-     * <p>
-     * //pour chaque unitÃ© dans le chateau, l'ajouter Ã  l'ost
-     * while (source.getReserveSize()>0) {
-     * Unit u = source.reservePull(0);
-     * o.reserveAdd(u);
-     * }
-     * o.setGoalx(dest.getCenterX());
-     * o.setGoaly(dest.getCenterY());
-     * //System.out.println("ost: "+ o+" size: "+o.getReserveSize());
-     * osts.add(o);
-     * //System.out.println("ost[]: "+ osts.get(0));
-     * }
-     * <p>
-     * <p>
-     * if(selected.size()>1) {
-     * //System.out.println(selected.get(0).getOwner() + (selected.get(1).getOwner()));
-     * if(
-     * (selected.get(0).getOwner()=="player" && selected.get(1)!=selected.get(0) &&( selected.get(1).getOwner()=="unowned")||(selected.get(1).getOwner()=="ennemi"))&&
-     * (selected.get(0).getReserveSize()>0) &&(selected.get(0).isReadyToAttack))
-     * {
-     * Castle c=selected.get(0);
-     * Castle d=selected.get(1);
-     * <p>
-     * System.out.println(selected.get(0).getOwner() +" attacks -> "+ (selected.get(1).getOwner()));
-     * Unit u = c.reservePull(0);
-     * <p>
-     * u.addToLayer();
-     * units.add(u);
-     * if (c.getReserveSize()==0)
-     * selected.clear();
-     * //gameOver();
-     * }
-     * <p>
-     * }
-     * <p>
-     * }
-     **/
     private void selectTarget(Castle c) {
         for (Castle targetc : castles) {
             if (targetc != c) {
@@ -767,7 +618,6 @@ public class Main extends Application {
                 targets.add(target);
                 target.getView().setOnMousePressed(e -> {
                     sendOst(c, targetc);
-                    //System.out.println("DEBUG: ");
                     e.consume();
                 });
             }
@@ -775,7 +625,6 @@ public class Main extends Application {
     }
 
     private void sendOst(Castle c, Castle d) {
-
         Ost o = c.ost;
         o.setSpeed(o.getOstSpeed());
         for (Unit u : o.reserve) {
@@ -787,16 +636,9 @@ public class Main extends Application {
             u.addToPath(d.getEntrance());
             double[] doubleArray = new double[]{ d.getCenterX()-10,d.getCenterY()-10};
             u.addToPath(doubleArray);
-            //System.out.println("Path: "+u.path.get(0)[0] +","+u.path.get(0)[1]);
             u.isNotAtDoor = false;
             c.deploymentQ.add(u);
-            //System.out.println("u.x "+u.goalx+"u.goalx "+u.getGoalx());
-            //System.out.println("added to list");
-            if (!playfieldLayer.getChildren().contains(u.imageView)) {
-                //u.addToLayer();
-            }
         }
-        //System.out.println("DEBUG: "+"ost size: "+c.ost.getReserveSize());
         o.reserve.clear();
         c.isBuildingOst = false;
         if(c.getOwner()=="player")
@@ -805,7 +647,7 @@ public class Main extends Application {
     }
     
     private void deploy(Castle c) {
-    	if(c.turnUntilDeployment==0&& c.deploymentQ.size()>0) {
+    	if(c.turnUntilDeployment==0 && c.deploymentQ.size()>0) {
     		Unit u = c.deploymentQ.get(0);
     		units.add(u);
     		u.addToLayer();
@@ -823,7 +665,7 @@ public class Main extends Application {
     private void checkSieges() {
         List<Unit> unitsToDelete = new ArrayList<>();
         for (Unit u : units) {
-            // La condition est comme Ã§a pour laisser de la marge d'erreur et ne pas rater la collision
+            //Check unit collision with destination castle with a little margin of error
             if (
                     ((int) u.getGoalx() - 5 < (int) u.getX()) &&
                             ((int) u.getX() < (int) u.getGoalx() + 5) &&
@@ -831,18 +673,17 @@ public class Main extends Application {
                             ((int) u.getY() < (int) u.getGoaly() + 5)) {
                 for (Castle c : castles) {
                     if (u.collidesWith(c)) {
-                        //System.out.println("collision");
                         if (c.getReserveSize() > 0) {
-                            //System.out.println("c " + c.getOwner() + " u " + u.owner );
-                            if (c.getOwner() == u.owner) { //même owner -> ajout à la garnison
+                            if (c.getOwner() == u.owner) { //same owner -> add to castle
                                 c.reserveAdd(u);
 
-                            } else { // attaque
-                                //System.out.println("attaque");
+                            } else { // attack
                                 c.takeDamage(u);
                                 unitsToDelete.add(u);
                             }
-                        } else {
+                        } 
+                        
+                        else { //Conquer the castle
                             int type = 0;
                             Image im = castleImage;
                             if (u.owner == "player") {
@@ -861,16 +702,13 @@ public class Main extends Application {
                             c.reserveAdd(u);
                             u.path.clear();
                         }
-                        //u.remove();
                         unitsToDelete.add(u);
                     }
                 }
-
             }
-            //u.removeFromLayer();
         }
 
-        units.removeAll(unitsToDelete);
+        units.removeAll(unitsToDelete); //removing all units from the map
         unitsToDelete.forEach(sprite -> sprite.removeFromLayer());
         unitsToDelete.clear();
     }

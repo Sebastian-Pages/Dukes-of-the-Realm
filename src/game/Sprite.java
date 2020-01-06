@@ -111,6 +111,6 @@ public abstract class Sprite {
         this.removable = true;
     }
 
-    public abstract void checkRemovability();
+
 
 }

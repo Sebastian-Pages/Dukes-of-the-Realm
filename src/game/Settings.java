@@ -6,6 +6,9 @@ public class Settings {
     public static final double SCENE_HEIGHT = 900;
 	public static final double STATUS_BAR_HEIGHT = 80;
 	
+	public static final int CASTLE_SIZE=100;
+	public static final int UNIT_SIZE=20;
+	
 	public static final int NUMBER_OF_CASTLES = 5;
 	public static final double NEUTRAL_PRODUCTION_SPEED = 0.1;
 	public static final double NORMAL_PRODUCTION_SPEED = 0.2;
