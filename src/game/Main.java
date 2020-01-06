@@ -497,9 +497,10 @@ public class Main extends Application {
                 double deltaX = Math.abs(castle.getCenterX()-c.getCenterX());
                 double deltaY = Math.abs(castle.getCenterY()-c.getCenterY());
 
-                if (castle.collidesWith(c) || (deltaX<120-count) || (deltaY<120-count) || castle.getCenterX()<100-count || castle.getCenterX()>Settings.SCENE_WIDTH-100-count || castle.getCenterY()<100-count || castle.getCenterX()>Settings.SCENE_HEIGHT-100-count  ) {
+                if (castle.collidesWith(c) || (deltaX<120-count) || (deltaY<120-count) || castle.getCenterX()<100 || castle.getCenterX()>Settings.SCENE_WIDTH-100 || castle.getCenterY()<100 || castle.getCenterX()>Settings.SCENE_HEIGHT-100  ) {
                     placed_well = false;
-                    count+= 5;
+                    if(count<50)
+                    	count+= 1;
                 }
             }
 
