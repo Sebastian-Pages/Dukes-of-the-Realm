@@ -9,6 +9,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 
+/**
+ * A class to handle game's castles and it's interactions
+ *
+ */
 public class Castle extends Sprite {
 	long time;
 	private String owner;
@@ -77,6 +81,9 @@ public class Castle extends Sprite {
 		this.level = level;
 	}
 	
+	/**
+	 * update castle's gold amount considering it's level and incomespeed
+	 */
 	public void income() {
         gold += this.incomeSpeed*this.getLevel();
     }
@@ -88,6 +95,14 @@ public class Castle extends Sprite {
 	public void reserveAdd(Unit u) {
 		reserve.add(u);
 	}
+	
+	/**
+	 * remove the first unit with corresponding type from the castle's reserve
+	 * @param type
+	 * 			the unit's type
+	 * @return Unit
+	 * 			the removed unit
+	 */
 	public Unit reservePull(int type) {
 		Unit u2 = null;
 		for (Unit u : reserve){
@@ -100,6 +115,11 @@ public class Castle extends Sprite {
 		return u2;
 	}
 	
+	/**
+	 * remove the last unit from castle's reserve
+	 * @return Unit
+	 * 			the removed unit
+	 */
 	public Unit reservePull() {
 		Unit u = reserve.get(getReserveSize()-1);
 		reserve.remove(getReserveSize()-1);
@@ -116,6 +136,7 @@ public class Castle extends Sprite {
 		}
 		return u2;
 	}
+
 	
 	public void update() {
 		String selectString ="";
@@ -125,6 +146,7 @@ public class Castle extends Sprite {
 			selectString ="";
 		newMessage.setText(""+this.getReserveSize()+selectString);
 	}
+	
 	public boolean hasUnit(int unitType){
 		
 		if (this.getReserveSize()>0){
@@ -140,6 +162,13 @@ public class Castle extends Sprite {
 	}
 	
 
+	/**
+	 * Change the owner of a castle
+	 * @param type
+	 * 			the owner type
+	 * @param img
+	 * 			the castle's color
+	 */
 	public void CastleSet(int type,Image img){
 		
 		// On dit que 0 c'est les chateau alliés
@@ -197,6 +226,11 @@ public class Castle extends Sprite {
 		
 	}
 	
+	/**
+	 * Sacrifice an attacking unit and distribute his damage randomly on castle's reserve
+	 * @param attacker 
+	 * 				the attacking unit
+	 */
 	public void takeDamage(Unit attacker) {
 		if(this.getReserveSize()>0) {
 			Random rnd = new Random();
@@ -215,6 +249,9 @@ public class Castle extends Sprite {
 		}
 	}
 	
+	/**
+	 * put the castle upgrade in the queue
+	 */
 	public void levelUp() {
 		if(this.getLevel()<2 && this.getGold()>=this.getLevel()*Settings.LVL_UP_COST) {
 			this.setGold(this.getGold()-Settings.LVL_UP_COST);
@@ -223,6 +260,9 @@ public class Castle extends Sprite {
 		
 	}
 	
+	/**
+	 * Upgrade the castle's level by 1
+	 */
 	public void upgradeCastle() {
 		if(this.levelUpProgress>0) {
 			this.levelUpProgress+=1;
@@ -234,6 +274,11 @@ public class Castle extends Sprite {
 		
 	}
 
+	/**
+	 * return the position of the castle's door
+	 * @return entrance
+	 * 				double [x,y]
+	 */
 	public double[] getEntrance(){
 		double[] entrance = new double[]{0,0};
 		switch ((int)this.orientation) {

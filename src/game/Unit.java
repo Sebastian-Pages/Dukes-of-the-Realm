@@ -7,6 +7,10 @@ import javafx.scene.layout.Pane;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The class to handle Units and it's interactions in the game 
+ *
+ */
 abstract public class Unit extends Sprite {
     public boolean isNotAtDoor = false;
     protected String owner;
@@ -50,12 +54,18 @@ abstract public class Unit extends Sprite {
         this(u.layer, u.image, u.x, u.y, u.owner);
     }
 
+    /**
+     * check if the unit not alive to remove it
+     */
     public void checkRemovability() {
 
         if (!isAlive())
             remove();
     }
 
+    /**
+     * update the unit's coordinate and check if it reached it's goal
+     */
     public void move() {
         int distanceMargin=5;
         if (((int) this.path.get(0)[0] - distanceMargin  < (int) this.x) &&      //valeur arbitraire marge pour toucher le point malgr� la vitesse

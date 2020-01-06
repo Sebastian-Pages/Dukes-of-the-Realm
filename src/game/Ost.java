@@ -2,6 +2,10 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The class to manage group of attacking units from the castle
+ *
+ */
 public class Ost {
 	String owner;
 	public List<Unit> reserve = new ArrayList<>();
