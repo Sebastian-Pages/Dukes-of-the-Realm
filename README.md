@@ -2,7 +2,7 @@
 Ce projet est un jeu vidéo en java réalisé dans le cadre du cours de programmation objet.
 
 
-###Mode d'emploi
+### Mode d'emploi
 Le menu principal vous permet de choisir entre le mode de jeu Classique ou un
 mode IA vs IA. Dans le mode Classique, vous commencez la partie avec un chateau
 sous votre contrôle. Cliquer sur un chateau vous donne les informations le concernant.
@@ -13,7 +13,7 @@ le chateau à attaquer. [Upgrade] : permettant d'augmenter le niveau d'un chatea
 augmenter sa vitesse de production d'or.
 Vous Gagnez la partie lorsque l'ennemi n'as plus de chateau ou d'unités sur la carte.
 
-##Règle du jeu complète
+## Règle du jeu complète
 Après avoir sélectionné un mode de jeu, la partie commence. la carte est générée avec 5
 chateaux à des positions aléatoires. Un chateau bleu vous appartenant, un rouge appartenant
 à l'IA et 3 blancs qui sont neutres et ne font que se défendre. Chaque chateau génère passivement de l'or dans sa réserve vous permettant de faire des achats de soldats dans le menu.
@@ -39,7 +39,7 @@ Voici un tableau détaillé des unités du jeu:
 | Temps de Production| 30           | 100    | 200     |
 
 
-##Fonctionnalités supplémentaires
+## Fonctionnalités supplémentaires
 * Barre de production des unités
 * Affichage visuel de la cible d'envoi d'un OST
 * Compteur des unités d'un chateau sur la carte
@@ -49,9 +49,9 @@ Voici un tableau détaillé des unités du jeu:
 * Fichier Settings permettant de modifier les valeurs du jeu
 
 
-##Fonctionnalités non implémentées
+## Fonctionnalités non implémentées
 * Sauvegarde et chargement du jeu
 
-##Bugs
+## Bugs
 * Pathfinding déffectueux lorsque la vitesse des unités est trop importante
 * Compteur des unités dans le chateau qui ne se met pas correctement à jour
