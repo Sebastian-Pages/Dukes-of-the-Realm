@@ -24,6 +24,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
+/**
+ * The main application class to run the game
+ *
+ */
 public class Main extends Application {
 
     /**
@@ -95,11 +99,10 @@ public class Main extends Application {
         menuLayer = new Pane();
         root.getChildren().add(playfieldLayer);
 
-        /**INITIALISATION DU JEU**/
-        //loadGame();
+        //INITIALISATION DU JEU
         loadMenu();
 
-        /**DEBUT DE LA LOOP**/
+        //DEBUT DE LA LOOP
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -116,7 +119,7 @@ public class Main extends Application {
                     }
                     
                     // movement
-                    checkUnitCollision();
+                    pathfindingCollision();
                     units.forEach(sprite -> sprite.move());
 
                     // AI
@@ -163,6 +166,9 @@ public class Main extends Application {
         gameLoop.start();
     }
 
+    /**
+     * Load images and input listeners
+     */
     private void loadGame() {
         castleImage = new Image(getClass().getResource("/images/neutral_castle.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
         castleImageBlue = new Image(getClass().getResource("/images/blue_castle.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
@@ -205,6 +211,9 @@ public class Main extends Application {
         spawnCastles();
     }
 
+    /**
+     * Load starting menu
+     */
     private void loadMenu() {
         classiqueImage = new Image(getClass().getResource("/images/classique.png").toExternalForm(), 350, 120, false, true);
         iavsiaImage = new Image(getClass().getResource("/images/iavsia.png").toExternalForm(), 350, 120, false, false);
@@ -226,6 +235,9 @@ public class Main extends Application {
     }
 
 
+    /**
+     * Create the information bar
+     */
     public void createStatusBar() {
         statusBar = new HBox();
         setStatusBar(statusBar, Settings.STATE_INIT);
@@ -235,7 +247,16 @@ public class Main extends Application {
         root.getChildren().add(statusBar);
     }
 
-    //MENUS AND BUTTONS
+
+    /**
+     * Set the different bar configurations with buttons
+     * 
+     * @param sb 
+     * 			the bar where to put the buttons and informations
+     * @param state
+     * 			the type of button and informations we want on the bar
+     *
+     */
     public void setStatusBar(HBox sb, int state) {
         switch (state) {
             case Settings.STATE_INIT:
@@ -320,14 +341,14 @@ public class Main extends Application {
                 buttons.add(piquierButton);
                 c = selected.get(0);
                 piquierButton.setOnAction(e -> {
-                    buyUnit(c, 0, Settings.PIKEMAN_COST);
+                    buyUnit(c, Settings.PIKEMAN_TYPE, Settings.PIKEMAN_COST);
                     e.consume();
                 });
                 Button chevalierButton = new Button("Knight: "+Settings.KNIGHT_COST);
                 sb.getChildren().addAll(chevalierButton);
                 buttons.add(chevalierButton);
                 chevalierButton.setOnAction(e -> {
-                    buyUnit(c, 1, Settings.KNIGHT_COST);
+                    buyUnit(c, Settings.KNIGHT_TYPE, Settings.KNIGHT_COST);
                     e.consume();
                 });
 
@@ -335,7 +356,7 @@ public class Main extends Application {
                 sb.getChildren().addAll(onagreButton);
                 buttons.add(onagreButton);
                 onagreButton.setOnAction(e -> {
-                    buyUnit(c, 2, Settings.ONAGER_COST);
+                    buyUnit(c, Settings.ONAGER_TYPE, Settings.ONAGER_COST);
                     e.consume();
                 });
 
@@ -417,6 +438,11 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Displays the castle's production queue
+     * @param c
+     * 		The castle 
+     */
     void displayQ(Castle c) {
         for (Unit u : c.productionQ) {
             Image img = unitImage;
@@ -432,13 +458,13 @@ public class Main extends Application {
 
 
     /**
-     * Castle initialization
+     * Initialize and place castles on the map
      **/
     private void spawnCastles() {
         boolean placed_well = true;
 
 
-        /**Generate Settings.NUMBER_OF_CASTLES castles at the beginning of the  game**/
+        //Generate Settings.NUMBER_OF_CASTLES castles at the beginning of the  game
         while ((castles.size() < Settings.NUMBER_OF_CASTLES)) {
             ListIterator<Castle> it = castles.listIterator();
             double speed = 0;
@@ -513,6 +539,15 @@ public class Main extends Application {
 
     }
 
+    /**
+     * Buy unit in a castle and put it in the castle's production queue
+     * @param c
+     * 		The castle
+     * @param type
+     * 			The unit type
+     * @param cost
+     * 			The unit's cost			
+     */
     private void buyUnit(Castle c, int type, int cost) {
         if (c.getGold() > cost) {
             String owner = c.getOwner();
@@ -544,6 +579,12 @@ public class Main extends Application {
     }
 
 
+    /**
+     * Removes sprite from the screen
+     * 
+     * @param spriteList 
+     * 				The list of sprite to remove
+     */
     private void removeSprites(List<? extends Sprite> spriteList) {
         Iterator<? extends Sprite> iter = spriteList.iterator();
         while (iter.hasNext()) {
@@ -559,6 +600,13 @@ public class Main extends Application {
     }
 
 
+    /**
+     * Pull units from the castle reserve to the ost
+     * @param c
+     * 		the castle from which to pull units
+     * @param unitType
+     * 			the type of unit to pull
+     */
     private void reserveToOst(Castle c, int unitType) {
         if (c.hasUnit(unitType)) {
             String mystring = " ";
@@ -584,6 +632,12 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Send ost to the selected castle
+     * @param c
+     * 		the attacking castle
+     * @see #sendOst(Castle c,Castle d)
+     */
     private void selectTarget(Castle c) {
         for (Castle targetc : castles) {
             if (targetc != c) {
@@ -597,6 +651,15 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Initialize the ost's unit's destination and put them in the deployment queue.
+     * 
+     * @param c
+     * 		the attacking castle
+     * @param d
+     * 		destination castle
+     * @see #deploy(Castle)
+     */
     private void sendOst(Castle c, Castle d) {
         Ost o = c.ost;
         o.setSpeed(o.getOstSpeed());
@@ -619,19 +682,31 @@ public class Main extends Application {
 
     }
     
+    /**
+     * Put units on the map every turnUntilDeployment
+     * @param c 
+     * 		the castle from which to deploy units
+     * @see Settings#TURN_UNTIL_DEPLOYMENT
+     */
     private void deploy(Castle c) {
     	if(c.turnUntilDeployment==0 && c.deploymentQ.size()>0) {
     		Unit u = c.deploymentQ.get(0);
     		units.add(u);
     		u.addToLayer();
     		c.deploymentQ.remove(u);
-    		c.turnUntilDeployment=10;
+    		c.turnUntilDeployment=Settings.TURN_UNTIL_DEPLOYMENT;
     	}
     	if(c.turnUntilDeployment>0) {
     		c.turnUntilDeployment--;
     	}
     }
     
+    /**
+     * Resolve all the attacks on the map on a turn when units collide with castles
+     * 
+     * @see Castle#takeDamage(Unit)
+     *
+     */
     private void checkSieges() {
         List<Unit> unitsToDelete = new ArrayList<>();
         for (Unit u : units) {
@@ -683,7 +758,7 @@ public class Main extends Application {
         unitsToDelete.clear();
     }
 
-    private void checkUnitCollision() {
+    private void pathfindingCollision() {
         for (Unit u : units) {
             if (u.path.size()<2)
                 u.isNotAtDoor=false;
@@ -699,36 +774,32 @@ public class Main extends Application {
 
                     //hitting north border
                     if(u.movingS) {
-                        p[0] -= 100;
+                        p[0] -= Settings.CASTLE_SIZE;
                         p[1] -= 4;
                         u.setY(u.getY()-4);
                         p2[0]=p[0];
-                        p2[1]=p[1]+130;
+                        p2[1]=p[1]+(Settings.CASTLE_SIZE+30);
                         u.path.add(0,p2);
-                        System.out.println("DEBUG : N Border | X: "+ (60-deltaX));
                     }
                     if(u.movingN) {
-                        p[0] += 100;
+                        p[0] += Settings.CASTLE_SIZE;
                         p[1] += 4;
                         u.setY(u.getY()+4);
                         p2[0]=p[0];
-                        p2[1]=p[1]-130;
+                        p2[1]=p[1]-(Settings.CASTLE_SIZE+30);
                         u.path.add(0,p2);
-                        System.out.println("DEBUG : S Border | X: "+ (60-deltaX));
                     }
                     if(u.movingE) { // -> [
                         p[0] -= 4;
-                        p[1] += 100;
+                        p[1] += Settings.CASTLE_SIZE;
                         u.setX(u.getX()-4);
-                        System.out.println("DEBUG : W Border | Y: "+ (60-deltaY));
                     }
                     if(u.movingW) {
                         p[0] += 4;
-                        p[1] -= 100;
+                        p[1] -= Settings.CASTLE_SIZE;
                         u.setX(u.getX()+4);
                         System.out.println("DEBUG : E Border | Y: "+ (60-deltaY));
                     }
-                    System.out.println("DEBUG : Point added");
                     u.path.add(0,p);
 
                 }
@@ -737,6 +808,9 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Check if there is at least two different castles owner Or if there is still units on the map
+     */
     private void checkIfGameOver() {
         boolean areAllOwnedByTheSame = true;
         String s = castles.get(2).getOwner();
@@ -760,6 +834,9 @@ public class Main extends Application {
             gameOver();
     }
 
+    /**
+     * End the game loop
+     */
     private void gameOver() {
         HBox hbox = new HBox();
         hbox.setPrefSize(Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT);
