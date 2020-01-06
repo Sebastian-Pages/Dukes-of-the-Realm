@@ -57,10 +57,11 @@ abstract public class Unit extends Sprite {
     }
 
     public void move() {
-        if (((int) this.path.get(0)[0] - 3 < (int) this.x) &&      //valeur arbitraire marge pour toucher le point malgré la vitesse
-                ((int) this.x < (int) this.path.get(0)[0] + 3) &&
-                ((int) this.path.get(0)[1] - 3 < (int) this.y) &&
-                ((int) this.y < (int) this.path.get(0)[1] + 3)) {
+        int distanceMargin=Math.max(Math.max(Settings.PIKEMAN_SPEED,Settings.KNIGHT_SPEED),Settings.ONAGER_SPEED);
+        if (((int) this.path.get(0)[0] - distanceMargin  < (int) this.x) &&      //valeur arbitraire marge pour toucher le point malgrï¿½ la vitesse
+                ((int) this.x < (int) this.path.get(0)[0] + distanceMargin ) &&
+                ((int) this.path.get(0)[1] - distanceMargin  < (int) this.y) &&
+                ((int) this.y < (int) this.path.get(0)[1] + distanceMargin )) {
             this.path.remove(0);
             this.isNotAtDoor = true;
         }
