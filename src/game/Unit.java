@@ -57,7 +57,7 @@ abstract public class Unit extends Sprite {
     }
 
     public void move() {
-        int distanceMargin=Math.max(Math.max(Settings.PIKEMAN_SPEED,Settings.KNIGHT_SPEED),Settings.ONAGER_SPEED);
+        int distanceMargin=5;
         if (((int) this.path.get(0)[0] - distanceMargin  < (int) this.x) &&      //valeur arbitraire marge pour toucher le point malgr� la vitesse
                 ((int) this.x < (int) this.path.get(0)[0] + distanceMargin ) &&
                 ((int) this.path.get(0)[1] - distanceMargin  < (int) this.y) &&
