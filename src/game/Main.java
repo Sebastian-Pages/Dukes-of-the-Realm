@@ -465,6 +465,7 @@ public class Main extends Application {
 
 
         //Generate Settings.NUMBER_OF_CASTLES castles at the beginning of the  game
+        int count = 0;
         while ((castles.size() < Settings.NUMBER_OF_CASTLES)) {
             ListIterator<Castle> it = castles.listIterator();
             double speed = 0;
@@ -487,8 +488,9 @@ public class Main extends Application {
                 double deltaX = Math.abs(castle.getCenterX()-c.getCenterX());
                 double deltaY = Math.abs(castle.getCenterY()-c.getCenterY());
 
-                if (castle.collidesWith(c) || (deltaX<120) || (deltaY<120) || castle.getCenterX()<100 || castle.getCenterX()>Settings.SCENE_WIDTH-100 || castle.getCenterY()<100 || castle.getCenterX()>Settings.SCENE_HEIGHT-100  ) {
+                if (castle.collidesWith(c) || (deltaX<120-count) || (deltaY<120-count) || castle.getCenterX()<100-count || castle.getCenterX()>Settings.SCENE_WIDTH-100-count || castle.getCenterY()<100-count || castle.getCenterX()>Settings.SCENE_HEIGHT-100-count  ) {
                     placed_well = false;
+                    count+= 5;
                 }
             }
 

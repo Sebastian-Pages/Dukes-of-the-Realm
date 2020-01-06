@@ -41,7 +41,7 @@ public class Settings {
 	public static final int ONAGER_DAMAGE= 10;
 	
 	public static final int LVL_UP_COST=1000;
-	public static final int TURN_UNTIL_DEPLOYMENT=15;
+	public static final int TURN_UNTIL_DEPLOYMENT=30;
 	
 	
     public static final int STATE_INIT=0;
