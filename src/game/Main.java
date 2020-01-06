@@ -77,6 +77,7 @@ public class Main extends Application {
     private HBox statusBar;
     private int hboxState;
     public int global;
+    public int distanceMargin=Math.max(Math.max(Settings.KNIGHT_SPEED,Settings.ONAGER_SPEED),Settings.PIKEMAN_SPEED);
 
     private Scene scene;
     private Input input;
@@ -714,10 +715,10 @@ public class Main extends Application {
         for (Unit u : units) {
             //Check unit collision with destination castle with a little margin of error
             if (
-                    ((int) u.getGoalx() - 5 < (int) u.getX()) &&
-                            ((int) u.getX() < (int) u.getGoalx() + 5) &&
-                            ((int) u.getGoaly() - 5 < (int) u.getY()) &&
-                            ((int) u.getY() < (int) u.getGoaly() + 5)) {
+                    ((int) u.getGoalx() - distanceMargin < (int) u.getX()) &&
+                            ((int) u.getX() < (int) u.getGoalx() + distanceMargin) &&
+                            ((int) u.getGoaly() - distanceMargin < (int) u.getY()) &&
+                            ((int) u.getY() < (int) u.getGoaly() + distanceMargin)) {
                 for (Castle c : castles) {
                     if (u.collidesWith(c)) {
                         if (c.getReserveSize() > 0) {
