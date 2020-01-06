@@ -44,8 +44,12 @@ public class Main extends Application {
     private Image castleImageBlue;
     private Image castleImageBlueS;
     private Image castleImageRed;
-    private Image castleImageRedS;
-    private Image unitImageR;
+    private Image pikeman_red;
+    private Image pikeman_blue;
+    private Image knight_red;
+    private Image knight_blue;
+    private Image onager_red;
+    private Image onager_blue;
     private Image grassImage;
     private Image targetImage;
     private Image backgroundImage;
@@ -77,7 +81,7 @@ public class Main extends Application {
     private HBox statusBar;
     private int hboxState;
     public int global;
-    public int distanceMargin=Math.max(Math.max(Settings.KNIGHT_SPEED,Settings.ONAGER_SPEED),Settings.PIKEMAN_SPEED);
+    public int distanceMargin=10;
 
     private Scene scene;
     private Input input;
@@ -175,9 +179,13 @@ public class Main extends Application {
         castleImageBlue = new Image(getClass().getResource("/images/blue_castle.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
         castleImageBlueS = new Image(getClass().getResource("/images/blue_castle_selected.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
         castleImageRed = new Image(getClass().getResource("/images/red_castle.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
-        castleImageRedS = new Image(getClass().getResource("/images/red_castle_selected.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
         unitImage = new Image(getClass().getResource("/images/pikeman_blue.png").toExternalForm(), Settings.UNIT_SIZE, Settings.UNIT_SIZE, true, true);
-        unitImageR = new Image(getClass().getResource("/images/pikeman_red.png").toExternalForm(), Settings.UNIT_SIZE, Settings.UNIT_SIZE, true, true);
+        pikeman_blue = new Image(getClass().getResource("/images/pikeman_blue.png").toExternalForm(), Settings.UNIT_SIZE, Settings.UNIT_SIZE, true, true);
+        pikeman_red = new Image(getClass().getResource("/images/pikeman_red.png").toExternalForm(), Settings.UNIT_SIZE, Settings.UNIT_SIZE, true, true);
+        knight_blue = new Image(getClass().getResource("/images/knight_blue.png").toExternalForm(), Settings.UNIT_SIZE, Settings.UNIT_SIZE, true, true);
+        knight_red = new Image(getClass().getResource("/images/knight_red.png").toExternalForm(), Settings.UNIT_SIZE, Settings.UNIT_SIZE, true, true);
+        onager_blue = new Image(getClass().getResource("/images/onager_blue.png").toExternalForm(), Settings.UNIT_SIZE, Settings.UNIT_SIZE, true, true);
+        onager_red = new Image(getClass().getResource("/images/onager_red.png").toExternalForm(), Settings.UNIT_SIZE, Settings.UNIT_SIZE, true, true);
         targetImage = new Image(getClass().getResource("/images/target.png").toExternalForm(), Settings.CASTLE_SIZE, Settings.CASTLE_SIZE, true, true);
         grassImage = new Image(getClass().getResource("/images/grass.png").toExternalForm(), Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT, false, true);
         input = new Input(scene);
@@ -557,21 +565,29 @@ public class Main extends Application {
             Unit u = null;
             Image img = unitImage;
             double offset = img.getWidth()/2;
-            if (c.getOwner() == "player")
-                img = unitImage;
-            if (c.getOwner() == "ennemi")
-                img = unitImageR;
             if (c.getOwner() == "unowned")
-                img = unitImageR;
+                img = unitImage;
 
             if (type == Settings.PIKEMAN_TYPE) {
-                u = new Pikeman(playfieldLayer, unitImage, c.getCenterX()-offset, c.getCenterY()-offset, owner);
+                if (c.getOwner() == "player")
+                    img = pikeman_blue;
+                if (c.getOwner() == "ennemi")
+                    img = pikeman_red;
+                u = new Pikeman(playfieldLayer, img, c.getCenterX()-offset, c.getCenterY()-offset, owner);
             }
             if (type == Settings.KNIGHT_TYPE) {
-                u = new Knight(playfieldLayer, unitImage, c.getCenterX()-offset, c.getCenterY()-offset, owner);
+                if (c.getOwner() == "player")
+                    img = knight_blue;
+                if (c.getOwner() == "ennemi")
+                    img = knight_red;
+                u = new Knight(playfieldLayer, img, c.getCenterX()-offset, c.getCenterY()-offset, owner);
             }
             if (type == Settings.ONAGER_TYPE) {
-                u = new Onager(playfieldLayer, unitImage, c.getCenterX()-offset, c.getCenterY()-offset, owner);
+                if (c.getOwner() == "player")
+                    img = onager_blue;
+                if (c.getOwner() == "ennemi")
+                    img = onager_red;
+                u = new Onager(playfieldLayer, img, c.getCenterX()-offset, c.getCenterY()-offset, owner);
             }
 
             double temp = c.getGold();
@@ -616,11 +632,11 @@ public class Main extends Application {
             Image im = unitImage;
 
             if (c.getOwner() == "player") {
-                im = unitImageR;
+                //im = unitImageR;
                 mystring = "player";
             }
             if (c.getOwner() == "ennemi") {
-                im = unitImageR;
+                //im = unitImageR;
                 mystring = "ennemi";
             }
             if (!c.isBuildingOst) {
