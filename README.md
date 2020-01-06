@@ -28,16 +28,14 @@ l'unité de votre choix. Elle est placé dans l'ost du chateau. Une fois l'ost c
 appuyé sur "Send OST". Une cible apparait sur les chateaux. Choisissez la destination 
 de l'ost. SI le chateau est allié, l'ost vas rejoindre la réserve du chateau. Si le 
 chateau est ennemi, Les unité vont soustraire la valeur de leur attaque à celle de la 
-vie d'une unité dans la réserve du chateau en défense.
+vie d'une unité aléatoire dans la réserve du chateau en défense. Si la réserve attaqué
+est vide, Le chateau passe sous votre controle. Vous gardez l'or de ce chateau. 
 
-```java
-public int getGold(){
-    return this.gold;
-}
-```
+Voici un tableau détaillé des unités du jeu:
 
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+|                   | Pikeman       | Knight | Onagre  |
+| :-----------:     |:-------------:| :-----:| :------:|
+| Attaque           | 1             | 3      | 10      |
+| Vie               | 1             | 2      | 5       |
+| Cout              | 100           | 300    | 300     |
+| Temp de Production| 100           | 100    | 200     | 
